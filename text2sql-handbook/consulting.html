@@ -87,6 +87,13 @@
           Fill out the form below and I'll get back to you shortly
         </p>
 
+        <!-- Success Message -->
+        <div id="success-message" class="hidden max-w-2xl mx-auto mb-8 p-6 bg-green-900 border-2 border-green-500 rounded-lg text-center">
+          <div class="text-4xl mb-3">✓</div>
+          <h3 class="text-2xl font-bold text-white mb-2">Message Received!</h3>
+          <p class="text-gray-200">Thank you for reaching out. I'll get back to you very shortly.</p>
+        </div>
+
         <form action="https://api.web3forms.com/submit" method="POST" id="contact-form" class="max-w-2xl mx-auto space-y-6">
 
           <!-- Web3Forms Access Key -->
@@ -194,6 +201,23 @@
       once: true,
       offset: 100
     });
+
+    // Check for success parameter in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+      // Show success message
+      const successMsg = document.getElementById('success-message');
+      const form = document.getElementById('contact-form');
+
+      successMsg.classList.remove('hidden');
+      form.classList.add('hidden');
+
+      // Scroll to success message
+      successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      // Remove success parameter from URL without reloading
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   </script>
   <script src="assets/js/main.js"></script>
 </body>
