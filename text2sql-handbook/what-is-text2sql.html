@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What is Text-to-SQL? | Text2SQLHandbook</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/main.css?v=3">
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    /* TOC styles - Dark Theme */
+    .toc {
+      position: sticky;
+      top: 100px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-light);
+      padding: 1.5rem;
+    }
+
+    .toc h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border-light);
+      letter-spacing: 0.02em;
+    }
+
+    .toc nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .toc a {
+      display: block;
+      padding: 0.75rem 1rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .toc a:hover {
+      color: var(--text-primary);
+      background-color: rgba(34, 211, 238, 0.1);
+      border-left-color: var(--primary-400);
+      transform: translateX(2px);
+    }
+
+    .toc a.active {
+      color: var(--primary-400);
+      background: linear-gradient(90deg, rgba(34, 211, 238, 0.15), transparent);
+      border-left-color: var(--primary-400);
+      font-weight: 600;
+    }
+
+    .toc a.subsection {
+      padding-left: 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    /* Scrollbar styling for TOC */
+    .toc::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .toc::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .toc::-webkit-scrollbar-thumb {
+      background: var(--border-medium);
+      border-radius: 3px;
+    }
+
+    .toc::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-400);
+    }
+
+    /* Modern cards - Dark Theme */
+    .card-modern {
+      position: relative;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 1.75rem 2rem;
+      box-shadow: var(--shadow-md);
+      transition: all 0.25s ease;
+    }
+
+    .card-modern:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-xl), var(--glow-teal);
+      border-color: var(--primary-400);
+    }
+
+    .card-accent {
+      border-left: 4px solid var(--primary-400);
+      padding-left: 1.75rem;
+    }
+
+    /* Section and dataset cards - Dark Theme */
+    .section-card,
+    .dataset-card {
+      position: relative;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 1.75rem 2rem;
+      box-shadow: var(--shadow-md);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      margin: 1.5rem 0;
+    }
+
+    .section-card:hover,
+    .dataset-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl), var(--glow-teal);
+      border-color: var(--primary-400);
+    }
+
+    /* Lifecycle detail cards (modern) */
+    .lifecycle-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    @media (min-width: 768px) { .lifecycle-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 1024px) { .lifecycle-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+    .lifecycle-card { --accent: var(--primary-400); position: relative; border-radius: 16px; background:
+      radial-gradient(120% 120% at 10% -10%, rgba(34,211,238,.10), transparent 60%),
+      radial-gradient(120% 120% at 110% 10%, rgba(124,58,237,.10), transparent 50%),
+      var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-md);
+      padding: 1.25rem;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px) saturate(140%);
+    }
+
+    .lifecycle-card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: linear-gradient(90deg, var(--accent), transparent); border-radius: 16px 16px 0 0; }
+    .lifecycle-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-xl), var(--glow-teal); border-color: var(--primary-400); }
+
+    .lc-icon { width: 40px; height: 40px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--gray-900); background:
+      radial-gradient(120% 120% at 30% 20%, var(--primary-400), var(--primary-500)),
+      linear-gradient(135deg, var(--accent), var(--primary-600));
+      box-shadow: var(--glow-teal);
+      border: 2px solid rgba(255,255,255,.9);
+    }
+
+    .lc-icon svg { width: 18px; height: 18px; }
+    .cc-badge, .lc-tag { box-shadow: none; }
+
+    .lc-title { font-weight: 800; color: var(--text-primary); margin: .6rem 0 .25rem; }
+    .lc-desc  { font-size: .9rem; color: var(--text-secondary); }
+    .lc-tags { margin-top: .65rem; display: flex; flex-wrap: wrap; gap: .4rem; }
+    .lc-tag  { font-size: .72rem; padding: .25rem .45rem; border-radius: 9999px; background: rgba(34, 211, 238, 0.1); color: var(--text-secondary); border: 1px solid rgba(34, 211, 238, 0.2); }
+
+    /* Challenge card header and list styling */
+    .cc-head { display: flex; align-items: center; gap: .75rem; justify-content: space-between; }
+    .cc-title { font-weight: 800; color: var(--text-primary); flex: 1; }
+    .cc-badge { font-size: .7rem; padding: .2rem .45rem; border-radius: .5rem; background: rgba(34, 211, 238, 0.1); color: var(--text-primary); border: 1px solid var(--border-light); }
+    .cc-list { list-style: none; padding: 0; margin: .6rem 0 0 0; }
+    .cc-list li { position: relative; padding-left: 1.1rem; margin: .35rem 0; color: var(--text-secondary); font-size: .92rem; }
+    .cc-list li::before { content: ""; position: absolute; left: 0; top: .62rem; width: 6px; height: 6px; border-radius: 9999px; background: var(--primary-400); box-shadow: 0 0 0 2px rgba(34,211,238,.18); }
+
+    /* Stat boxes - Dark Theme */
+    .stat-box {
+      text-align: center;
+      padding: 2rem;
+      border-radius: 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl), var(--glow-teal);
+      border-color: var(--primary-400);
+    }
+
+    .stat-number {
+      font-size: 2.75rem;
+      font-weight: 800;
+      display: block;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, var(--primary-400), #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Challenge boxes - Dark Theme */
+    .challenge-box {
+      padding: 1.75rem;
+      border-radius: 12px;
+      border-left: 4px solid;
+      margin: 1.5rem 0;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-light);
+      transition: all 0.3s ease;
+    }
+
+    .challenge-box:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-xl), var(--glow-teal);
+      border-color: var(--primary-400);
+    }
+
+    /* Lifecycle wrap - Dark Theme */
+    .lifecycle-wrap {
+      max-width: 920px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-light);
+    }
+
+    .lifecycle-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .lifecycle-chip {
+      fill: var(--bg-secondary);
+      filter: drop-shadow(0 8px 24px rgba(34,211,238,0.18));
+    }
+
+    .lifecycle-chip-text {
+      font: 600 15px/1.2 Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      fill: var(--text-primary);
+      text-anchor: middle;
+    }
+
+    .lifecycle-center {
+      fill: url(#centerGrad);
+      stroke: var(--primary-400);
+      stroke-width: 6;
+      filter: drop-shadow(0 24px 60px rgba(34,211,238,0.4));
+    }
+
+    .lifecycle-center-text {
+      font: 800 22px/1.2 Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      fill: var(--gray-900);
+      text-anchor: middle;
+    }
+
+    /* .lifecycle-arrow-path removed */
+    .lifecycle-arc { fill: none; stroke-width: 22; stroke-linecap: round; }
+
+    /* legacy */
+    .lifecycle-arrow-path {
+      fill: none;
+      stroke: var(--primary-400);
+      stroke-width: 4;
+      marker-end: url(#arrowHead);
+    }
+
+    @keyframes drawArrow {
+      0% { stroke-dashoffset: 1000; opacity: 0.3; }
+      50% { stroke-dashoffset: 0; opacity: 1; }
+      100% { stroke-dashoffset: -1000; opacity: 0.3; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    /* Vertical Timeline */
+    .timeline-vertical {
+      position: relative;
+      max-width: 800px;
+      margin: 3rem auto;
+      padding: 2rem 0;
+    }
+
+    .timeline-vertical::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, #9CA3AF 0%, #3B82F6 50%, #8B5CF6 100%);
+    }
+
+    .timeline-era {
+      position: relative;
+      margin: 3rem 0;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Default layout: use markup order (content | dot | empty OR empty | dot | content) */
+    .timeline-era { flex-direction: row; }
+    .timeline-content-wrapper { flex: 1; padding: 0 2rem; }
+    .timeline-content-wrapper { text-align: left; }
+
+    /* Align content towards the center line based on detected side */
+    .timeline-era[data-side="left"] .timeline-content-wrapper:first-child { text-align: right; }
+    .timeline-era[data-side="right"] .timeline-content-wrapper:last-child { text-align: left; }
+
+    /* No flex-direction flipping to avoid double alternation with markup */
+
+    .timeline-dot-wrapper {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .timeline-dot {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 5px solid;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      box-shadow: var(--shadow-lg);
+      transition: all 0.3s ease;
+    }
+
+    .timeline-era:hover .timeline-dot {
+      transform: scale(1.2);
+      box-shadow: var(--glow-teal-strong);
+    }
+
+    .timeline-era:nth-child(1) .timeline-dot { border-color: #6B7280; }
+    .timeline-era:nth-child(2) .timeline-dot { border-color: var(--primary-400); }
+    .timeline-era:nth-child(3) .timeline-dot { border-color: #8B5CF6; }
+    .timeline-era:nth-child(4) .timeline-dot { border-color: #10B981; }
+
+    .timeline-card {
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-light);
+      transition: all 0.3s ease;
+    }
+
+    .timeline-era:hover .timeline-card {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl), var(--glow-teal);
+    }
+
+    .timeline-era:nth-child(1) .timeline-card { border-left: 4px solid #6B7280; }
+    .timeline-era:nth-child(2) .timeline-card { border-left: 4px solid var(--primary-400); }
+    .timeline-era:nth-child(3) .timeline-card { border-left: 4px solid #8B5CF6; }
+    .timeline-era:nth-child(4) .timeline-card { border-left: 4px solid #10B981; }
+
+    @media (max-width: 768px) {
+      .lifecycle-wrap { margin: 2rem auto; }
+      .lifecycle-svg { max-width: 100%; }
+
+      .timeline-vertical::before {
+        left: 30px;
+      }
+
+      .timeline-era {
+        flex-direction: row !important; /* force single side on mobile */
+        padding-left: 80px;
+      }
+
+      .timeline-content-wrapper {
+        text-align: left !important;
+      }
+
+      .timeline-dot-wrapper {
+        position: absolute;
+        left: 0;
+      }
+    }
+  
+    /* Article section headings: bigger and bolder than TOC */
+    .article-content h2 {
+      font-size: 2rem; /* ~text-3xl */
+      line-height: 1.2;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-top: 3rem;
+      margin-bottom: 1.25rem;
+      scroll-margin-top: 110px; /* for anchored TOC jumps */
+      position: relative;
+    }
+
+    .article-content h2::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -10px;
+      width: 72px;
+      height: 4px;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, var(--primary-400), #8B5CF6);
+      opacity: 0.9;
+    }
+    /* Stronger subsection subtitle (h3) utility */
+    .sub-strong {
+      font-weight: 800 !important;
+      font-size: 1.25rem; /* ~text-xl */
+      line-height: 1.3;
+      color: var(--text-primary);
+      display: inline-block;
+      position: relative;
+      margin: 1.25rem 0 .75rem;
+    }
+
+    .sub-strong::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 56px;
+      height: 3px;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, var(--primary-400), #10B981);
+      opacity: 0.9;
+    }
+    /* Default subsection headings (h3) inside article */
+    .article-content h3 {
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="flex items-center justify-between py-4">
+        <a href="index.html" class="text-2xl font-bold text-blue-600 hover:opacity-80 transition-opacity">
+          Text2SQL<span class="text-gray-200">Handbook</span>
+        </a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="index.html" class="nav-link">Text2SQL Handbook</a>
+          <a href="what-is-text2sql.html" class="nav-link active">What is Text-to-SQL?</a>
+          <a href="approaches.html" class="nav-link">Solutions</a>
+          <a href="about.html" class="nav-link">About</a>
+          <a href="consulting.html" class="btn-primary">Get In Touch</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <section class="article-header">
+    <div class="container">
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-6">
+          What is Text-to-SQL?
+        </h1>
+        <p class="text-xl opacity-90 mb-4">
+          A Comprehensive Guide Based on Latest Research
+        </p>
+        <p class="text-lg opacity-75">
+          Understanding Text-to-SQL in the Era of Large Language Models
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content with TOC -->
+  <div class="container py-12">
+    <div class="flex flex-col lg:flex-row gap-10 max-w-7xl mx-auto">
+
+      <!-- Table of Contents (Sticky Sidebar) -->
+      <aside class="lg:w-80 flex-shrink-0">
+        <div class="toc">
+          <h3>📚 Table of Contents</h3>
+          <nav>
+            <a href="#introduction" class="active">I. Introduction</a>
+            <a href="#problem-background" class="subsection">II. Problem & Background</a>
+            <a href="#llm-overview" class="subsection">III. LLM-Powered Solutions</a>
+            <a href="#preprocessing" class="subsection">IV. Pre-Processing</a>
+            <a href="#translation" class="subsection">V. Translation Methods</a>
+            <a href="#postprocessing" class="subsection">VI. Post-Processing</a>
+            <a href="#benchmarks" class="subsection">VII. Benchmarks & Datasets</a>
+            <a href="#evaluation" class="subsection">VIII. Evaluation & Errors</a>
+            <a href="#guidance" class="subsection">IX. Practical Guidance</a>
+            <a href="#challenges" class="subsection">X. Open Problems</a>
+            <a href="#credits" class="subsection">Credits & References</a>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 min-w-0">
+        <div class="article-content card p-8 md:p-12">
+
+          <!-- Section I: Introduction -->
+          <section id="introduction">
+            <h2>I. Introduction</h2>
+            <p>
+              <strong>Natural Language to SQL (Text-to-SQL or NL2SQL)</strong> is a key technique for converting natural language queries into SQL queries, significantly lowering the barrier to accessing relational databases. It supports critical applications like business intelligence and natural language interfaces for databases, advancing data science democratization.
+            </p>
+
+            <div class="bg-gradient-to-r from-blue-900 to-indigo-900 border-l-4 border-blue-500 p-6 my-6 rounded-r-lg">
+              <h3 class="text-xl font-bold text-cyan-400 mb-2">🎯 What is Text-to-SQL?</h3>
+              <p class="text-white mb-3">
+                Text-to-SQL translates natural language questions into executable SQL queries, enabling non-technical users to interact with databases using everyday language.
+              </p>
+              <div class="bg-gray-800 bg-opacity-80 rounded-lg p-4 mt-3">
+                <p class="font-mono text-sm text-primary"><strong>Example:</strong></p>
+                <p class="text-secondary italic mt-2">"Show me the top 5 highest-paid engineers"</p>
+                <p class="text-gray-400 mt-2">↓ Translates to:</p>
+                <p class="font-mono text-xs text-primary mt-2">SELECT name, salary FROM employees WHERE department = 'Engineering' ORDER BY salary DESC LIMIT 5</p>
+              </div>
+            </div>
+
+            <h3 class="sub-strong">The Text-to-SQL Lifecycle</h3>
+            <p class="text-center mb-8">Modern Text-to-SQL systems follow a comprehensive lifecycle covering four key aspects:</p>
+
+            <!-- Modern Lifecycle (SVG) -->
+            <div class="lifecycle-wrap" data-aos="zoom-in">
+              <svg class="lifecycle-svg" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Text-to-SQL lifecycle">
+                <defs>
+                  <linearGradient id="centerGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#3B82F6"/>
+                    <stop offset="100%" stop-color="#1D4ED8"/>
+                  </linearGradient>
+                  <marker id="arrowHead" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+                    <polygon points="0 0, 12 6, 0 12" fill="#3B82F6"/>
+                  </marker>
+                </defs>
+
+                <!-- Outer faint ring -->
+                <circle cx="400" cy="300" r="200" fill="none" stroke="#DBEAFE" stroke-width="6"/>
+
+                <!-- Clockwise arrows (quarter arcs) -->
+                <path class="lifecycle-arrow-path" d="M 400 100 A 200 200 0 0 1 600 300"/>
+                <path class="lifecycle-arrow-path" d="M 600 300 A 200 200 0 0 1 400 500"/>
+                <path class="lifecycle-arrow-path" d="M 400 500 A 200 200 0 0 1 200 300"/>
+                <path class="lifecycle-arrow-path" d="M 200 300 A 200 200 0 0 1 400 100"/>
+
+                <!-- Center -->
+                <circle class="lifecycle-center" cx="400" cy="300" r="110"/>
+                <text class="lifecycle-center-text" x="400" y="292">Text-to-SQL</text>
+                <text class="lifecycle-center-text" x="400" y="320" font-size="16" font-weight="600" opacity="0.9">Lifecycle</text>
+
+                <!-- Top chip: Model -->
+                <g transform="translate(400,140)">
+                  <rect class="lifecycle-chip" x="-120" y="-28" rx="14" ry="14" width="240" height="56"/>
+                  <text class="lifecycle-chip-text" x="0" y="4">🤖 Model · NL→SQL translation</text>
+                </g>
+
+                <!-- Right chip: Data -->
+                <g transform="translate(640,300)">
+                  <rect class="lifecycle-chip" x="-120" y="-28" rx="14" ry="14" width="240" height="56"/>
+                  <text class="lifecycle-chip-text" x="0" y="4">📊 Data · training & benchmarks</text>
+                </g>
+
+                <!-- Bottom chip: Evaluation -->
+                <g transform="translate(400,460)">
+                  <rect class="lifecycle-chip" x="-140" y="-28" rx="14" ry="14" width="280" height="56"/>
+                  <text class="lifecycle-chip-text" x="0" y="4">📏 Evaluation · metrics & granularity</text>
+                </g>
+
+                <!-- Left chip: Error Analysis -->
+                <g transform="translate(160,300)">
+                  <rect class="lifecycle-chip" x="-140" y="-28" rx="14" ry="14" width="280" height="56"/>
+                  <text class="lifecycle-chip-text" x="0" y="4">🔍 Error Analysis · root causes</text>
+                </g>
+              </svg>
+            </div>
+          </section>
+
+          <!-- Lifecycle Details: Modern Cards -->
+          <div class="lifecycle-cards">
+            <div class="lifecycle-card" style="--accent:#3B82F6" data-aos="fade-up" data-aos-delay="50">
+              <div class="lc-icon">🤖</div>
+              <div class="lc-title">Model</div>
+              <div class="lc-desc">NL→SQL with sketch/grammar decoding, IR bridges, and reasoning prompts.</div>
+              <div class="lc-tags">
+                <span class="lc-tag">Sketch/Grammar</span>
+                <span class="lc-tag">IR/AST</span>
+                <span class="lc-tag">Reasoning</span>
+              </div>
+            </div>
+
+            <div class="lifecycle-card" style="--accent:#10B981" data-aos="fade-up" data-aos-delay="100">
+              <div class="lc-icon">📊</div>
+              <div class="lc-title">Data</div>
+              <div class="lc-desc">Training corpora, synthesis, and cross-domain benchmarks for generalization.</div>
+              <div class="lc-tags">
+                <span class="lc-tag">WikiSQL</span>
+                <span class="lc-tag">Spider</span>
+                <span class="lc-tag">BIRD</span>
+              </div>
+            </div>
+
+            <div class="lifecycle-card" style="--accent:#8B5CF6" data-aos="fade-up" data-aos-delay="150">
+              <div class="lc-icon">📏</div>
+              <div class="lc-title">Evaluation</div>
+              <div class="lc-desc">Exact/exec accuracy, component metrics, stress tests, and reliability.</div>
+              <div class="lc-tags">
+                <span class="lc-tag">Exact/Exec</span>
+                <span class="lc-tag">Component</span>
+                <span class="lc-tag">Robustness</span>
+              </div>
+            </div>
+
+            <div class="lifecycle-card" style="--accent:#F59E0B" data-aos="fade-up" data-aos-delay="200">
+              <div class="lc-icon">🔍</div>
+              <div class="lc-title">Error Analysis</div>
+              <div class="lc-desc">Root-cause analysis to guide iteration across prompts, data, and modeling.</div>
+              <div class="lc-tags">
+                <span class="lc-tag">Tracing</span>
+                <span class="lc-tag">Refinement</span>
+                <span class="lc-tag">ICE</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Evolution Timeline removed per request -->
+
+          <!-- Section II: Problem & Background -->
+          <section id="problem-background">
+            <h2>II. Text-to-SQL Problem & Background</h2>
+
+            <h3 class="sub-strong">Problem Formulation</h3>
+            <div class="bg-gray-800 p-6 rounded-xl my-4 border-2 border-gray-700">
+              <p class="font-semibold text-white mb-3">Definition:</p>
+              <p class="text-gray-200">
+                <strong>Text-to-SQL (NL2SQL)</strong> is the task of converting a natural language query (NL) into a corresponding SQL query (SQL) executable on a relational database (DB). Given the NL and DB, the goal is to generate an SQL query that accurately reflects the user's intent and returns the appropriate results upon execution.
+              </p>
+            </div>
+
+            <h3 class="sub-strong">Key Challenges</h3>
+            <p>Building robust Text-to-SQL systems involves overcoming four fundamental challenges:</p>
+
+            <div class="challenge-cards">
+              <!-- C1: Uncertain Natural Language Query -->
+              <div class="lifecycle-card" style="--accent:#EF4444" data-aos="fade-up" data-aos-delay="50">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 12c0 4.418-4.477 8-10 8-1.1 0-2.16-.15-3.15-.42L3 20l1.12-3.36C3.41 15.51 3 13.8 3 12 3 7.58 7.48 4 13 4s8 3.58 8 8Z"/>
+                      <path d="M8 10h10M8 14h6"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">C1: Uncertain Natural Language Query</div>
+                  <span class="cc-badge">C1</span>
+                </div>
+                <ul class="cc-list">
+                  <li><strong>Lexical Ambiguity:</strong> Single words with multiple meanings (e.g., "bat").</li>
+                  <li><strong>Syntactic Ambiguity:</strong> Sentences with multiple interpretations.</li>
+                  <li><strong>Under-specification:</strong> Expressions lacking sufficient detail (e.g., "Labor Day in 2023" varies by country).</li>
+                </ul>
+              </div>
+
+              <!-- C2: Complex Database and Dirty Content -->
+              <div class="lifecycle-card" style="--accent:#F59E0B" data-aos="fade-up" data-aos-delay="100">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <ellipse cx="12" cy="5" rx="7" ry="3"/>
+                      <path d="M5 5v6c0 1.66 3.13 3 7 3s7-1.34 7-3V5"/>
+                      <path d="M5 11v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">C2: Complex Database and Dirty Content</div>
+                  <span class="cc-badge">C2</span>
+                </div>
+                <ul class="cc-list">
+                  <li><strong>Complex Relationships:</strong> Hundreds of tables with intricate interrelationships.</li>
+                  <li><strong>Ambiguity in Attributes:</strong> Unclear column names and data values.</li>
+                  <li><strong>Domain-Specific Designs:</strong> Schema variations across different industries.</li>
+                  <li><strong>Large and Dirty Data:</strong> Massive volumes with missing values and inconsistencies.</li>
+                </ul>
+              </div>
+
+              <!-- C3: Text-to-SQL Translation -->
+              <div class="lifecycle-card" style="--accent:#8B5CF6" data-aos="fade-up" data-aos-delay="150">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M8 4l-6 6 6 6"/>
+                      <path d="M16 20l6-6-6-6"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">C3: Text-to-SQL Translation</div>
+                  <span class="cc-badge">C3</span>
+                </div>
+                <ul class="cc-list">
+                  <li><strong>Free-form vs. Formal:</strong> Flexible NL to strict SQL syntax.</li>
+                  <li><strong>Multiple Valid Queries:</strong> One NL can correspond to many correct SQL queries.</li>
+                  <li><strong>Schema Dependency:</strong> Same NL yields different SQL for different schemas.</li>
+                </ul>
+              </div>
+
+              <!-- C4: Technical Challenges -->
+              <div class="lifecycle-card" style="--accent:#3B82F6" data-aos="fade-up" data-aos-delay="200">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
+                      <path d="M19.4 15a1 1 0 0 1 .2 1.1l-1 1.73a1 1 0 0 1-1.1.45l-1.6-.45a7.5 7.5 0 0 1-1.4.8l-.25 1.65a1 1 0 0 1-.99.86h-2a1 1 0 0 1-.99-.86l-.25-1.65a7.5 7.5 0 0 1-1.4-.8l-1.6.45a1 1 0 0 1-1.1-.45l-1-1.73a1 1 0 0 1 .2-1.1l1.35-1.17a7.5 7.5 0 0 1 0-1.6L4.6 11a1 1 0 0 1-.2-1.1l1-1.73a1 1 0 0 1 1.1-.45l1.6.45c.44-.3.9-.57 1.4-.8l.25-1.65A1 1 0 0 1 11.75 4h2a1 1 0 0 1 .99.86l.25 1.65c.5.23.96.5 1.4.8l1.6-.45a1 1 0 0 1 1.1.45l1 1.73a1 1 0 0 1-.2 1.1l-1.35 1.17c.06.52.06 1.07 0 1.6L19.4 15Z"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">C4: Technical Challenges</div>
+                  <span class="cc-badge">C4</span>
+                </div>
+                <ul class="cc-list">
+                  <li><strong>Cost-effectiveness:</strong> Balancing LLM performance with resource costs.</li>
+                  <li><strong>Model Efficiency:</strong> Optimizing accuracy without sacrificing speed.</li>
+                  <li><strong>SQL Efficiency:</strong> Generating performant queries with proper indexes and joins.</li>
+                  <li><strong>Training Data Quality:</strong> Obtaining sufficient, high-quality labeled data.</li>
+                  <li><strong>Trustworthiness:</strong> Ensuring consistent, transparent, and verifiable results.</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3>Evolution of Text-to-SQL Solutions</h3>
+            <p class="text-center mb-8">From simple rules to intelligent AI systems - a journey through decades of innovation</p>
+
+            <!-- Vertical Timeline -->
+            <div class="timeline-vertical">
+
+              <!-- Era 1: Rule-Based (LEFT) -->
+              <div class="timeline-era" data-aos="fade-right">
+                <div class="timeline-content-wrapper">
+                  <div class="timeline-card">
+                    <div class="flex items-center gap-3 mb-3">
+                      <span class="text-3xl">📜</span>
+                      <div>
+                        <h4 class="font-bold text-lg text-white">Rule-Based Systems</h4>
+                        <p class="text-sm text-secondary">1970s - 2000s</p>
+                      </div>
+                    </div>
+                    <p class="text-gray-200 mb-3">Statistical language models and predefined rules formed the foundation of early Text-to-SQL systems.</p>
+                    <div class="flex flex-wrap gap-2">
+                      <span class="px-3 py-1 bg-gray-700 text-white rounded-full text-xs">Semantic Parsers</span>
+                      <span class="px-3 py-1 bg-gray-700 text-white rounded-full text-xs">Fixed Templates</span>
+                      <span class="px-3 py-1 bg-gray-700 text-white rounded-full text-xs">Limited Adaptability</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="timeline-dot-wrapper">
+                  <div class="timeline-dot">📜</div>
+                </div>
+                <div class="timeline-content-wrapper"></div>
+              </div>
+
+              <!-- Era 2: Neural Networks (RIGHT) -->
+              <div class="timeline-era" data-aos="fade-left">
+                <div class="timeline-content-wrapper"></div>
+                <div class="timeline-dot-wrapper">
+                  <div class="timeline-dot">🧠</div>
+                </div>
+                <div class="timeline-content-wrapper">
+                  <div class="timeline-card">
+                    <div class="flex items-center gap-3 mb-3">
+                      <span class="text-3xl">🧠</span>
+                      <div>
+                        <h4 class="font-bold text-lg text-white">Neural Network Era</h4>
+                        <p class="text-sm text-secondary">2000s - 2015</p>
+                      </div>
+                    </div>
+                    <p class="text-gray-200 mb-3">Neural networks brought improved understanding of synonyms and user intent through deep learning architectures.</p>
+                    <div class="flex flex-wrap gap-2">
+                      <span class="px-3 py-1 bg-blue-900 text-blue-200 rounded-full text-xs">Seq2Seq Models</span>
+                      <span class="px-3 py-1 bg-blue-900 text-blue-200 rounded-full text-xs">GNNs</span>
+                      <span class="px-3 py-1 bg-blue-900 text-blue-200 rounded-full text-xs">Multi-table Support</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Era 3: Pre-trained Language Models (LEFT) -->
+              <div class="timeline-era" data-aos="fade-right">
+                <div class="timeline-content-wrapper">
+                  <div class="timeline-card">
+                    <div class="flex items-center gap-3 mb-3">
+                      <span class="text-3xl">🔤</span>
+                      <div>
+                        <h4 class="font-bold text-lg text-white">Pre-trained Language Models</h4>
+                        <p class="text-sm text-secondary">2018 - 2020</p>
+                      </div>
+                    </div>
+                    <p class="text-gray-200 mb-3">BERT and T5 revolutionized the field, achieving ~80% accuracy on Spider benchmark through transfer learning.</p>
+                    <div class="flex flex-wrap gap-2">
+                      <span class="px-3 py-1 bg-purple-900 text-purple-200 rounded-full text-xs">BERT</span>
+                      <span class="px-3 py-1 bg-purple-900 text-purple-200 rounded-full text-xs">T5</span>
+                      <span class="px-3 py-1 bg-purple-900 text-purple-200 rounded-full text-xs">Transfer Learning</span>
+                      <span class="px-3 py-1 bg-purple-900 text-purple-200 rounded-full text-xs">80% Accuracy</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="timeline-dot-wrapper">
+                  <div class="timeline-dot">🔤</div>
+                </div>
+                <div class="timeline-content-wrapper"></div>
+              </div>
+
+              <!-- Era 4: Large Language Models (RIGHT) -->
+              <div class="timeline-era" data-aos="fade-left">
+                <div class="timeline-content-wrapper"></div>
+                <div class="timeline-dot-wrapper">
+                  <div class="timeline-dot">⚡</div>
+                </div>
+                <div class="timeline-content-wrapper">
+                  <div class="timeline-card">
+                    <div class="flex items-center gap-3 mb-3">
+                      <span class="text-3xl">⚡</span>
+                      <div>
+                        <h4 class="font-bold text-lg text-white">Large Language Models</h4>
+                        <p class="text-sm text-secondary">2021 - Present</p>
+                      </div>
+                    </div>
+                    <p class="text-gray-200 mb-3">GPT-4, Claude, and other LLMs demonstrate emergent capabilities, enabling production-ready solutions with few-shot learning.</p>
+                    <div class="flex flex-wrap gap-2">
+                      <span class="px-3 py-1 bg-green-900 text-green-200 rounded-full text-xs">GPT-4</span>
+                      <span class="px-3 py-1 bg-green-900 text-green-200 rounded-full text-xs">Claude</span>
+                      <span class="px-3 py-1 bg-green-900 text-green-200 rounded-full text-xs">Few-shot Learning</span>
+                      <span class="px-3 py-1 bg-green-900 text-green-200 rounded-full text-xs">Production-Ready</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Section III: LLM-Powered Solutions Overview -->
+          <section id="llm-overview">
+            <h2>III. LLM-Powered Text-to-SQL Overview</h2>
+            <p>
+              Modern PLM- and LLM-based solutions use modular design, decomposing the task into three stages: <strong>Pre-Processing</strong>, <strong>Translation</strong>, and <strong>Post-Processing</strong>.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-6 my-8">
+              <div class="p-6 bg-gradient-to-br from-blue-900 to-blue-800 rounded-xl border-2 border-blue-700">
+                <div class="text-4xl mb-3">🔧</div>
+                <h4 class="font-bold text-cyan-400 mb-3">Pre-Processing</h4>
+                <ul class="text-sm text-primary space-y-2">
+                  <li>✓ Schema Linking</li>
+                  <li>✓ Database Content Retrieval</li>
+                  <li>✓ Additional Information Acquisition</li>
+                </ul>
+              </div>
+
+              <div class="p-6 bg-gradient-to-br from-purple-900 to-purple-800 rounded-xl border-2 border-purple-700">
+                <div class="text-4xl mb-3">⚙️</div>
+                <h4 class="font-bold text-purple-300 mb-3">Translation</h4>
+                <ul class="text-sm text-primary space-y-2">
+                  <li>✓ Encoding Strategy</li>
+                  <li>✓ Decoding Strategy</li>
+                  <li>✓ Task-specific Prompts</li>
+                  <li>✓ Intermediate Representation</li>
+                </ul>
+              </div>
+
+              <div class="p-6 bg-gradient-to-br from-green-900 to-green-800 rounded-xl border-2 border-green-700">
+                <div class="text-4xl mb-3">✨</div>
+                <h4 class="font-bold text-green-300 mb-3">Post-Processing</h4>
+                <ul class="text-sm text-primary space-y-2">
+                  <li>✓ SQL Correction</li>
+                  <li>✓ Output Consistency</li>
+                  <li>✓ Execution-Guided Refinement</li>
+                  <li>✓ N-best Ranking</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-indigo-900 to-purple-900 border-2 border-indigo-600 rounded-xl p-6 my-8">
+              <h3 class="text-xl font-bold text-indigo-300 mb-3">🤝 Multi-Agent Collaboration</h3>
+              <p class="text-white mb-4">
+                Recent research employs multi-agent architectures where specialized agents handle subtasks:
+              </p>
+              <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-gray-800 bg-opacity-80 rounded-lg p-3">
+                  <p class="font-bold text-indigo-300 text-sm">MAC-SQL</p>
+                  <p class="text-xs text-secondary mt-1">Three agents for schema linking, query decomposition, and refinement</p>
+                </div>
+                <div class="bg-gray-800 bg-opacity-80 rounded-lg p-3">
+                  <p class="font-bold text-indigo-300 text-sm">CHASE-SQL</p>
+                  <p class="text-xs text-secondary mt-1">Divide-and-conquer with multi-CoT generation</p>
+                </div>
+                <div class="bg-gray-800 bg-opacity-80 rounded-lg p-3">
+                  <p class="font-bold text-indigo-300 text-sm">Alpha-SQL</p>
+                  <p class="text-xs text-secondary mt-1">Planning-centric with Monte Carlo Tree Search</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section IV: Pre-Processing -->
+          <section id="preprocessing">
+            <h2>IV. Pre-Processing Strategies</h2>
+            <p>Pre-processing is critical for identifying relevant information and preventing error propagation in the translation process.</p>
+
+            <h3>Schema Linking</h3>
+            <p>Identifies tables and columns relevant to the NL query, especially important due to LLM input length limitations.</p>
+
+            <div class="space-y-4 my-6">
+              <!-- String Matching-based -->
+              <div class="lifecycle-card" style="--accent:#0284C7">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="11" cy="11" r="7"/>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">String Matching-based</div>
+                </div>
+                <div class="lc-desc">Uses similarity measures (exact matching, Damerau-Levenshtein distance) between NL queries and DB schemas</div>
+                <div class="lc-tags" style="margin-top:.6rem">
+                  <span class="lc-tag">Effective for simple cases</span>
+                  <span class="lc-tag">Struggles with synonyms</span>
+                </div>
+              </div>
+
+              <!-- Neural Network-based -->
+              <div class="lifecycle-card" style="--accent:#7C3AED">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 5a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V8a3 3 0 0 0-3-3Z"/>
+                      <path d="M6 8a3 3 0 0 0 0 6"/>
+                      <path d="M18 8a3 3 0 0 1 0 6"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Neural Network-based</div>
+                </div>
+                <div class="lc-desc">Deep neural networks capture complex semantic relationships (DAE, RESDSQL, FinSQL)</div>
+                <div class="lc-tags" style="margin-top:.6rem">
+                  <span class="lc-tag">Better semantic understanding</span>
+                  <span class="lc-tag">Limited generalization</span>
+                </div>
+              </div>
+
+              <!-- In-Context Learning (LLMs) -->
+              <div class="lifecycle-card" style="--accent:#10B981">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 3v4"/>
+                      <path d="M5 13a7 7 0 0 1 14 0"/>
+                      <path d="M9 17h6"/>
+                      <path d="M8 21h8"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">In-Context Learning (LLMs)</div>
+                </div>
+                <div class="lc-desc">Leverages LLM reasoning capabilities (C3-SQL, MAC-SQL, CHESS with GPT-4)</div>
+                <div class="lc-tags" style="margin-top:.6rem">
+                  <span class="lc-tag">Strong reasoning</span>
+                  <span class="lc-tag">Context length limits</span>
+                </div>
+              </div>
+            </div>
+
+            <h3>Database Content Retrieval</h3>
+            <p>Focuses on efficiently extracting cell values for SQL clauses like WHERE.</p>
+            <div class="bg-yellow-900 p-4 rounded-lg my-4 border-l-4 border-yellow-500">
+              <p class="text-sm text-gray-200"><strong>Techniques:</strong> String matching (IRNet n-grams, BRIDGE anchor text), neural retrieval, and LLM-based methods</p>
+            </div>
+          </section>
+
+          <!-- Section V: Translation Methods -->
+          <section id="translation">
+            <h2>V. Text-to-SQL Translation Methods</h2>
+            <p>The core stage converting NL queries into SQL through various strategies.</p>
+
+            <div class="grid md:grid-cols-2 gap-6 my-6">
+              <!-- Encoding Strategies -->
+              <div class="lifecycle-card" style="--accent:#0EA5E9">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="7" height="7" rx="1"/>
+                      <rect x="14" y="3" width="7" height="7" rx="1"/>
+                      <rect x="14" y="14" width="7" height="7" rx="1"/>
+                      <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Encoding Strategies</div>
+                </div>
+                <div class="lc-desc">Transforms NL and schema into internal representation</div>
+                <ul class="cc-list">
+                  <li>Schema-aware encoding</li>
+                  <li>Relation-aware encoding</li>
+                  <li>Context enrichment</li>
+                </ul>
+              </div>
+
+              <!-- Decoding Strategies -->
+              <div class="lifecycle-card" style="--accent:#A78BFA">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M16 18l6-6-6-6"/>
+                      <path d="M8 6l-6 6 6 6"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Decoding Strategies</div>
+                </div>
+                <div class="lc-desc">Transforms representation into SQL queries</div>
+                <ul class="cc-list">
+                  <li>Sketch-based decoding</li>
+                  <li>Grammar-based decoding</li>
+                  <li>End-to-end generation</li>
+                </ul>
+              </div>
+
+              <!-- Prompt Strategies -->
+              <div class="lifecycle-card" style="--accent:#22C55E">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Prompt Strategies</div>
+                </div>
+                <div class="lc-desc">Tailored guidance for LLMs</div>
+                <ul class="cc-list">
+                  <li>Few-shot prompting</li>
+                  <li>Chain-of-Thought (CoT)</li>
+                  <li>Zero-shot prompting</li>
+                </ul>
+              </div>
+
+              <!-- Intermediate Representation -->
+              <div class="lifecycle-card" style="--accent:#F59E0B">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="6" cy="6" r="3"/>
+                      <circle cx="18" cy="6" r="3"/>
+                      <circle cx="6" cy="18" r="3"/>
+                      <circle cx="18" cy="18" r="3"/>
+                      <path d="M9 6h6M6 9v6M18 9v6M9 18h6"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Intermediate Representation</div>
+                </div>
+                <div class="lc-desc">Bridge between NL and SQL</div>
+                <ul class="cc-list">
+                  <li>Semantic parsing</li>
+                  <li>Logical forms</li>
+                  <li>Abstract syntax trees</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section VI: Post-Processing -->
+          <section id="postprocessing">
+            <h2>VI. Post-Processing Strategies</h2>
+            <p>Refines generated SQL queries for better accuracy and reliability.</p>
+
+            <div class="grid md:grid-cols-2 gap-4 my-6">
+              <!-- SQL Correction -->
+              <div class="lifecycle-card" style="--accent:#EF4444">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/>
+                      <path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">SQL Correction</div>
+                </div>
+                <div class="lc-desc">Identifies and fixes syntax errors in generated SQL</div>
+              </div>
+
+              <!-- Output Consistency -->
+              <div class="lifecycle-card" style="--accent:#3B82F6">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 3h18v4H3z"/>
+                      <path d="M7 13h10"/>
+                      <path d="M7 17h10"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Output Consistency</div>
+                </div>
+                <div class="lc-desc">Samples multiple results and selects most consistent</div>
+              </div>
+
+              <!-- Execution-Guided -->
+              <div class="lifecycle-card" style="--accent:#10B981">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Execution-Guided</div>
+                </div>
+                <div class="lc-desc">Uses execution results to guide refinements</div>
+              </div>
+
+              <!-- N-best Ranking -->
+              <div class="lifecycle-card" style="--accent:#8B5CF6">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M8 21h8"/>
+                      <path d="M7 10h5v11H7z"/>
+                      <path d="M12 6h5v15h-5z"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">N-best Ranking</div>
+                </div>
+                <div class="lc-desc">Reranks top-k results to enhance accuracy</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section VII: Benchmarks & Datasets -->
+          <section id="benchmarks">
+            <h2>VII. Text-to-SQL Benchmarks & Datasets</h2>
+            <p>Datasets have evolved from single-domain simple queries to complex cross-domain, multi-turn, and domain-specific scenarios.</p>
+
+            <h3>📊 Major Dataset Categories</h3>
+
+            <div class="space-y-6 my-8">
+              <!-- Single-Domain Datasets -->
+              <div class="lifecycle-card" style="--accent:#2563EB">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="14" rx="2"/>
+                      <path d="M7 4v14M17 4v14"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Single-Domain Datasets</div>
+                </div>
+                <div class="lc-desc">Focused on specific domains with complex databases and SQL queries</div>
+                <div class="lc-tags" style="margin-top:.6rem">
+                  <span class="lc-tag">ATIS - Flight information</span>
+                  <span class="lc-tag">GeoQuery - U.S. geography</span>
+                  <span class="lc-tag">BookSQL - Book domain</span>
+                  <span class="lc-tag">BULL - Domain-specific</span>
+                </div>
+              </div>
+
+              <!-- Cross-Domain Datasets -->
+              <div class="lifecycle-card" style="--accent:#059669">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Cross-Domain Datasets</div>
+                </div>
+                <div class="lc-desc">Testing system generalization across diverse queries and databases</div>
+                <div class="lc-tags" style="margin-top:.6rem">
+                  <span class="lc-tag">WikiSQL · First cross-domain</span>
+                  <span class="lc-tag">Spider · Multi-table</span>
+                  <span class="lc-tag">BIRD · Advanced SQL</span>
+                </div>
+              </div>
+
+              <!-- Multi-Turn Datasets -->
+              <div class="lifecycle-card" style="--accent:#7C3AED">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Multi-Turn Datasets</div>
+                </div>
+                <div class="lc-desc">Supporting interactive dialogues with contextual understanding</div>
+                <div class="lc-tags" style="margin-top:.6rem">
+                  <span class="lc-tag">SParC · Cross-domain</span>
+                  <span class="lc-tag">CoSQL · 30K+ turns</span>
+                </div>
+              </div>
+
+              <!-- Robustness Testing -->
+              <div class="lifecycle-card" style="--accent:#F59E0B">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Robustness Testing Datasets</div>
+                </div>
+                <div class="lc-desc">Handling diverse user groups and database variations</div>
+                <div class="lc-tags" style="margin-top:.6rem">
+                  <span class="lc-tag">Spider-Syn · Synonyms</span>
+                  <span class="lc-tag">Dr.Spider · 17 perturbations</span>
+                </div>
+              </div>
+
+              <!-- Efficiency Testing -->
+              <div class="lifecycle-card" style="--accent:#06B6D4">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 3h18v4H3z"/>
+                      <path d="M7 13h10"/>
+                      <path d="M7 17h10"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">SQL Efficiency Testing</div>
+                </div>
+                <div class="lc-desc">Evaluating SQL execution performance on large databases</div>
+                <div class="bg-yellow-900 p-3 rounded-lg mt-2">
+                  <p class="font-bold text-yellow-300 text-sm">BIRD with VES Metric</p>
+                  <p class="text-xs text-secondary">Valid Efficiency Score for execution performance</p>
+                </div>
+              </div>
+
+              <!-- Knowledge-Augmented -->
+              <div class="lifecycle-card" style="--accent:#4F46E5">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                      <path d="M8 17V3h10v14"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Knowledge-Augmented Datasets</div>
+                </div>
+                <div class="lc-desc">Incorporating domain-specific knowledge</div>
+                <div class="lc-tags" style="margin-top:.6rem">
+                  <span class="lc-tag">KaggleDBQA · DB docs</span>
+                  <span class="lc-tag">Spider-DK · 5 knowledge types</span>
+                </div>
+              </div>
+
+              <!-- Ambiguous Questions -->
+              <div class="lifecycle-card" style="--accent:#EC4899">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M9.09 9a3 3 0 1 1 5.82 1c0 2-3 2-3 4"/>
+                      <path d="M12 17h.01"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Ambiguous Question Datasets</div>
+                </div>
+                <div class="lc-desc">Assessing ambiguity coverage</div>
+                <div class="bg-pink-900 p-3 rounded-lg mt-2">
+                  <p class="font-bold text-pink-300 text-sm">AmbiQT</p>
+                  <p class="text-xs text-secondary">First dataset with NL mapping to multiple valid SQL queries</p>
+                </div>
+              </div>
+
+              <!-- Synthetic Datasets -->
+              <div class="lifecycle-card" style="--accent:#14B8A6">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 12h18"/>
+                      <path d="M12 3v18"/>
+                    </svg>
+                  </div>
+                  <div class="cc-title">Synthetic Datasets</div>
+                </div>
+                <div class="lc-desc">Template-based generation and AI-assisted creation</div>
+                <div class="lc-tags" style="margin-top:.6rem">
+                  <span class="lc-tag">MIMICSQL · Template-based</span>
+                  <span class="lc-tag">ScienceBenchmark · GPT-3 assisted</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="consulting-cta p-6 rounded-2xl my-8">
+              <h3 class="text-2xl font-bold mb-3">📈 Dataset Evolution Insights</h3>
+              <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-gray-800 bg-opacity-30 rounded-lg p-4">
+                  <p class="text-3xl font-bold">80%+</p>
+                  <p class="text-sm mt-2">Accuracy on Spider with PLMs</p>
+                </div>
+                <div class="bg-gray-800 bg-opacity-30 rounded-lg p-4">
+                  <p class="text-3xl font-bold">~50%</p>
+                  <p class="text-sm mt-2">Accuracy on extra-hard cases</p>
+                </div>
+                <div class="bg-gray-800 bg-opacity-30 rounded-lg p-4">
+                  <p class="text-3xl font-bold">100s</p>
+                  <p class="text-sm mt-2">Tables in modern databases</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section VIII: Evaluation & Error Analysis -->
+          <section id="evaluation">
+            <h2>VIII. Evaluation & Error Analysis</h2>
+
+            <h3>Evaluation Metrics</h3>
+            <p>Multiple metrics assess Text-to-SQL systems from different angles:</p>
+
+            <div class="grid md:grid-cols-2 gap-4 my-6">
+              <div class="lifecycle-card" style="--accent:#16A34A">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  </div>
+                  <div class="cc-title">Execution Accuracy (EX)</div>
+                </div>
+                <div class="lc-desc">Compares execution results of ground-truth vs. predicted SQL</div>
+              </div>
+
+              <div class="lifecycle-card" style="--accent:#3B82F6">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h10M4 17h16"/></svg>
+                  </div>
+                  <div class="cc-title">String-Match Accuracy (SM)</div>
+                </div>
+                <div class="lc-desc">Logical form accuracy - exact string matching</div>
+              </div>
+
+              <div class="lifecycle-card" style="--accent:#8B5CF6">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                  </div>
+                  <div class="cc-title">Component-Match Accuracy (CM)</div>
+                </div>
+                <div class="lc-desc">Detailed performance by SQL component (SELECT, WHERE, etc.)</div>
+              </div>
+
+              <div class="lifecycle-card" style="--accent:#F59E0B">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7 12l3 3 7-7"/></svg>
+                  </div>
+                  <div class="cc-title">Exact-Match Accuracy (EM)</div>
+                </div>
+                <div class="lc-desc">All SQL components match ground-truth query</div>
+              </div>
+
+              <div class="lifecycle-card" style="--accent:#06B6D4">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v4H3z"/><path d="M7 13h10"/><path d="M7 17h10"/></svg>
+                  </div>
+                  <div class="cc-title">Valid Efficiency Score (VES)</div>
+                </div>
+                <div class="lc-desc">Considers both accuracy and execution efficiency</div>
+              </div>
+
+              <div class="lifecycle-card" style="--accent:#EC4899">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 1 1 5.82 1c0 2-3 2-3 4"/><path d="M12 17h.01"/></svg>
+                  </div>
+                  <div class="cc-title">Query Variance Testing (QVT)</div>
+                </div>
+                <div class="lc-desc">Robustness against NL query variations</div>
+              </div>
+            </div>
+
+            <h3>Error Taxonomy</h3>
+            <div class="bg-gradient-to-r from-red-900 to-orange-900 border-2 border-red-600 rounded-xl p-6 my-6">
+              <h4 class="text-xl font-bold text-red-300 mb-4">Two-Level Error Analysis Framework</h4>
+
+              <div class="grid md:grid-cols-2 gap-6">
+                <div class="card rounded-lg p-4">
+                  <h5 class="font-bold text-red-300 mb-2">Level 1: Error Localization</h5>
+                  <p class="text-sm text-primary mb-2">Identifies specific SQL component with error:</p>
+                  <ul class="text-xs text-secondary space-y-1 ml-4">
+                    <li>• SELECT clause errors</li>
+                    <li>• WHERE clause errors</li>
+                    <li>• JOIN errors</li>
+                    <li>• GROUP BY errors</li>
+                    <li>• ORDER BY errors</li>
+                  </ul>
+                </div>
+
+                <div class="card rounded-lg p-4">
+                  <h5 class="font-bold text-red-300 mb-2">Level 2: Cause of Error</h5>
+                  <p class="text-sm text-primary mb-2">Focuses on underlying reason:</p>
+                  <ul class="text-xs text-secondary space-y-1 ml-4">
+                    <li>• Schema linking limitations</li>
+                    <li>• Database content retrieval issues</li>
+                    <li>• Knowledge evidence gaps</li>
+                    <li>• Reasoning failures</li>
+                    <li>• Syntax errors</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="bg-green-900 p-4 rounded-lg mt-4">
+                <p class="text-sm text-gray-200"><strong>Practicality:</strong> Only 1.8% of DIN-SQL errors on Spider fell into "Others" category, demonstrating comprehensive coverage</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section IX: Practical Guidance -->
+          <section id="guidance">
+            <h2>IX. Practical Guidance for Text-to-SQL</h2>
+            <p>Real-world deployment requires careful consideration of performance, cost, and reliability.</p>
+
+            <div class="grid md:grid-cols-2 gap-6 my-8">
+              <div class="lifecycle-card" style="--accent:#3B82F6">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3z"/><path d="M14 3h7v7h-7z"/><path d="M14 14h7v7h-7z"/><path d="M3 14h7v7H3z"/></svg>
+                  </div>
+                  <div class="cc-title">Roadmap for Optimizing LLMs</div>
+                </div>
+                <ol class="text-sm text-primary space-y-2 ml-4 mt-2">
+                  <li><strong>1. Select Base Model:</strong> Choose appropriate LLM (GPT-4, Claude, Llama, etc.)</li>
+                  <li><strong>2. Design Prompts:</strong> Craft effective prompts with schema, examples, and instructions</li>
+                  <li><strong>3. Implement Pre-Processing:</strong> Add schema linking and content retrieval</li>
+                  <li><strong>4. Add Post-Processing:</strong> Implement validation and refinement</li>
+                  <li><strong>5. Fine-tune (Optional):</strong> Domain-specific fine-tuning for better performance</li>
+                  <li><strong>6. Optimize Costs:</strong> Balance model size, caching, and API costs</li>
+                </ol>
+              </div>
+
+              <div class="lifecycle-card" style="--accent:#10B981">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M5 9l7-7 7 7"/></svg>
+                  </div>
+                  <div class="cc-title">Decision Flow for Module Selection</div>
+                </div>
+                <div class="space-y-3 mt-2">
+                  <div class="card p-3 rounded-lg">
+                    <p class="font-bold text-green-300 text-sm">Simple Schema (&lt;50 tables)</p>
+                    <p class="text-xs text-secondary">Use direct prompting with full schema</p>
+                  </div>
+                  <div class="card p-3 rounded-lg">
+                    <p class="font-bold text-green-300 text-sm">Complex Schema (&gt;50 tables)</p>
+                    <p class="text-xs text-secondary">Implement schema linking and pruning</p>
+                  </div>
+                  <div class="card p-3 rounded-lg">
+                    <p class="font-bold text-green-300 text-sm">Domain-Specific</p>
+                    <p class="text-xs text-secondary">Add knowledge acquisition and fine-tuning</p>
+                  </div>
+                  <div class="card p-3 rounded-lg">
+                    <p class="font-bold text-green-300 text-sm">High Volume</p>
+                    <p class="text-xs text-secondary">Implement caching and efficiency optimization</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section X: Open Problems & Challenges -->
+          <section id="challenges">
+            <h2>X. Limitations and Open Problems</h2>
+            <p>The LLM era presents new challenges and research opportunities:</p>
+
+            <div class="space-y-6 my-8">
+              <div class="lifecycle-card" style="--accent:#3B82F6">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                  </div>
+                  <div class="cc-title">Cost-Effective LLM-Based Text-to-SQL</div>
+                </div>
+                <div class="lc-desc">Balancing performance with API costs and computational resources</div>
+                <ul class="cc-list">
+                  <li>Model compression and distillation</li>
+                  <li>Efficient prompt engineering</li>
+                  <li>Semantic caching strategies</li>
+                  <li>Hybrid approaches (small models for simple queries, large for complex)</li>
+                </ul>
+              </div>
+
+              <div class="lifecycle-card" style="--accent:#22C55E">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20"/></svg>
+                  </div>
+                  <div class="cc-title">Open-World Text-to-SQL</div>
+                </div>
+                <div class="lc-desc">Handling unseen schemas, domains, and query types</div>
+                <ul class="cc-list">
+                  <li>Zero-shot cross-domain generalization</li>
+                  <li>Adapting to evolving database schemas</li>
+                  <li>Handling novel SQL patterns</li>
+                  <li>Multi-lingual support</li>
+                </ul>
+              </div>
+
+              <div class="lifecycle-card" style="--accent:#8B5CF6">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+                  </div>
+                  <div class="cc-title">Trustworthy and Reliable Solutions</div>
+                </div>
+                <div class="lc-desc">Ensuring accuracy, transparency, and security</div>
+                <ul class="cc-list">
+                  <li>Explainable SQL generation</li>
+                  <li>Preventing SQL injection attacks</li>
+                  <li>Hallucination detection and mitigation</li>
+                  <li>Privacy-preserving approaches</li>
+                </ul>
+              </div>
+
+              <div class="lifecycle-card" style="--accent:#F59E0B">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg>
+                  </div>
+                  <div class="cc-title">Efficiency Optimization</div>
+                </div>
+                <div class="lc-desc">Generating performant SQL queries</div>
+                <ul class="cc-list">
+                  <li>Query optimization techniques</li>
+                  <li>Index-aware generation</li>
+                  <li>Execution plan consideration</li>
+                  <li>Scalability for large databases</li>
+                </ul>
+              </div>
+
+              <div class="lifecycle-card" style="--accent:#EC4899">
+                <div class="cc-head">
+                  <div class="lc-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M2 12a10 10 0 0 1 10-10"/></svg>
+                  </div>
+                  <div class="cc-title">Multi-Modal and Multi-Task</div>
+                </div>
+                <div class="lc-desc">Expanding beyond traditional text-to-SQL</div>
+                <ul class="cc-list">
+                  <li>Voice-to-SQL interfaces</li>
+                  <li>Visual query builders combined with NL</li>
+                  <li>Multi-turn conversational interfaces</li>
+                  <li>Integration with data visualization</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Credits Section -->
+          <section id="credits">
+            <h2>Credits & References</h2>
+
+            <div class="bg-gradient-to-br from-indigo-900 to-purple-900 p-8 rounded-2xl my-8 border-2 border-indigo-700">
+              <h3 class="font-bold text-2xl text-indigo-300 mb-6 text-center">📚 Primary Source</h3>
+
+              <div class="card rounded-xl p-6 mb-6">
+                <h4 class="font-bold text-xl text-indigo-300 mb-2">A Survey of Text-to-SQL in the Era of LLMs</h4>
+                <p class="text-base text-primary mb-4"><strong>Subtitle:</strong> Where are we, and where are we going?</p>
+
+                <div class="bg-indigo-900 rounded-lg p-4">
+                  <p class="text-sm text-primary mb-2"><strong>Paper (arXiv PDF):</strong></p>
+                  <a href="https://arxiv.org/pdf/2408.05109v5" target="_blank" class="text-gray-200 hover:underline text-sm break-all">
+                    https://arxiv.org/pdf/2408.05109v5
+                  </a>
+                </div>
+
+                <div class="bg-indigo-900 rounded-lg p-4">
+                  <p class="text-sm text-primary mb-2"><strong>Online Handbook:</strong></p>
+                  <a href="https://github.com/HKUSTDial/NL2SQL Handbook" target="_blank" class="text-gray-200 hover:underline text-sm break-all">
+                    https://github.com/HKUSTDial/NL2SQL Handbook
+                  </a>
+                </div>
+              </div>
+
+              <div class="consulting-cta p-6 rounded-xl text-center">
+                <p class="text-lg mb-2">This comprehensive educational guide is based on the survey paper's extensive research</p>
+                <p class="text-sm opacity-90">covering the entire Text-to-SQL lifecycle from models to evaluation</p>
+              </div>
+            </div>
+
+            
+
+            <div class="consulting-cta p-8 rounded-2xl text-center my-8">
+              <h3 class="text-2xl font-bold mb-4">Want to Learn More?</h3>
+              <p class="text-lg opacity-90 mb-6">
+                Explore production-ready approaches and hands-on implementations
+              </p>
+              <div class="flex justify-center gap-4">
+                <a href="approaches.html" class="btn-primary">
+                  View All Approaches →
+                </a>
+                <a href="consulting.html" class="btn-primary bg-gray-800 bg-opacity-30 hover:bg-opacity-30">
+                  Get Expert Help →
+                </a>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">Text2SQLHandbook</h3>
+          <p class="text-gray-400">Your comprehensive guide to Text-to-SQL systems with GenAI.</p>
+        </div>
+        <div class="footer-links">
+          <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="what-is-text2sql.html">What is Text-to-SQL?</a></li>
+            <li><a href="approaches.html">All Approaches</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="consulting.html">Consulting</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4">Connect</h3>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
+        <p>&copy; 2025 Text2SQLHandbook. Built with ❤️ for the AI and Text-to-SQL community.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      once: true
+    });
+
+    // Smooth scrolling for TOC links
+    document.querySelectorAll('.toc a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetSection = document.getElementById(targetId);
+
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          // Update active state
+          document.querySelectorAll('.toc a').forEach(a => a.classList.remove('active'));
+          this.classList.add('active');
+        }
+      });
+    });
+
+    // Update active TOC link on scroll
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('section[id]');
+      let currentSection = '';
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (window.pageYOffset >= sectionTop - 150) {
+          currentSection = section.getAttribute('id');
+        }
+      });
+
+      document.querySelectorAll('.toc a').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${currentSection}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Detect which side has content based on wrappers
+    document.querySelectorAll('.timeline-vertical').forEach(container => {
+      const eras = Array.from(container.querySelectorAll('.timeline-era'));
+      eras.forEach(el => {
+        const wrappers = el.querySelectorAll('.timeline-content-wrapper');
+        if (wrappers.length === 2 || wrappers.length === 3) {
+          // Check first wrapper for a card; if present, content is on the left
+          const firstHasCard = wrappers[0].querySelector('.timeline-card') !== null;
+          const lastHasCard = wrappers[wrappers.length - 1].querySelector('.timeline-card') !== null;
+          if (firstHasCard && !lastHasCard) {
+            el.setAttribute('data-side', 'left');
+          } else if (!firstHasCard && lastHasCard) {
+            el.setAttribute('data-side', 'right');
+          } else {
+            // Fallback to index-based if structure is unexpected
+            const index = Array.from(el.parentNode.children).filter(n => n.classList && n.classList.contains('timeline-era')).indexOf(el);
+            el.setAttribute('data-side', index % 2 === 0 ? 'left' : 'right');
+          }
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

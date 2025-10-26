@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="How semantic caching makes Text-to-SQL 9X faster using natural language processing and AI frameworks to slash query times for enterprise data.">
+
+  <title>How Semantic Caching Makes Text-to-SQL 9X Faster | Text2SQLHandbook</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/main.css?v=3">
+
+  <!-- Prism.js for code highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+  <!-- AOS Animations -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="flex items-center justify-between py-4">
+        <a href="../index.html" class="text-2xl font-bold text-blue-600 hover:opacity-80 transition-opacity">
+          Text2SQL<span class="text-gray-200">Handbook</span>
+        </a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="../index.html" class="nav-link">Text2SQL Handbook</a>
+          <a href="../what-is-text2sql.html" class="nav-link">What is Text-to-SQL?</a>
+          <a href="../approaches.html" class="nav-link active">Solutions</a>
+          <a href="../about.html" class="nav-link">About</a>
+          <a href="../consulting.html" class="btn-primary">Get In Touch</a>
+        </div>
+        <button id="mobile-menu-btn" class="md:hidden p-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
+  <div id="mobile-menu" class="mobile-menu">
+    <button id="mobile-menu-close" class="absolute top-4 right-4 text-secondary">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    <div class="flex flex-col space-y-6 mt-12">
+      <a href="../index.html" class="text-xl font-semibold">Home</a>
+      <a href="../approaches.html" class="text-xl font-semibold">Approaches</a>
+      <a href="../about.html" class="text-xl font-semibold">About</a>
+      <a href="../consulting.html" class="btn-primary inline-block text-center">Get In Touch</a>
+    </div>
+  </div>
+
+  <!-- Article Header -->
+  <section class="article-header">
+    <div class="container">
+      <div class="max-w-4xl mx-auto" data-aos="fade-up">
+        <a href="../approaches.html" class="text-white opacity-75 hover:opacity-100 mb-6 inline-flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Back to All Approaches
+        </a>
+
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
+          How Semantic Caching Makes Text-to-SQL 9X Faster
+        </h1>
+
+        <p class="text-xl opacity-90 mb-6">
+          How Natural Language Processing and AI Frameworks Slash Query Times for Enterprise Data
+        </p>
+
+        <div class="article-meta">
+          <span class="article-meta-item">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            October 25, 2024
+          </span>
+          <span class="article-meta-item">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            15 min read
+          </span>
+          <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
+          <span class="tag">Semantic Caching</span>
+          <span class="tag">Performance</span>
+          <span class="tag">Denodo AI SDK</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Article Content -->
+  <div class="container py-12">
+    <div class="article-content">
+
+      <!-- Hero Image -->
+      <div class="my-8" data-aos="fade-up">
+        <img src="../assets/images/semantic-caching/intro.png" alt="Semantic Caching Architecture" class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">Image by Author</p>
+      </div>
+
+      <!-- Introduction -->
+      <section data-aos="fade-up">
+        <p>
+          Text-to-SQL transformed how enterprises interact with their data. However, for similar questions, regenerating SQL from scratch isn't always the most efficient approach.
+        </p>
+        <p>
+          When LLMs start translating natural language into database queries, it marked a significant advancement in data democratization. Non-technical users could finally ask complex questions of their data without learning SQL.
+        </p>
+        <p>
+          Among the solutions in this space, Denodo AI SDK stands out by connecting and combining enterprise data silos through a logical data layer, providing secure, governed access to structured data through natural language.
+        </p>
+        <p>
+          With remarkable accuracy, Denodo's text-to-SQL functionality translates questions into Denodo's Virtual Query Language (VQL). While this process produces excellent results, it presents an optimization opportunity.
+        </p>
+
+        <div class="bg-blue-900 border-l-4 border-blue-500 p-6 my-6">
+          <p class="font-bold text-white mb-2">💡 Key Question</p>
+          <p class="text-gray-200">
+            Why regenerate SQL from scratch when users ask similar questions with minor variations?
+          </p>
+        </div>
+
+        <p>
+          By implementing a semantic caching layer on top of Denodo AI SDK, we've seen dramatic performance improvements, making responses <strong>9x faster</strong> while maintaining all of Denodo's powerful governance and security features. This enhancement makes Denodo's already robust platform even more responsive for users asking variations of common questions.
+        </p>
+        <p>
+          In this article, I'll show how semantic caching can turbocharge Denodo AI SDK, complete with code examples and performance metrics you can implement in your environment.
+        </p>
+
+        <!-- Platform Note -->
+        <div class="bg-gradient-to-r from-indigo-900 to-purple-900 border-2 border-indigo-300 rounded-xl p-6 my-8">
+          <h3 class="text-xl font-bold text-cyan-400 mb-3">🌐 Works with Any Data Platform</h3>
+          <p class="text-white mb-3">
+            <strong>Semantic caching is platform-agnostic!</strong> You can apply this approach to any data platform including:
+          </p>
+          <div class="grid md:grid-cols-2 gap-3 mb-4">
+            <ul class="text-gray-200 space-y-1">
+              <li>• <strong>Cloud Data Warehouses:</strong> Snowflake, Databricks, Redshift, BigQuery</li>
+              <li>• <strong>RDBMS:</strong> Oracle, SQL Server, PostgreSQL, MySQL</li>
+            </ul>
+            <ul class="text-gray-200 space-y-1">
+              <li>• <strong>NoSQL:</strong> MongoDB, Cassandra</li>
+              <li>• <strong>Data Lakes:</strong> Delta Lake, Iceberg</li>
+            </ul>
+          </div>
+          <div class="card bg-opacity-70 rounded-lg p-4 border-l-4 border-indigo-500">
+            <p class="text-white">
+              <strong>Why Denodo for this demo?</strong> I'm using <strong>Denodo AI SDK</strong> because Denodo's data virtualization platform excels at building a <strong>unified semantic layer</strong> across all your data sources. It provides a logical abstraction layer that connects disparate data silos (databases, cloud warehouses, APIs, files) into a single governed view — making it ideal for enterprise Text-to-SQL applications. The semantic caching technique demonstrated here works seamlessly with Denodo while maintaining its governance, security, and data abstraction capabilities.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- What is Semantic Caching -->
+      <section data-aos="fade-up">
+        <h2>What is Semantic Caching?</h2>
+        <p>
+          Semantic caching stores the meaning behind queries, retrieving information based on intent rather than exact matches. This provides more relevant results than traditional caching while being faster than direct LLM responses.
+        </p>
+        <p>
+          Like a perceptive librarian who understands the context of requests rather than just matching titles, semantic caching intelligently retrieves data that best aligns with the user's actual needs.
+        </p>
+
+        <h3>Key Components</h3>
+        <ol>
+          <li><strong>Embedding model:</strong> Creates vector representations of data to measure query similarity.</li>
+          <li><strong>Vector database:</strong> Stores embeddings for fast retrieval based on semantic similarity rather than exact matches.</li>
+          <li><strong>Cache:</strong> Central storage for responses and their semantic meaning.</li>
+          <li><strong>Vector search:</strong> Quickly evaluates similarity between incoming queries and cached data to determine the best response.</li>
+        </ol>
+
+        <h3>Benefits Over Traditional Caching</h3>
+        <p>
+          Traditional caching speeds up access to frequently requested information but disregards query meaning. Semantic caching adds an intelligent layer that understands query intent, storing and retrieving only the most relevant data. By using AI embedding models to capture meaning, semantic caching delivers faster, more relevant results while reducing processing overhead and improving efficiency.
+        </p>
+      </section>
+
+      <!-- The Challenge -->
+      <section data-aos="fade-up">
+        <h2>The Challenge: Denodo AI SDK and the Cost of Natural Language</h2>
+        <p>
+          Denodo's data virtualization platform excels at solving trusted data challenges by connecting and combining data silos through a logical data layer.
+        </p>
+        <p>
+          Denodo's AI feature — Denodo AI SDK offers functionality which helps AI Developers to build an LLM application which translates natural language questions into Denodo's Virtual Query Language (VQL) with remarkable accuracy that retrieves the Enterprise data, also it is remarkably easy to integrate structured data into text-to-SQL LLM applications with robust governance and security.
+        </p>
+
+        <div class="bg-red-900 border-l-4 border-red-500 p-6 my-6">
+          <p class="font-bold text-white mb-3">🚨 The Cost Challenge</p>
+          <p class="text-gray-200 mb-3">
+            However, this powerful capability comes with a cost challenge. Every time a user asks a question, the standard Denodo AI SDK workflow involves:
+          </p>
+          <ol class="text-gray-200 space-y-2">
+            <li>1. Vector search to find relevant tables and columns</li>
+            <li>2. Analysis of database schema and relationships</li>
+            <li>3. Understanding of filters and aggregations</li>
+            <li>4. Generation of valid VQL (Denodo SQL)</li>
+            <li>5. Execution of the query and formatting results</li>
+          </ol>
+        </div>
+
+        <p>
+          For organizations handling hundreds of queries daily through Denodo AI SDK, each consuming thousands of tokens in a large language model, this quickly becomes unsustainable from both a cost and performance perspective.
+        </p>
+        <p>
+          <strong>How could we preserve Denodo's excellent data governance while making the text-to-SQL conversion more efficient?</strong>
+        </p>
+      </section>
+
+      <!-- Spotting the Opportunity -->
+      <section data-aos="fade-up">
+        <h2>Spotting the Opportunity — Why Redo What's Already Done?</h2>
+        <p>
+          The key insight is that most database questions follow patterns with minor variations. When analysts ask <strong>"How many customers in California?"</strong> followed by <strong>"Count clients in New York,"</strong> they're asking the same question with one parameter changed. We can enhance performance for these similar queries by implementing a semantic caching pattern:
+        </p>
+
+        <!-- Architecture Diagram -->
+        <div class="my-8">
+          <img src="../assets/images/semantic-caching/architecture.png" alt="Semantic Caching Architecture" class="w-full rounded-lg shadow-lg">
+          <p class="text-center text-sm text-secondary mt-2">Image by Author</p>
+        </div>
+
+        <ol>
+          <li><strong>Vector-based Cache Database</strong> — Store natural language questions, their SQL queries, and query explanations in a vector database that enables semantic search</li>
+          <li><strong>Match similar questions</strong> — When a new question arrives, use vector embeddings to find semantically similar previously asked questions</li>
+          <li><strong>Validate semantic relationship</strong> — Use a small language model or cheaper models to verify if the questions truly have the same intent but with different parameters</li>
+          <li><strong>Modify the existing SQL query</strong> — Instead of generating a completely new SQL, adapt the cached query by changing only the necessary parts</li>
+          <li><strong>Execute and validate</strong> — Run the modified query against the denodo's data catalog to retrieve real-time results with secured layer.</li>
+        </ol>
+
+        <p>
+          This approach preserves all the benefits of Denodo's trusted data platform while making it significantly more responsive and cost-effective for common query patterns.
+        </p>
+      </section>
+
+      <!-- Step 1: Designing the Solution -->
+      <section data-aos="fade-up">
+        <h2>Step 1: Designing the Solution — A Smart Two-Path Workflow</h2>
+        <p>
+          The trick is to blend Denodo's full power for new questions with a fast lane for similar ones. My solution uses a semantic cache with two paths:
+        </p>
+
+        <!-- Workflow Diagram -->
+        <div class="my-8">
+          <img src="../assets/images/semantic-caching/cache.png" alt="Two-Path Workflow" class="w-full rounded-lg shadow-lg">
+          <p class="text-center text-sm text-secondary mt-2">Image by Author</p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="bg-green-900 border-l-4 border-green-500 p-4">
+            <p class="font-bold text-white">✅ Cache Check</p>
+            <p class="text-gray-200">When someone asks "Count the number of clients in NewYork," we check our cache/vector database (FAISS)</p>
+          </div>
+
+          <div class="bg-green-900 border-l-4 border-green-500 p-4">
+            <p class="font-bold text-white mb-2">✅ Validation Layer</p>
+            <ul class="text-gray-200 space-y-1">
+              <li>• Vector similarity identifies candidate matches like "How many customers do we have in the state of CA?"</li>
+              <li>• A small language model validates semantic relatedness</li>
+              <li>• This prevents false positives while maintaining high accuracy</li>
+            </ul>
+          </div>
+
+          <div class="bg-green-900 border-l-4 border-green-500 p-4">
+            <p class="font-bold text-white mb-2">✅ Execution Paths</p>
+            <ul class="text-gray-200 space-y-1">
+              <li>• <strong>Cache Hit:</strong> For repeated/similar questions, modify the existing SQL (changing "CA" to "NY") if required and execute the SQL.</li>
+              <li>• <strong>Cache Miss:</strong> For actual questions, use Denodo AI SDK's standard pipeline (fallback mechanism)</li>
+            </ul>
+          </div>
+        </div>
+
+        <p>
+          This complementary approach means we get the best of both worlds: Denodo's powerful data virtualization for novel questions and lightning-fast responses for similar ones.
+        </p>
+      </section>
+
+      <!-- Step 2: Building the Core -->
+      <section data-aos="fade-up">
+        <h2>Step 2: Building the Core — Semantic Cache in Python</h2>
+        <p>
+          Let's get hands-on. The system hinges on a <code>SemanticCache</code> class that pairs vector embeddings with a FAISS index for lightning-fast similarity checks. Here's how it starts:
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-language">Python</span>
+            <button class="copy-button">Copy</button>
+          </div>
+          <pre><code class="language-python">class SemanticCache:
+    def __init__(self, embedding_model, similarity_threshold=0.90):
+        self.embedding_model = embedding_model
+        self.similarity_threshold = similarity_threshold
+        self.cache = {
+            "questions": [],
+            "embeddings": None,
+            "sql_queries": [],
+            "results": []
+        }
+        self.faiss_index = faiss.IndexFlatL2(3072)  # 3072 dims for text-embedding-3-large</code></pre>
+        </div>
+
+        <h3>Key Components</h3>
+        <ul>
+          <li><strong>Embedding Model:</strong> I used OpenAI's text-embedding-3-large to convert questions into vectors.</li>
+          <li><strong>FAISS Index:</strong> Stores embeddings for fast lookups.</li>
+          <li><strong>Threshold:</strong> 0.90 ensures only truly similar questions match.</li>
+        </ul>
+
+        <p>
+          When a question comes in, <code>find_similar_question</code> checks the cache:
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-language">Python</span>
+            <button class="copy-button">Copy</button>
+          </div>
+          <pre><code class="language-python">def find_similar_question(self, question):
+    if self.faiss_index.ntotal == 0:
+        return None, None, None, 0.0
+
+    query_vector = np.array([self.embedding_model.embed_query(question)], dtype=np.float32)
+    distances, indices = self.faiss_index.search(query_vector, 1)
+    similarity = 1 - (distances[0][0] / 20)  # Normalize distance to similarity
+
+    if similarity >= self.similarity_threshold:
+        index = indices[0][0]
+        return (
+            self.cache["questions"][index],
+            self.cache["sql_queries"][index],
+            self.cache["results"][index],
+            similarity
+        )
+
+    return None, None, None, 0.0</code></pre>
+        </div>
+      </section>
+
+      <!-- Step 3: Validating Similarity -->
+      <section data-aos="fade-up">
+        <h2>Step 3: Validating Similarity — The LLM Gatekeeper</h2>
+        <p>
+          Vector similarity alone isn't foolproof. "List top 5 loans" and "List top 5 customers" might look close in vector space but need different SQL.
+        </p>
+        <p>
+          In the below example, the system initially found a high similarity score (0.93) between the question <em>'How many customers do we have in the state of CA?'</em> and the cached question <em>'What is the total loan amount across all loans?'</em>.
+        </p>
+        <p>
+          However, despite the high similarity score, the two questions are semantically different — the first asks for a count of customers in a specific state, while the second asks for a total loan amount. This mismatch occurred because the cache contained very limited data, causing the similarity algorithm to overestimate relevance. To mitigate this, I used an SLM for semantic validation, which correctly identified the questions as unrelated. As a result, the system fell back to the Denodo AI SDK to generate the correct SQL query, ensuring accurate results.
+        </p>
+
+        <!-- Example Image -->
+        <div class="my-8">
+          <img src="../assets/images/semantic-caching/result1.png" alt="Semantic Validation Example" class="w-full rounded-lg shadow-lg">
+        </div>
+
+        <h3>Code Snippet</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-language">Python</span>
+            <button class="copy-button">Copy</button>
+          </div>
+          <pre><code class="language-python">def are_questions_semantically_related(question1, question2):
+    """
+    Use a small, cost-effective language model to determine if two questions
+    are semantically related enough to potentially reuse and modify the SQL.
+    This function uses GPT-3.5 Turbo, but could easily be replaced with
+    open-source models like Llama 3 or Mistral for even greater cost savings.
+    """
+    llm = ChatOpenAI(api_key=OPENAI_API_KEY, model="gpt-3.5-turbo")
+
+    prompt = ChatPromptTemplate.from_template("""
+    I need to determine if two questions about a banking database are semantically related enough
+    that the SQL query for one could be modified to answer the other.
+
+    Question 1: {question1}
+    Question 2: {question2}
+
+    First, analyze what each question is asking for:
+    - What entity/table is each question about?
+    - What operation is being performed?
+    - What filters or conditions are applied?
+
+    Then determine if they are related enough that one SQL could be modified to answer the other.
+
+    Output your decision as a JSON object with these fields:
+    {{
+      "are_related": true/false,
+      "explanation": "Brief explanation of your reasoning",
+      "primary_entity": "The main entity/table being queried",
+      "operation_type": "The type of operation",
+      "parameter_differences": "Description of any parameter differences"
+    }}
+    """)
+
+    response = llm.invoke(prompt.format(question1=question1, question2=question2))
+
+    # Extract JSON response and return decision
+    # ...
+    return result</code></pre>
+        </div>
+      </section>
+
+      <!-- Step 4: Modifying SQL -->
+      <section data-aos="fade-up">
+        <h2>Step 4: Modifying SQL — Precision Tweaks</h2>
+        <p>
+          Once validated, we tweak the cached SQL for the new question. Let's look at a real example from my testing:
+        </p>
+
+        <!-- SQL Modification Example -->
+        <div class="my-8">
+          <img src="../assets/images/semantic-caching/result2.png" alt="SQL Modification Example" class="w-full rounded-lg shadow-lg">
+          <p class="text-center text-sm text-secondary mt-2">Image by Author</p>
+        </div>
+
+        <p>In this example, when processing "Count the number of clients in NewYork":</p>
+        <ol>
+          <li>The system found a similar question "How many customers do we have in the state of CA?" with 0.93 similarity</li>
+          <li>The LLM confirmed these are semantically related — both counting customers in specific states</li>
+          <li>It modified only the state code in the WHERE clause from 'CA' to 'NY'</li>
+          <li>The query executed successfully in just 1.42 seconds</li>
+          <li>The result showed 5 clients in NewYork</li>
+        </ol>
+
+        <div class="bg-green-900 border-l-4 border-green-500 p-6 my-6">
+          <p class="font-bold text-white mb-2">⚡ Performance Win</p>
+          <p class="text-gray-200">
+            This entire process took just <strong>1.42 seconds</strong>, compared to the 10+ seconds it would have taken with the standard Denodo AI SDK approach. The modification was minimal and precise, changing just the state code while preserving the query structure.
+          </p>
+        </div>
+
+        <h3>Code Implementation</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-language">Python</span>
+            <button class="copy-button">Copy</button>
+          </div>
+          <pre><code class="language-python">def modify_sql_query(original_query, new_question, original_question):
+    """
+    Use a small language model (GPT-3.5 Turbo) to modify the original VQL query.
+    This function could be implemented with open-source models like Llama 3 or Mistral
+    for further cost reduction or on-premises deployment.
+    """
+    llm = ChatOpenAI(api_key=OPENAI_API_KEY, model="gpt-3.5-turbo")
+
+    prompt = ChatPromptTemplate.from_template("""
+    Original question: {original_question}
+    Original VQL query: {original_query}
+    New question: {new_question}
+
+    Modify the VQL query to answer the new question. Only change what's necessary.
+    Preserve the overall structure and intent of the query.
+
+    Return ONLY the modified VQL query, nothing else.
+    """)
+
+    response = llm.invoke(prompt.format(
+        original_question=original_question,
+        original_query=original_query,
+        new_question=new_question
+    ))
+
+    return response.content.strip()</code></pre>
+        </div>
+      </section>
+
+      <!-- Results Section -->
+      <section data-aos="fade-up">
+        <h2>The Results: 9X Performance Improvement</h2>
+
+        <div class="grid md:grid-cols-3 gap-6 my-8">
+          <div class="bg-gradient-to-br from-blue-900 to-blue-100 border border-blue-700 rounded-lg p-6 text-center">
+            <div class="text-4xl font-bold text-blue-200 mb-2">9X</div>
+            <div class="text-gray-200 font-semibold">Faster Response</div>
+            <div class="text-sm text-secondary mt-2">1.4s vs 10+s</div>
+          </div>
+          <div class="bg-gradient-to-br from-green-900 to-green-100 border border-green-700 rounded-lg p-6 text-center">
+            <div class="text-4xl font-bold text-green-200 mb-2">90%</div>
+            <div class="text-gray-200 font-semibold">Cost Reduction</div>
+            <div class="text-sm text-secondary mt-2">For similar queries</div>
+          </div>
+          <div class="bg-gradient-to-br from-purple-900 to-purple-100 border border-purple-700 rounded-lg p-6 text-center">
+            <div class="text-4xl font-bold text-purple-200 mb-2">0.93</div>
+            <div class="text-gray-200 font-semibold">Similarity Score</div>
+            <div class="text-sm text-secondary mt-2">High accuracy</div>
+          </div>
+        </div>
+
+        <p>
+          The semantic caching layer dramatically improves performance for common query patterns while maintaining the full power and governance of Denodo AI SDK for novel questions.
+        </p>
+      </section>
+
+      <!-- Key Takeaways -->
+      <section data-aos="fade-up">
+        <h2>Key Takeaways</h2>
+
+        <div class="bg-blue-900 border-l-4 border-blue-500 p-6 my-6">
+          <h3 class="text-lg font-bold text-white mb-3">💡 What You've Learned</h3>
+          <ul class="space-y-2 text-gray-200">
+            <li>• Semantic caching can make Text-to-SQL systems up to 9x faster</li>
+            <li>• Vector embeddings enable intelligent query matching beyond exact string comparison</li>
+            <li>• LLM validation prevents false positives in similarity matching</li>
+            <li>• SQL modification is more efficient than regenerating queries from scratch</li>
+            <li>• This approach works alongside existing systems like Denodo AI SDK</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Try It Yourself -->
+      <section class="consulting-cta p-8 md:p-12 rounded-2xl my-12" data-aos="fade-up">
+        <h2 class="text-white text-center mb-4">Try It Yourself</h2>
+        <p class="text-xl text-center mb-8 opacity-90">
+          Full source code and implementation examples available on GitHub
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+          <a href="YOUR-GITHUB-REPO-URL" target="_blank" class="btn-primary text-blue-600 hover:bg-gray-800">
+            View on GitHub →
+          </a>
+          <a href="YOUR-MEDIUM-ARTICLE-URL" target="_blank" class="btn-secondary border-white text-white hover:card hover:text-blue-600">
+            Read on Medium
+          </a>
+        </div>
+
+        <div class="card bg-opacity-10 backdrop-blur-sm rounded-lg p-6 max-w-2xl mx-auto">
+          <h3 class="font-bold text-lg mb-4">Quick Setup</h3>
+          <ol class="space-y-2 text-sm">
+            <li>1. Install dependencies: <code class="bg-black bg-opacity-30 px-2 py-1 rounded">pip install faiss-cpu langchain openai</code></li>
+            <li>2. Set up your embedding model and FAISS index</li>
+            <li>3. Implement the SemanticCache class</li>
+            <li>4. Integrate with your Text-to-SQL system</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Consulting CTA -->
+      <div class="consulting-cta" data-aos="fade-up">
+        <h3>Need Help Implementing Semantic Caching?</h3>
+        <p>
+          I offer consulting services for Text-to-SQL optimization, semantic caching implementation, and performance tuning.
+          Let's discuss how to make your system faster and more cost-effective.
+        </p>
+        <a href="../consulting.html" class="btn-primary text-blue-600 hover:bg-gray-800">
+          Schedule a Consultation
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">Text2SQLHandbook</h3>
+          <p class="text-gray-400 mb-4">
+            Your comprehensive guide to building Text-to-SQL systems with GenAI.
+          </p>
+        </div>
+        <div class="footer-links">
+          <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../approaches.html">All Approaches</a></li>
+            <li><a href="../about.html">About</a></li>
+            <li><a href="../consulting.html">Consulting Services</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4">Connect</h3>
+          <div class="social-icons mb-4">
+            <a href="https://github.com/yourusername" target="_blank" aria-label="GitHub">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+            <a href="https://linkedin.com/in/muthu-kumaran-here" target="_blank" aria-label="LinkedIn">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </a>
+            <a href="https://medium.com/@yourusername" target="_blank" aria-label="Medium">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
+            </a>
+          </div>
+          <p class="text-gray-400 text-sm">your@email.com</p>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
+        <p>&copy; 2025 Text2SQLHandbook. Built for the Text-to-SQL community.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 100
+    });
+  </script>
+  <script src="../assets/js/main.js"></script>
+
+</body>
+</html>

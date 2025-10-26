@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Text2SQLHandbook - Learn 8 production-ready approaches to build Text-to-SQL systems with GenAI. RAG, fine-tuning, prompt engineering & more. Open-source repos + tutorials.">
+  <meta name="keywords" content="text to sql, text2sql genai, natural language to sql, llm sql generation, rag text to sql, langchain text2sql, Text2SQLHandbook">
+  <meta name="author" content="Text2SQLHandbook">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:title" content="Text2SQLHandbook | Text-to-SQL Handbook">
+  <meta property="og:description" content="Production-ready Text-to-SQL implementations using GenAI. Real code, honest trade-offs, proven approaches.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yourusername.github.io/Text2SQLHandbook/">
+
+  <title>Text2SQLHandbook | Text-to-SQL Handbook</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/main.css?v=3">
+
+  <!-- AOS Animations -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="flex items-center justify-between py-4">
+        <!-- Logo -->
+        <a href="index.html" class="text-2xl font-bold text-blue-600 hover:opacity-80 transition-opacity">
+          Text2SQL<span class="text-gray-200">Handbook</span>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="index.html" class="nav-link active">Text2SQL Handbook</a>
+          <a href="what-is-text2sql.html" class="nav-link">What is Text-to-SQL?</a>
+          <a href="approaches.html" class="nav-link">Solutions</a>
+          <a href="about.html" class="nav-link">About</a>
+          <a href="consulting.html" class="btn-primary">Get In Touch</a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
+  <div id="mobile-menu" class="mobile-menu">
+    <button id="mobile-menu-close" class="absolute top-4 right-4">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    <div class="flex flex-col space-y-6 mt-12">
+      <a href="index.html" class="text-xl font-semibold">Text2SQL Handbook</a>
+      <a href="what-is-text2sql.html" class="text-xl font-semibold">What is Text-to-SQL?</a>
+      <a href="approaches.html" class="text-xl font-semibold">Solutions</a>
+      <a href="about.html" class="text-xl font-semibold">About</a>
+      <a href="consulting.html" class="btn-primary inline-block text-center">Get In Touch</a>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content container text-center" data-aos="fade-up">
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-6">
+        Text2SQL Handbook
+      </h1>
+      <p class="text-xl md:text-2xl mb-8 text-gray-100 max-w-3xl mx-auto">
+        All top Text-to-SQL production-ready solutions in one place
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="approaches.html" class="btn-primary text-lg px-8 py-4">
+          Explore Approaches
+        </a>
+        <a href="consulting.html" class="btn-secondary text-lg px-8 py-4">
+          Get In Touch
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Handbook Value Proposition -->
+  <section class="section">
+    <div class="container">
+      <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
+        <h2 class="text-4xl font-bold mb-6">All Top Text-to-SQL Solutions in One Place</h2>
+        <p class="text-xl mb-8">
+          The goal of this handbook is to provide <strong>all the top Text-to-SQL production-ready solutions</strong> in one place.
+          Get hands-on prototypes, understand pros & cons, and discover which approach fits your use case.
+        </p>
+        <div class="grid md:grid-cols-3 gap-8 mt-12">
+          <div class="card p-8" data-aos="fade-up" data-aos-delay="100">
+            <div class="text-5xl mb-4">🔬</div>
+            <h3 class="text-xl font-bold mb-3">Production-Ready Approaches</h3>
+            <p>Explore all the key approaches with working code examples and detailed explanations</p>
+          </div>
+          <div class="card p-8" data-aos="fade-up" data-aos-delay="200">
+            <div class="text-5xl mb-4">💻</div>
+            <h3 class="text-xl font-bold mb-3">Hands-On Prototypes</h3>
+            <p>Test each approach with your own database and sample queries to see what works best</p>
+          </div>
+          <div class="card p-8" data-aos="fade-up" data-aos-delay="300">
+            <div class="text-5xl mb-4">⚖️</div>
+            <h3 class="text-xl font-bold mb-3">Honest Pros & Cons</h3>
+            <p>Make informed decisions with transparent analysis of strengths and limitations</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Approach -->
+  <section class="section">
+    <div class="container">
+      <div class="text-center mb-12" data-aos="fade-up">
+        <h2 class="text-4xl font-bold mb-4">Featured This Week</h2>
+        <p class="text-xl">This week's spotlight implementation</p>
+      </div>
+
+      <div class="max-w-4xl mx-auto" id="featured-approach">
+        <!-- Featured approach will be loaded dynamically -->
+        <div class="text-center py-12">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-400 mx-auto"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- All Solutions Preview -->
+  <section class="section">
+    <div class="container">
+      <div class="text-center mb-12" data-aos="fade-up">
+        <h2 class="text-4xl font-bold mb-4">Production-Ready Solutions</h2>
+        <p class="text-xl">Explore modern techniques for building Text-to-SQL systems</p>
+      </div>
+
+      <div id="approaches-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Approaches will be loaded dynamically -->
+      </div>
+
+      <div class="text-center mt-12" data-aos="fade-up">
+        <a href="approaches.html" class="btn-primary text-lg px-8 py-4">View All Solutions</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- What You'll Learn -->
+  <section class="section">
+    <div class="container">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12" data-aos="fade-up">
+          <h2 class="text-4xl font-bold mb-4">What You'll Learn</h2>
+          <p class="text-xl">Deep dive into modern Text-to-SQL techniques</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="flex items-start space-x-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center text-2xl" style="background-color: rgba(34, 211, 238, 0.1);">
+              📊
+            </div>
+            <div>
+              <h3 class="text-xl font-bold mb-2">RAG vs Fine-tuning Trade-offs</h3>
+              <p>Understand when to use retrieval-based approaches versus custom-trained models</p>
+            </div>
+          </div>
+
+          <div class="flex items-start space-x-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center text-2xl" style="background-color: rgba(34, 211, 238, 0.1);">
+              ✍️
+            </div>
+            <div>
+              <h3 class="text-xl font-bold mb-2">Prompt Engineering Strategies</h3>
+              <p>Master few-shot learning and prompt optimization for better SQL generation</p>
+            </div>
+          </div>
+
+          <div class="flex items-start space-x-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center text-2xl" style="background-color: rgba(34, 211, 238, 0.1);">
+              🗄️
+            </div>
+            <div>
+              <h3 class="text-xl font-bold mb-2">Vector Database Integration</h3>
+              <p>Learn to leverage FAISS, Pinecone, and other vector stores for schema retrieval</p>
+            </div>
+          </div>
+
+          <div class="flex items-start space-x-4" data-aos="fade-up" data-aos-delay="400">
+            <div class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center text-2xl" style="background-color: rgba(34, 211, 238, 0.1);">
+              🚀
+            </div>
+            <div>
+              <h3 class="text-xl font-bold mb-2">Production Deployment Patterns</h3>
+              <p>Real-world considerations for latency, cost, accuracy, and scalability</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section (Brief) -->
+  <section class="section">
+    <div class="container">
+      <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
+        <div class="mb-8">
+          <div class="w-32 h-32 rounded-full mx-auto mb-6 flex items-center justify-center text-5xl" style="background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(124, 58, 237, 0.2)); border: 2px solid var(--primary-400);">
+            👨‍💻
+          </div>
+          <h2 class="text-4xl font-bold mb-4">About</h2>
+          <p class="text-xl mb-6">
+            Learn more about the creator and the vision behind this comprehensive Text-to-SQL resource.
+          </p>
+          <a href="about.html" class="btn-secondary">Learn More</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Consulting CTA -->
+  <section class="section hero">
+    <div class="container">
+      <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
+        <h2 class="text-4xl font-bold mb-6">Need Help Implementing Text-to-SQL?</h2>
+        <p class="text-xl mb-8 opacity-90">
+          From architecture consulting to full implementation, I help teams build production-ready Text-to-SQL systems.
+        </p>
+
+        <div class="grid md:grid-cols-3 gap-6 mb-10 text-left">
+          <div class="card p-6">
+            <h3 class="font-bold text-lg mb-2">Architecture Consulting</h3>
+            <p class="text-sm opacity-90">Choose the right approach for your use case</p>
+          </div>
+          <div class="card p-6">
+            <h3 class="font-bold text-lg mb-2">Custom Implementation</h3>
+            <p class="text-sm opacity-90">End-to-end development and deployment</p>
+          </div>
+          <div class="card p-6">
+            <h3 class="font-bold text-lg mb-2">Training & Workshops</h3>
+            <p class="text-sm opacity-90">Upskill your team on Text-to-SQL best practices</p>
+          </div>
+        </div>
+
+        <a href="consulting.html" class="btn-primary text-lg px-8 py-4">
+          Schedule a Consultation
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <!-- About -->
+        <div>
+          <h3 class="text-xl font-bold mb-4">Text2SQLHandbook</h3>
+          <p class="text-gray-400 mb-4">
+            Your comprehensive guide to building Text-to-SQL systems with GenAI. Open source, production-tested approaches.
+          </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-links">
+          <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="index.html">Text2SQL Handbook</a></li>
+            <li><a href="what-is-text2sql.html">What is Text-to-SQL?</a></li>
+            <li><a href="approaches.html">All Solutions</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="consulting.html">Consulting Services</a></li>
+          </ul>
+        </div>
+
+        <!-- Connect -->
+        <div>
+          <h3 class="text-xl font-bold mb-4">Connect</h3>
+          <div class="social-icons mb-4">
+            <a href="https://github.com/yourusername" target="_blank" aria-label="GitHub">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+            <a href="https://linkedin.com/in/muthu-kumaran-here" target="_blank" aria-label="LinkedIn">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </a>
+            <a href="https://medium.com/@yourusername" target="_blank" aria-label="Medium">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
+        <p>&copy; 2025 Text2SQLHandbook. Built with ❤️ for the AI and Text-to-SQL community.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 100
+    });
+  </script>
+  <script src="assets/js/main.js"></script>
+
+  <!-- Load approaches preview -->
+  <script>
+    // Load and display approach cards on homepage
+    fetch('assets/data/approaches.json')
+      .then(response => response.json())
+      .then(data => {
+        // Load featured approach (4th item - index 3)
+        const featuredContainer = document.getElementById('featured-approach');
+        const featured = data.approaches[3]; // 4th item (0-indexed)
+
+        if (featured) {
+          const difficultyClass = featured.difficulty === 'beginner' ? 'bg-green-100 text-green-700' :
+                                  featured.difficulty === 'intermediate' ? 'bg-blue-100 text-blue-700' :
+                                  'bg-purple-100 text-purple-700';
+
+          featuredContainer.innerHTML = `
+            <div class="card p-8 md:p-10" data-aos="fade-up" data-aos-delay="100" style="border: 2px solid var(--primary-400); box-shadow: var(--glow-teal);">
+              <div class="flex items-center gap-3 mb-6">
+                <span class="px-3 py-1 text-sm font-semibold rounded-full ${difficultyClass}">${featured.difficulty}</span>
+                <span class="px-3 py-1 bg-yellow-400 text-yellow-900 text-sm font-bold rounded-full">Featured</span>
+              </div>
+
+              <h3 class="text-3xl md:text-4xl font-bold mb-4">${featured.title}</h3>
+              <p class="mb-6 text-lg leading-relaxed">
+                ${featured.description}
+              </p>
+
+              <div class="flex flex-wrap gap-2 mb-8">
+                ${featured.tags.slice(0, 5).map(tag => `<span class="px-3 py-1 text-sm rounded-lg" style="background-color: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.3);">${tag}</span>`).join('')}
+              </div>
+
+              <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="card p-6" style="border-color: rgba(16, 185, 129, 0.5);">
+                  <h4 class="font-bold mb-3 text-lg" style="color: rgb(16, 185, 129);">✓ Key Benefits</h4>
+                  <ul class="text-sm space-y-2">
+                    ${featured.pros.slice(0, 3).map(pro => `<li>• ${pro}</li>`).join('')}
+                  </ul>
+                </div>
+                <div class="card p-6" style="border-color: rgba(34, 211, 238, 0.5);">
+                  <h4 class="font-bold mb-3 text-lg" style="color: rgb(34, 211, 238);">🎯 Best For</h4>
+                  <ul class="text-sm space-y-2">
+                    ${featured.bestFor.slice(0, 3).map(use => `<li>• ${use}</li>`).join('')}
+                  </ul>
+                </div>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-4">
+                <a href="approaches/${featured.slug}.html" class="btn-primary text-center">View Full Details →</a>
+                <a href="${featured.medium.url}" class="btn-secondary text-center" target="_blank">Read on Medium</a>
+              </div>
+            </div>
+          `;
+        }
+
+        // Load production solutions (show only 3 with compact style)
+        const grid = document.getElementById('approaches-grid');
+        const approaches = data.approaches.slice(0, 3); // Show first 3
+
+        grid.innerHTML = approaches.map((approach, index) => {
+          const difficultyClass = approach.difficulty === 'beginner' ? 'bg-green-100 text-green-700' :
+                                  approach.difficulty === 'intermediate' ? 'bg-blue-100 text-blue-700' :
+                                  'bg-purple-100 text-purple-700';
+
+          return `
+            <a href="approaches/${approach.slug}.html" class="card group relative transition-all duration-300 overflow-hidden" data-aos="fade-up" data-aos-delay="${index * 100}">
+              <!-- Thumbnail -->
+              <div class="relative h-40 overflow-hidden ${approach.thumbnailImage ? '' : 'bg-gradient-to-br ' + approach.thumbnailGradient}">
+                ${approach.thumbnailImage
+                  ? `<img src="${approach.thumbnailImage}" alt="${approach.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">`
+                  : `<span class="flex items-center justify-center h-full text-6xl">${approach.thumbnailIcon}</span>`
+                }
+                ${approach.featured ? '<div class="absolute top-3 right-3"><span class="px-3 py-1 bg-yellow-400 text-yellow-900 text-xs font-bold rounded-full shadow-lg">Featured</span></div>' : ''}
+              </div>
+
+              <!-- Content -->
+              <div class="p-5">
+                <!-- Meta info -->
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="text-xs flex items-center gap-1" style="color: var(--text-tertiary);">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    ${approach.readTime}
+                  </span>
+                  <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${difficultyClass}">${approach.difficulty}</span>
+                </div>
+
+                <!-- Title -->
+                <h3 class="text-lg font-bold mb-2 group-hover:text-teal-400 transition-colors line-clamp-2">
+                  ${approach.title}
+                </h3>
+
+                <!-- Preview -->
+                <p class="text-sm mb-3 line-clamp-2">${approach.shortDescription}</p>
+
+                <!-- Tags -->
+                <div class="flex flex-wrap gap-1.5">
+                  ${approach.tags.slice(0, 2).map(tag => `<span class="px-2 py-0.5 text-xs rounded-md" style="background-color: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.2);">${tag}</span>`).join('')}
+                </div>
+              </div>
+
+              <!-- Arrow indicator -->
+              <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity" style="color: var(--primary-400);">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+              </div>
+            </a>
+          `;
+        }).join('');
+      })
+      .catch(error => console.error('Error loading approaches:', error));
+  </script>
+</body>
+</html>

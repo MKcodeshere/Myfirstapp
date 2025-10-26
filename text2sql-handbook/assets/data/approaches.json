@@ -1,0 +1,310 @@
+{
+  "approaches": [
+    {
+      "id": "semantic-caching-9x-faster",
+      "title": "How Semantic Caching Makes Text-to-SQL 9X Faster",
+      "slug": "semantic-caching-text2sql-9x-faster",
+      "description": "How Natural Language Processing and AI Frameworks slash query times for enterprise data using semantic caching with Denodo AI SDK. This approach makes Text-to-SQL systems 9x faster while maintaining governance and security.",
+      "shortDescription": "Semantic caching for 9X faster Text-to-SQL responses",
+      "articlePreview": "Learn how semantic caching makes Text-to-SQL 9X faster using vector embeddings, FAISS, and intelligent query modification instead of regenerating SQL from scratch.",
+      "thumbnailImage": "assets/images/semantic-caching/intro.png",
+      "thumbnailGradient": "from-emerald-500 to-teal-500",
+      "thumbnailIcon": "⚡",
+      "readTime": "15 min read",
+      "difficulty": "intermediate",
+      "tags": ["Semantic Caching", "Performance", "Denodo AI SDK", "FAISS", "Vector DB"],
+      "llmModel": "GPT-3.5",
+      "database": "Denodo VQL",
+      "github": {
+        "url": "https://github.com/yourusername/semantic-caching-text2sql",
+        "stars": 0,
+        "forks": 0
+      },
+      "medium": {
+        "url": "https://medium.com/@yourusername/semantic-caching-article",
+        "title": "How Semantic Caching Makes Text-to-SQL 9X Faster"
+      },
+      "datePublished": "2024-10-25",
+      "featured": true,
+      "architecture": {
+        "imageUrl": "/assets/images/semantic-caching-architecture.png",
+        "components": [
+          "FAISS Vector Database",
+          "OpenAI Embeddings",
+          "GPT-3.5 for Validation",
+          "Denodo AI SDK",
+          "SQL Modification Engine"
+        ]
+      },
+      "pros": [
+        "9X faster response times for similar queries",
+        "90% cost reduction on repeated query patterns",
+        "Maintains all Denodo governance features",
+        "Works alongside existing Text-to-SQL systems"
+      ],
+      "cons": [
+        "Requires initial cache warm-up",
+        "Depends on vector similarity accuracy",
+        "Additional infrastructure (FAISS)",
+        "May need tuning for optimal threshold"
+      ],
+      "bestFor": [
+        "Enterprise systems with repetitive query patterns",
+        "High-volume Text-to-SQL applications",
+        "Cost-sensitive deployments",
+        "Systems using Denodo AI SDK or similar platforms"
+      ],
+      "setupTime": "4-6 hours",
+      "productionReady": true
+    },
+    {
+      "id": "text2sql-long-term-memory",
+      "title": "Building a Text2SQL Agent With Long-Term Memory",
+      "slug": "text2sql-long-term-memory",
+      "description": "A production-grade architecture for user memory isolation inspired by Mem0. This implementation adds long-term memory capabilities to Text2SQL agents, enabling personalized experiences through user-specific preferences, custom terminology, and context retention across sessions.",
+      "shortDescription": "Long-term memory for personalized Text2SQL interactions",
+      "articlePreview": "Learn how to build a Text2SQL agent with long-term memory that remembers user preferences, custom terminology, and context across sessions using PostgreSQL, pgvector, and the Mem0 architecture principles.",
+      "thumbnailImage": "assets/images/article2/intro.png",
+      "thumbnailGradient": "from-purple-500 to-indigo-500",
+      "thumbnailIcon": "🧠",
+      "readTime": "15 min read",
+      "difficulty": "advanced",
+      "tags": ["Long-Term Memory", "Mem0", "PostgreSQL", "pgvector", "User Isolation"],
+      "llmModel": "GPT-4",
+      "database": "PostgreSQL + Denodo",
+      "github": {
+        "url": "https://github.com/MKcodeshere/Text2SQl-Agent-with-Long-Term-Memory",
+        "stars": 0,
+        "forks": 0
+      },
+      "medium": {
+        "url": "https://medium.com/@muthu10star/building-a-text2sql-agent-with-long-term-memory-a-production-grade-architecture-for-user-memory-9d6fc3509e92",
+        "title": "Building a Text2SQL Agent With Long-Term Memory"
+      },
+      "datePublished": "2025-01-15",
+      "featured": true,
+      "architecture": {
+        "imageUrl": "/assets/images/article2/architecture-diagram.png",
+        "components": [
+          "Memory Extraction Phase",
+          "Text2SQL Memory Component",
+          "Update Phase with Vector DB",
+          "PostgreSQL with pgvector",
+          "User-Specific Memory Isolation"
+        ]
+      },
+      "pros": [
+        "Personalized user experiences across sessions",
+        "Automatic preference and terminology retention",
+        "Complete memory isolation between users",
+        "Works with any database platform (Snowflake, Databricks, etc.)",
+        "Reduces repetitive user instructions"
+      ],
+      "cons": [
+        "Additional infrastructure (PostgreSQL + pgvector)",
+        "Requires embedding generation for similarity search",
+        "Initial memory warm-up period",
+        "More complex architecture to maintain"
+      ],
+      "bestFor": [
+        "Multi-user Text2SQL applications",
+        "Enterprise systems with diverse user preferences",
+        "Applications requiring personalized data interactions",
+        "Long-running analytical workflows"
+      ],
+      "setupTime": "1-2 days",
+      "productionReady": true
+    },
+    {
+      "id": "sql-of-thought",
+      "title": "Building SQL-of-Thought: Multi-Agentic Text-to-SQL with Guided Error Correction",
+      "slug": "sql-of-thought",
+      "description": "A multi-agent framework for Text-to-SQL that uses 6 specialized agents working collaboratively to generate, validate, and iteratively correct SQL queries. Inspired by Chain-of-Thought prompting with built-in error correction mechanisms.",
+      "shortDescription": "Multi-agent framework with 6 specialized agents for error-correcting Text-to-SQL",
+      "articlePreview": "Discover how SQL-of-Thought uses a collaborative team of 6 specialized agents (Schema, Question, SQL Generation, Validation, Execution, and Reflection) to achieve high accuracy through iterative error correction and guided refinement.",
+      "thumbnailImage": "assets/images/sql-of-thought/intro.png",
+      "thumbnailGradient": "from-cyan-500 to-blue-500",
+      "thumbnailIcon": "🧩",
+      "readTime": "20 min read",
+      "difficulty": "advanced",
+      "tags": ["Multi-Agent", "Error Correction", "Chain-of-Thought", "LangGraph", "DuckDB"],
+      "llmModel": "GPT-4o",
+      "database": "DuckDB",
+      "github": {
+        "url": "https://github.com/MKcodeshere/sql-of-thought-demo",
+        "stars": 0,
+        "forks": 0
+      },
+      "medium": {
+        "url": "https://medium.com/@muthu10star/building-sql-of-thought-multi-agentic-text-to-sql-with-guided-error-correction-4c48a2e7a7ca",
+        "title": "Building SQL-of-Thought: Multi-Agentic Text-to-SQL with Guided Error Correction"
+      },
+      "datePublished": "2025-01-20",
+      "featured": true,
+      "architecture": {
+        "imageUrl": "/assets/images/sql-of-thought/architecture.png",
+        "components": [
+          "Schema Understanding Agent",
+          "Question Clarification Agent",
+          "SQL Generation Agent",
+          "Validation Agent",
+          "Execution Agent",
+          "Reflection Agent",
+          "LangGraph Orchestration"
+        ]
+      },
+      "pros": [
+        "Self-correcting through iterative refinement",
+        "Each agent focuses on specific expertise",
+        "Built-in error taxonomy for targeted fixes",
+        "Transparent reasoning at each step",
+        "Handles complex multi-join queries effectively",
+        "Reduces hallucination through validation loops"
+      ],
+      "cons": [
+        "Higher latency due to multiple agent calls",
+        "More complex to debug and maintain",
+        "Higher API costs from multiple LLM invocations",
+        "Requires careful orchestration logic",
+        "May over-engineer simple queries"
+      ],
+      "bestFor": [
+        "Complex analytical queries requiring high accuracy",
+        "Applications where query correctness is critical",
+        "Scenarios with intricate business logic",
+        "Production systems needing transparent error handling",
+        "Teams comfortable with multi-agent architectures"
+      ],
+      "setupTime": "1-2 days",
+      "productionReady": true
+    },
+    {
+      "id": "sql-probes-sde-sql",
+      "title": "How I Built a Text-to-SQL System Without Vector Databases Using SQL Probes",
+      "slug": "sql-probes",
+      "description": "Active database exploration using SQL Probes achieves 85% accuracy without embeddings, vector stores, or complex infrastructure. This implementation of the SDE-SQL research paper uses Locality Sensitive Hashing and real-time database exploration to generate accurate SQL queries.",
+      "shortDescription": "SQL Probes for vector-free Text-to-SQL with 85% accuracy",
+      "articlePreview": "Learn how to build a Text-to-SQL system that explores databases dynamically using SQL Probes instead of vector databases. Achieves 85% accuracy using LSH, GPT-4, and a 4-stage pipeline with real-time trace visualization.",
+      "thumbnailImage": "assets/images/sql-probes/intro.png",
+      "thumbnailGradient": "from-orange-500 to-red-500",
+      "thumbnailIcon": "🔍",
+      "readTime": "18 min read",
+      "difficulty": "advanced",
+      "tags": ["SQL Probes", "SDE-SQL", "LSH", "No Vector DB", "Active Exploration", "FastAPI"],
+      "llmModel": "GPT-4",
+      "database": "PostgreSQL",
+      "github": {
+        "url": "https://github.com/MKcodeshere/sde-sql-text2sql",
+        "stars": 0,
+        "forks": 0
+      },
+      "medium": {
+        "url": "https://medium.com/@muthu10star/how-i-built-a-text-to-sql-system-without-vector-databases-using-sql-probes-522ee96ab9fe",
+        "title": "How I Built a Text-to-SQL System Without Vector Databases Using SQL Probes"
+      },
+      "datePublished": "2025-01-26",
+      "featured": true,
+      "architecture": {
+        "imageUrl": "/assets/images/sql-probes/workflow.png",
+        "components": [
+          "FastAPI Backend",
+          "PostgreSQL (DVD Rental DB)",
+          "OpenAI GPT-4",
+          "LSH (Locality Sensitive Hashing)",
+          "React + TypeScript Frontend",
+          "WebSocket Real-time Updates"
+        ]
+      },
+      "pros": [
+        "No vector database infrastructure required",
+        "85% accuracy on real-world database",
+        "Active exploration adapts to schema dynamically",
+        "Transparent real-time trace visualization",
+        "Works offline with LSH for value matching",
+        "Handles complex multi-table queries effectively"
+      ],
+      "cons": [
+        "Higher latency (7-20 seconds per query)",
+        "7x higher cost than RAG ($0.40 per query)",
+        "Increased database load from probe queries",
+        "Depends on prompt quality",
+        "No adaptive learning from past queries"
+      ],
+      "bestFor": [
+        "Accuracy-critical applications (analytics, compliance)",
+        "Complex analytical queries across multiple tables",
+        "Dynamic or poorly documented schemas",
+        "Self-service BI tools",
+        "Teams wanting to avoid vector database complexity",
+        "Applications that can tolerate 10-20 second latency"
+      ],
+      "setupTime": "5 minutes",
+      "productionReady": true
+    },
+    {
+      "id": "ace-sql-self-improving",
+      "title": "Building Self-Improving Text-to-SQL Systems with Agentic Context Engineering",
+      "slug": "ace-sql",
+      "description": "Create adaptive database query systems that fix their own mistakes and optimize performance automatically using Stanford's Agentic Context Engineering (ACE) framework. Learn through structured knowledge bullets, surgical updates, and continuous improvement cycles.",
+      "shortDescription": "Self-improving Text-to-SQL with ACE framework and adaptive learning",
+      "articlePreview": "Discover how to build Text-to-SQL systems that learn from mistakes and improve over time using Stanford's ACE framework. Features 86.9% faster adaptation, structured knowledge management, and automatic performance optimization.",
+      "thumbnailImage": "assets/images/ace-sql/intro.png",
+      "thumbnailGradient": "from-violet-500 to-purple-500",
+      "thumbnailIcon": "🧠",
+      "readTime": "16 min read",
+      "difficulty": "advanced",
+      "tags": ["ACE", "Self-Improving", "Adaptive Learning", "ChromaDB", "LangChain", "Knowledge Management"],
+      "llmModel": "GPT-4",
+      "database": "PostgreSQL",
+      "github": {
+        "url": "https://github.com/MKcodeshere/Self-Improving-Text2SQL/tree/main",
+        "stars": 0,
+        "forks": 0
+      },
+      "medium": {
+        "url": "https://medium.com/@muthu10star/building-self-improving-text-to-sql-systems-with-agentic-context-engineering",
+        "title": "Building Self-Improving Text-to-SQL Systems with Agentic Context Engineering"
+      },
+      "datePublished": "2025-01-28",
+      "featured": true,
+      "architecture": {
+        "imageUrl": "/assets/images/ace-sql/architecture.png",
+        "components": [
+          "Generator (SQL Production)",
+          "Reflector (Error Analysis)",
+          "Curator (Knowledge Updates)",
+          "Evaluator (Quality Scoring)",
+          "Memory Fabric (Episodic/Semantic/Procedural)",
+          "ChromaDB Vector Store"
+        ]
+      },
+      "pros": [
+        "86.9% faster adaptation than traditional methods",
+        "Self-improving through usage without retraining",
+        "Structured knowledge with surgical updates",
+        "Prevents context collapse and brevity bias",
+        "Automatic performance optimization learning",
+        "Human-readable knowledge base",
+        "Continuous improvement cycles with Thompson sampling"
+      ],
+      "cons": [
+        "Complex architecture with multiple components",
+        "Requires initial setup of memory fabric",
+        "Needs vector database infrastructure (ChromaDB)",
+        "Learning phase requires feedback and evaluation",
+        "Higher initial development effort"
+      ],
+      "bestFor": [
+        "Enterprise systems requiring continuous improvement",
+        "Organizations with evolving database schemas",
+        "Teams wanting to capture institutional knowledge",
+        "Compliance-heavy environments (GDPR, regulations)",
+        "Long-term deployments where learning compounds value",
+        "Self-service BI and analytics platforms"
+      ],
+      "setupTime": "1-2 days",
+      "productionReady": true
+    }
+   
+  ]
+}

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building a Text2SQL Agent With Long-Term Memory | Text2SQLHandbook</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/main.css?v=3">
+
+  <!-- Prism.js for code highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="flex items-center justify-between py-4">
+        <a href="../index.html" class="text-2xl font-bold text-blue-600 hover:opacity-80 transition-opacity">
+          Text2SQL<span class="text-gray-200">Handbook</span>
+        </a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="../index.html" class="nav-link">Text2SQL Handbook</a>
+          <a href="../what-is-text2sql.html" class="nav-link">What is Text-to-SQL?</a>
+          <a href="../approaches.html" class="nav-link active">Solutions</a>
+          <a href="../about.html" class="nav-link">About</a>
+          <a href="../consulting.html" class="btn-primary">Get In Touch</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Article Header -->
+  <section class="article-header">
+    <div class="container">
+      <div class="max-w-4xl mx-auto">
+        <a href="../approaches.html" class="text-white opacity-75 hover:opacity-100 mb-6 inline-block">← Back to All Solutions</a>
+
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-6">
+          Building a Text2SQL Agent With Long-Term Memory: A Production Grade Architecture for User Memory Isolation
+        </h1>
+
+        <p class="text-xl opacity-90 mb-6">
+          How to implement user-specific, long-term memory for smarter database interactions
+        </p>
+
+        <!-- Article Meta Info -->
+        <div class="article-meta">
+          <span>📅 January 2025</span>
+          <span>⏱️ 15 min read</span>
+          <span class="difficulty-badge difficulty-advanced">Advanced</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Article Content -->
+  <div class="container py-12">
+    <div class="article-content">
+
+      <!-- Hero Image -->
+      <div class="my-8">
+        <img src="../assets/images/article2/intro.png" alt="Text2SQL Agent with Long-Term Memory" class="w-full rounded-lg shadow-lg">
+        </div>
+
+      <!-- Introduction -->
+      <section>
+        <p>
+          Long-term memory transforms ordinary text2SQL agents into intelligent assistants that remember user preferences across sessions. This tutorial shows how to build a custom implementation inspired by the Mem0 architecture research paper.
+        </p>
+
+        <div class="bg-blue-900 border-l-4 border-blue-500 p-4 my-6">
+          <p class="font-semibold text-white mb-2">Important Clarification</p>
+          <p class="text-gray-200">
+            This implementation doesn't use the official Mem0 libraries from <a href="https://mem0.ai/research" target="_blank" class="text-cyan-400 hover:underline">https://mem0.ai/research</a>. Instead, I have developed the code from scratch that follows the core principles described in the Mem0 research paper. This gives us more flexibility to adapt the architecture specifically for text2SQL applications.
+          </p>
+        </div>
+      </section>
+
+      <!-- Why Long-Term Memory Matters -->
+      <section>
+        <h2>Why Long-Term Memory Matters for Text2SQL</h2>
+        <p>
+          In traditional text2SQL systems, conversations restart from scratch each session. Preferences, terminology, and context vanish, forcing users to re-educate their AI assistant repeatedly.
+        </p>
+        <p>
+          This creates a significant cognitive load: financial analysts must specify "only show approved loans" every morning, property managers must redefine "luxury properties" each session, and follow-up questions require constant context refreshing.
+        </p>
+        <p>
+          Long-term memory transforms this experience by enabling your text2SQL agent to:
+        </p>
+        <ul>
+          <li><strong>Remember preferences</strong> across sessions, automatically filtering by user-specific criteria like "exclude canceled orders"</li>
+          <li><strong>Learn domain terminology</strong> that bridges user language and database schema, such as "quarterly performers" = "accounts with activity in last three months"</li>
+          <li><strong>Maintain context</strong> over time, allowing natural follow-ups like "How many of those were from California?" days later</li>
+          <li><strong>Build personalized understanding</strong> of each user's data interests, improving relevance without explicit instruction</li>
+        </ul>
+        <p>
+          This capability doesn't just enhance experience — it fundamentally changes how people interact with data, creating a more intuitive, human-like interface to complex database information.
+        </p>
+      </section>
+
+      <!-- What is Mem0 -->
+      <section>
+        <h2>What is Mem0 and How it Inspired Our Multi-User Text2SQL Architecture</h2>
+        <p>
+          Mem0 (pronounced "mem-zero") is a memory architecture from mem0.ai that solves limited context window problems through a two-phase system: extracting key information from conversations and updating memory to maintain consistency.
+        </p>
+        <p>
+          This architecture enhances Mem0 with multi-user memory isolation:
+        </p>
+        <ol>
+          <li><strong>Complete memory isolation</strong>: Each user's preferences stored separately, preventing cross-contamination.</li>
+          <li><strong>User-targeted extraction</strong>: This Text2SQL Memory component identifies SQL-relevant elements (entities, preferences, terminology, metrics) per user.</li>
+          <li><strong>Database integration</strong>: Connects personalized memories directly to database schema for accurate SQL generation.</li>
+        </ol>
+        <p>
+          This architecture creates personalized database interfaces where financial analysts automatically filter by preferred metrics, property managers use specialized terminology, and executives reference custom KPIs — all without restating preferences each session.
+        </p>
+      </section>
+
+      <!-- Architecture Diagram -->
+      <div class="my-8">
+        <img src="../assets/images/article2/architecture.png" alt="Text2SQL Long-Term Memory Architecture" class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">Architecture Overview - Image by Author</p>
+      </div>
+
+      <!-- Core Components -->
+      <section>
+        <h2>Core Components of This Text2SQL + Long-Term Memory Architecture</h2>
+        <p>
+          As illustrated in the diagram, this text2sql long-term memory architecture consists of two primary phases that work in tandem:
+        </p>
+
+        <h3>1. Extraction Phase (Blue)</h3>
+        <p>The extraction phase captures important information from conversations:</p>
+        <ul>
+          <li><strong>Message Ingestion</strong>: The system processes new message pairs (user question + AI response).</li>
+          <li><strong>Context Retrieval</strong>: Two sources of context are leveraged:
+            <ul>
+              <li>A conversation summary that encapsulates the entire history</li>
+              <li>The most recent m messages for immediate context</li>
+            </ul>
+          </li>
+          <li><strong>LLM Processing</strong>: An LLM analyzes the conversation context to extract relevant information.</li>
+        </ul>
+
+        <h3>2. Text2SQL User-Specific Memory Extraction (Red)</h3>
+        <p>This specialized component transforms general conversation elements into structured, database-relevant memories:</p>
+        <ul>
+          <li><strong>Entity Extraction</strong>: Identifies database entities (tables, fields) that the user frequently references</li>
+          <li><strong>Preference Capture</strong>: Records filtering and sorting preferences specific to each user</li>
+          <li><strong>Terminology Recognition</strong>: Maps user-defined terms to their database equivalents</li>
+          <li><strong>Metric Definition</strong>: Stores custom calculations or criteria defined by the user</li>
+        </ul>
+
+        <h3>3. Update Phase (Green)</h3>
+        <p>The update phase maintains a consistent knowledge base:</p>
+        <ul>
+          <li><strong>Similarity Search</strong>: The system finds similar existing memories using the vector database</li>
+          <li><strong>Operation Classification</strong>: The system determines whether to:
+            <ul>
+              <li><strong>ADD</strong>: Create new memories when no similar ones exist</li>
+              <li><strong>UPDATE</strong>: Enhance existing memories with new information</li>
+              <li><strong>DELETE</strong>: Remove outdated or contradicted memories</li>
+              <li><strong>NOOP</strong>: Make no changes when information is redundant</li>
+            </ul>
+          </li>
+        </ul>
+        <p>
+          All operations center around the Vector Database at the top, which stores memories with proper user isolation, enabling personalized responses while maintaining privacy between users.
+        </p>
+      </section>
+
+      <!-- Implementation -->
+      <section>
+        <h2>Implementing Multi-User Memory Storage</h2>
+        <p>
+          The heart of our text2SQL memory system is its PostgreSQL-based storage implementation for production deployments.
+        </p>
+        <p>
+          This implementation leverages the <code>pgvector</code> extension for efficient similarity searches across high-dimensional embedding vectors, handling three critical aspects:
+        </p>
+        <ol>
+          <li><strong>Vector-based similarity search</strong>: Stores embeddings as native vector types, performing cosine similarity operations directly in the database without transferring large vector data.</li>
+          <li><strong>User isolation</strong>: The <code>user_id</code> field serves as both security boundary and performance optimization, ensuring one user's memories don't affect another's.</li>
+          <li><strong>Hierarchical indexing</strong>: HNSW (Hierarchical Navigable Small World) index accelerates similarity searches through a layered graph structure, enabling logarithmic-time approximate nearest neighbor searches.</li>
+        </ol>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-language">Python</span>
+            <button class="copy-button">Copy</button>
+          </div>
+          <pre><code class="language-python">class PostgresMemoryStore:
+    """PostgreSQL-based memory storage with user isolation"""
+
+    def __init__(self, connection_string: str):
+        self.conn_string = connection_string
+        self.embedding_dim = 1536  # OpenAI embedding dimension
+        self._init_db()
+
+    def _init_db(self):
+        """Initialize database tables if they don't exist"""
+        try:
+            import psycopg2
+
+            # Connect to PostgreSQL
+            conn = psycopg2.connect(self.conn_string)
+            cursor = conn.cursor()
+
+            # Ensure vector extension is loaded
+            cursor.execute("CREATE EXTENSION IF NOT EXISTS vector;")
+            conn.commit()
+
+            # Create memories table with user_id field
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS memories (
+                id SERIAL PRIMARY KEY,
+                user_id TEXT NOT NULL,
+                content TEXT NOT NULL,
+                created_at FLOAT NOT NULL,
+                source TEXT,
+                metadata JSONB DEFAULT '{}'::JSONB,
+                embedding vector(1536)
+            );
+            """)
+
+            # Create index for vector similarity search
+            cursor.execute("""
+            CREATE INDEX memories_embedding_idx
+            ON memories USING hnsw (embedding vector_cosine_ops);
+            """)</code></pre>
+        </div>
+
+        <p>
+          The database schema maintains three core tables:
+        </p>
+        <ul>
+          <li><code>memories</code>: Stores the actual memory content with embeddings</li>
+          <li><code>conversation_summaries</code>: Maintains compressed representations of conversation history</li>
+          <li><code>recent_messages</code>: Caches the most recent interactions for immediate context</li>
+        </ul>
+      </section>
+
+      <!-- Data Platform Connection -->
+      <section>
+        <h2>Connecting to the Data Platform</h2>
+        <p>
+          This API client serves as a flexible connector between our memory system and the underlying data platform. Though our implementation uses Denodo in this example, the architecture is designed to be platform-agnostic and can easily be adapted to work with any database system:
+        </p>
+        <ul>
+          <li><strong>Snowflake</strong>: Extract metadata using Snowflake's Information Schema views</li>
+          <li><strong>Databricks</strong>: Access catalog metadata through Unity Catalog API</li>
+          <li><strong>SQL Server/Oracle/PostgreSQL/MySQL</strong>: Generate semantic models through their respective system catalogs</li>
+        </ul>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-language">Python</span>
+            <button class="copy-button">Copy</button>
+          </div>
+          <pre><code class="language-python">class DenodoAPIClient:
+    """Client for interacting with Denodo data virtualization platform"""
+
+    def __init__(self, api_host: str):
+        self.api_host = api_host
+
+    async def get_metadata(self, database_name: str,
+                          username: str, password: str) -> Dict[str, Any]:
+        """Get metadata from data platform"""
+        try:
+            url = f"{self.api_host}/getMetadata"
+
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": self._get_basic_auth_header(username, password)
+            }
+
+            params = {
+                "database_name": database_name,
+                "include_schema": True
+            }
+
+            response = requests.get(url, headers=headers, params=params)
+
+            if response.status_code != 200:
+                return {"error": f"Status code: {response.status_code}"}
+
+            return response.json()
+        except Exception as e:
+            return {"error": str(e)}</code></pre>
+        </div>
+      </section>
+
+      <!-- Memory Agent -->
+      <section>
+        <h2>The Memory Agent Implementation</h2>
+        <p>
+          The <code>Mem0Agent</code> class serves as the cognitive core of our system, orchestrating the extraction, retrieval, and management of memories across user sessions.
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-language">Python</span>
+            <button class="copy-button">Copy</button>
+          </div>
+          <pre><code class="language-python">class Mem0Agent:
+    """Memory agent inspired by Mem0 architecture for text2SQL"""
+
+    def __init__(self, use_postgres: bool = False,
+                 postgres_conn_string: str = None):
+        # Initialize the appropriate memory store
+        if use_postgres and postgres_conn_string:
+            self.store = PostgresMemoryStore(postgres_conn_string)
+            print("Using PostgreSQL for memory storage")
+        else:
+            self.store = JSONMemoryStore()
+
+        self.db_schema = None
+        self.current_user_id = None
+        self.max_recent_messages = 10
+
+    def load_user_context(self, user_id: str):
+        """Load context for a specific user"""
+        self.current_user_id = user_id
+        self.memories = self.store.load_memories(user_id)
+        self.conversation_summary = self.store.get_conversation_summary(user_id)
+        self.recent_messages = self.store.get_recent_messages(user_id)</code></pre>
+        </div>
+
+        <p>
+          This implementation uses the <strong>strategy pattern</strong> to abstract storage mechanisms, allowing flexibility between PostgreSQL (production) and JSON (development).
+        </p>
+      </section>
+
+      <!-- Memory Extraction -->
+      <section>
+        <h2>Memory Extraction and Update Processes</h2>
+        <p>
+          The core of our system is how it extracts and updates memories:
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-language">Python</span>
+            <button class="copy-button">Copy</button>
+          </div>
+          <pre><code class="language-python">async def extract_memories(self, message_pair: List[str]) -> List[str]:
+    """Extract salient memories from a message pair using LLM"""
+
+    prompt = f"""You are an intelligent memory extraction system.
+Your task is to identify important information from conversations
+about database queries that should be remembered for future reference.
+
+Context:
+Conversation summary so far: {self.conversation_summary}
+Recent messages: {self.recent_messages}
+Current message pair:
+Human: {message_pair[0]}
+AI: {message_pair[1]}
+
+Extract 0-3 concise, salient facts that would be useful to remember
+in future database queries.
+
+Pay special attention to the following categories and tag them accordingly:
+1. [PREFERENCE] User's query preferences or filters
+2. [TERM] Custom terminology or abbreviations defined by the user
+3. [METRIC] Custom metrics or calculations defined by the user
+
+Format each memory as a single, concise sentence with the appropriate
+tag prefix. If no important information is worth retaining, return an
+empty list.
+
+Extracted memories:"""
+
+    # Send prompt to LLM and parse response...
+
+    return memories</code></pre>
+        </div>
+
+        <p>
+          The memory extraction process uses <strong>zero-shot learning</strong> where an LLM acts as a semantic filter to identify information worth remembering.
+        </p>
+      </section>
+
+      <!-- Demonstration -->
+      <section>
+        <h2>Demonstrating the Power of Long-Term Memory in Text2SQL</h2>
+        <p>
+          Let's see how our implementation helps two different users, Sandra and Alex, interact with queries using the bank database.
+        </p>
+
+        <h3>User 1: Sandra (Financial Analyst)</h3>
+
+        <div class="my-8">
+          <img src="../assets/images/article2/user1.gif" alt="Sandra's First Session" class="w-full rounded-lg shadow-lg">
+          <p class="text-center text-sm text-secondary mt-2">Sandra's First Session - Image by Author</p>
+        </div>
+
+        <h4>Session Flow</h4>
+        <ol>
+          <li><strong>Authentication</strong>: Sandra logs in, establishing her identity.</li>
+          <li><strong>Database Connection</strong>: System loads bank database schema to understand tables and relationships.</li>
+          <li><strong>Initial Query</strong>: "How many loans do we currently have in the system?"</li>
+          <li><strong>Preference Setting</strong>: "I'm only interested in approved loans going forward."</li>
+          <li><strong>Follow-up Query</strong>: "Show me the loans with the highest interest rates."</li>
+          <li><strong>Memory Application</strong>: System automatically filters to show only approved loans with high rates.</li>
+        </ol>
+
+        <h4>Memory System in Action</h4>
+        <p>The right panel shows the memory system working:</p>
+        <ul>
+          <li><strong>Preference Memory</strong>: Stores "User is only interested in approved loans" and applies this filter automatically.</li>
+          <li><strong>Entity Memories</strong>: Tracks tables Sandra is interested in.</li>
+          <li><strong>Metric Memory</strong>: Records how loans were counted for consistency.</li>
+          <li><strong>Database Context</strong>: Maintains schema knowledge for accurate SQL generation.</li>
+        </ul>
+
+        <div class="my-8">
+          <img src="../assets/images/article2/user2.gif" alt="Sandra's Session 2" class="w-full rounded-lg shadow-lg">
+          <p class="text-center text-sm text-secondary mt-2">Sandra's Session 2 (3 days later) - Image by Author</p>
+        </div>
+
+        <p>
+          When Sandra asks "Let's define high-risk loans as those with credit scores below 750. How many high-risk loans in California?", the system:
+        </p>
+        <ol>
+          <li><strong>Updates her metric definition</strong> (threshold from 650 to 750)</li>
+          <li><strong>Applies her approved loans preference</strong> automatically</li>
+          <li><strong>Generates SQL</strong> incorporating both preferences</li>
+          <li><strong>Acknowledges</strong> with "(Note: I've applied your previously expressed preferences)"</li>
+        </ol>
+
+        <h3>User 2: Alex (Property Manager)</h3>
+
+        <div class="my-8">
+          <img src="../assets/images/article2/user3.gif" alt="Alex's Session" class="w-full rounded-lg shadow-lg">
+          <p class="text-center text-sm text-secondary mt-2">Alex's Session - Image by Author</p>
+        </div>
+
+        <p>
+          This demonstration shows how the text2SQL agent with long-term memory creates a personalized experience for Property Manager Alex:
+        </p>
+        <ol>
+          <li><strong>Regional preference</strong>: Alex specifies he works with California properties, stored as a user preference.</li>
+          <li><strong>Custom terminology</strong>: Alex defines "luxury properties" as those valued over $300,000.</li>
+          <li><strong>Smart confirmation</strong>: When asked about luxury properties, system confirms whether to apply his California preference.</li>
+          <li><strong>Personalized results</strong>: After confirmation, system applies both preferences in the SQL query.</li>
+        </ol>
+      </section>
+
+      <!-- Performance Optimization -->
+      <section>
+        <h2>Performance Optimization for Production</h2>
+        <p>For production deployment, consider these optimizations:</p>
+        <ol>
+          <li><strong>Embedding cache</strong>: Store frequently used embeddings to reduce API calls</li>
+          <li><strong>Database indexing</strong>: Ensure proper vector and text indices on memory tables</li>
+          <li><strong>Batch processing</strong>: Update memories in batches rather than individually</li>
+          <li><strong>Connection pooling</strong>: Maintain a pool of database connections for better throughput</li>
+          <li><strong>Asynchronous execution</strong>: Process memory operations in the background when possible</li>
+        </ol>
+      </section>
+
+      <!-- Key Benefits -->
+      <section>
+        <h2>Key Benefits for Text2SQL Agents</h2>
+        <p>Adding long-term memory to text2SQL agents provides several advantages:</p>
+        <ol>
+          <li><strong>Personalized experiences</strong>: Users don't need to repeat preferences in every session</li>
+          <li><strong>Terminology consistency</strong>: Custom definitions and abbreviations persist across sessions</li>
+          <li><strong>Reduced friction</strong>: Users can build on previous queries without reestablishing context</li>
+          <li><strong>Multi-user support</strong>: Each user maintains their own memory context</li>
+          <li><strong>More natural interactions</strong>: The agent remembers important details like humans do</li>
+        </ol>
+      </section>
+
+      <!-- Conclusion -->
+      <section>
+        <h2>Conclusion</h2>
+        <p>
+          Long-term memory transforms text2SQL agents from basic query translators into collaborative partners that learn user preferences over time. By implementing this memory system inspired by the Mem0 architecture, I have created a text2SQL agent that remembers what matters.
+        </p>
+        <p>
+          The system extracts, stores, and retrieves important facts from conversations, allowing agents to maintain context across sessions, remember user preferences, learn custom terminology, and provide increasingly personalized experiences.
+        </p>
+        <p>
+          While I have used Denodo as the data platform for this demonstration, the same architecture works equally well with Snowflake, Databricks, or traditional databases. The key innovation lies in the memory system itself, which remains consistent regardless of the underlying data platform.
+        </p>
+      </section>
+
+      <!-- GitHub Link -->
+      <section class="consulting-cta p-8 md:p-12 rounded-2xl my-12">
+        <h2 class="text-white text-center mb-4">Try It Yourself</h2>
+        <p class="text-xl text-center mb-8 opacity-90">
+          Full source code and examples available on GitHub
+        </p>
+        <div class="flex justify-center gap-4">
+          <a href="https://github.com/MKcodeshere/Text2SQl-Agent-with-Long-Term-Memory" target="_blank" class="btn-primary text-blue-600 hover:bg-gray-800">
+            View on GitHub →
+          </a>
+        </div>
+      </section>
+
+      <!-- Consulting CTA -->
+      <div class="consulting-cta">
+        <h3>Need Help Implementing This?</h3>
+        <p>I offer consulting services for Text-to-SQL systems with long-term memory capabilities. Let's discuss your requirements.</p>
+        <a href="../consulting.html" class="btn-primary text-blue-600 hover:bg-gray-800">
+          Schedule a Consultation
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">Text2SQLHandbook</h3>
+          <p class="text-gray-400">Your comprehensive guide to Text-to-SQL systems with GenAI.</p>
+        </div>
+        <div class="footer-links">
+          <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="../index.html">Text2SQL Handbook</a></li>
+            <li><a href="../what-is-text2sql.html">What is Text-to-SQL?</a></li>
+            <li><a href="../approaches.html">All Solutions</a></li>
+            <li><a href="../about.html">About</a></li>
+            <li><a href="../consulting.html">Consulting</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4">Connect</h3>
+          <p class="text-gray-400 text-sm">your@email.com</p>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
+        <p>&copy; 2025 Text2SQLHandbook. Built with ❤️ for the AI and Text-to-SQL community.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="../assets/js/main.js"></script>
+
+</body>
+</html>
