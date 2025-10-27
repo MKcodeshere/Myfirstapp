@@ -1184,7 +1184,7 @@ footer p {
   .approach-thumbnail,
   .card img,
   .card > div:first-child {
-    height: 140px !important;
+    height: 180px !important; /* Increased from 140px to 180px for better proportions */
     object-fit: cover;
   }
 
@@ -1381,5 +1381,19 @@ footer p {
   .max-w-4xl,
   .max-w-3xl {
     max-width: 100% !important;
+  }
+
+  /* ===== UTILITY CLASSES - ALWAYS RESPECT ===== */
+  .hidden {
+    display: none !important;
+  }
+
+  /* ===== FORM ELEMENTS ON MOBILE ===== */
+  input, select, textarea {
+    font-size: 0.875rem !important;
+  }
+
+  label {
+    font-size: 0.875rem !important;
   }
 }
