@@ -1045,4 +1045,97 @@ footer p {
   .container-narrow {
     padding: 0 var(--space-4);
   }
+
+  /* Mobile-specific fixes for approach cards */
+  .approach-thumbnail,
+  .card img {
+    height: 180px !important;
+    object-fit: cover;
+  }
+
+  /* Fix card spacing on mobile */
+  .card {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Fix grid layout on mobile - single column */
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+
+  /* Reduce hero section size on mobile */
+  .hero {
+    padding: 3rem 0 2rem !important;
+    min-height: auto !important;
+  }
+
+  .hero h1 {
+    font-size: 1.875rem !important; /* 30px */
+    line-height: 1.2;
+  }
+
+  .hero h2 {
+    font-size: 1.5rem !important; /* 24px */
+  }
+
+  .hero p {
+    font-size: 0.875rem !important; /* 14px */
+  }
+
+  /* Button sizing */
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  /* Featured card on mobile */
+  .featured-card {
+    padding: 1.5rem !important;
+  }
+
+  /* Article content on mobile */
+  .article-content {
+    padding: 1rem;
+  }
+
+  .article-content h1 {
+    font-size: 1.75rem !important;
+  }
+
+  .article-content h2 {
+    font-size: 1.5rem !important;
+  }
+
+  .article-content h3 {
+    font-size: 1.25rem !important;
+  }
+
+  .article-content img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* Code blocks on mobile */
+  .code-block {
+    font-size: 0.75rem;
+    overflow-x: auto;
+  }
+
+  /* Social icons sizing */
+  .social-icons a {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Footer on mobile */
+  footer {
+    padding: 2rem 0;
+  }
+
+  footer .grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
 }
