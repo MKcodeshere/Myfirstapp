@@ -55,11 +55,13 @@
   --bg-secondary: #1E293B;
   --bg-tertiary: #334155;
 
-  /* Text Colors - Light on Dark */
-  --text-primary: #F8FAFC;
-  --text-secondary: #E2E8F0;
-  --text-tertiary: #94A3B8;
+  /* Text Colors - Light on Dark (SF Pro inspired) */
+  --text-primary: #e6edf3;
+  --text-secondary: #9aa4b2;
+  --text-tertiary: #7a8594;
   --text-inverse: #0F172A;
+  --link-color: #3b82f6;
+  --link-hover: #60a5fa;
 
   /* Border & Divider - Dark Theme */
   --border-light: #334155;
@@ -99,8 +101,19 @@
   --space-20: 5rem;
 
   /* Typography */
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
   --font-mono: 'Fira Code', ui-monospace, 'Courier New', monospace;
+
+  /* Font Sizes - Reduced for better readability */
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.875rem;    /* 14px */
+  --text-base: 0.9375rem; /* 15px - base reduced from 16px */
+  --text-lg: 1.0625rem;   /* 17px */
+  --text-xl: 1.1875rem;   /* 19px */
+  --text-2xl: 1.375rem;   /* 22px */
+  --text-3xl: 1.75rem;    /* 28px */
+  --text-4xl: 2.125rem;   /* 34px */
+  --text-5xl: 2.75rem;    /* 44px */
 
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -116,6 +129,7 @@
 
 body {
   font-family: var(--font-sans);
+  font-size: var(--text-base);
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
@@ -130,12 +144,13 @@ body {
 }
 
 a {
-  color: var(--primary-400);
+  color: var(--link-color);
   transition: color var(--transition-base);
+  text-decoration: none;
 }
 
 a:hover {
-  color: var(--primary-300);
+  color: var(--link-hover);
 }
 
 /* Typography - Modern, Compact, Professional */
@@ -148,33 +163,33 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: 2.75rem;
+  font-size: var(--text-5xl);
   font-weight: 800;
   line-height: 1.1;
 }
 
 h2 {
-  font-size: 2.25rem;
+  font-size: var(--text-4xl);
   font-weight: 700;
 }
 
 h3 {
-  font-size: 1.875rem;
+  font-size: var(--text-3xl);
   font-weight: 600;
 }
 
 h4 {
-  font-size: 1.5rem;
+  font-size: var(--text-2xl);
   font-weight: 600;
 }
 
 h5 {
-  font-size: 1.25rem;
+  font-size: var(--text-xl);
   font-weight: 600;
 }
 
 h6 {
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
   font-weight: 600;
 }
 
@@ -185,21 +200,21 @@ p {
 }
 
 .text-large {
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
   line-height: 1.75;
 }
 
 .text-small {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   line-height: 1.5;
 }
 
 /* Responsive Typography */
 @media (max-width: 768px) {
-  h1 { font-size: 2.25rem; }
-  h2 { font-size: 1.875rem; }
-  h3 { font-size: 1.5rem; }
-  h4 { font-size: 1.25rem; }
+  h1 { font-size: var(--text-4xl); }
+  h2 { font-size: var(--text-3xl); }
+  h3 { font-size: var(--text-2xl); }
+  h4 { font-size: var(--text-xl); }
 }
 
 /* Navigation - Dark Theme */
@@ -224,7 +239,7 @@ p {
   color: var(--text-secondary);
   text-decoration: none;
   padding: var(--space-2) var(--space-4);
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   font-weight: 500;
   transition: color var(--transition-base);
   border-radius: var(--radius-md);
@@ -265,7 +280,7 @@ p {
   padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-lg);
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -296,7 +311,7 @@ p {
   padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-lg);
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -373,8 +388,8 @@ p {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 0.875rem;
-  color: #64748B;
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
   margin-bottom: 1rem;
 }
 
@@ -391,7 +406,7 @@ p {
   color: #22D3EE !important;
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-full);
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   font-weight: 500;
   margin-right: var(--space-2);
   margin-bottom: var(--space-2);
@@ -408,7 +423,7 @@ p {
   display: inline-block;
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-md);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -450,25 +465,25 @@ p {
 }
 
 .code-language {
-  color: #94A3B8;
-  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
   font-weight: 600;
 }
 
 .copy-button {
   background-color: transparent;
-  color: #94A3B8;
-  border: 1px solid #334155;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
   padding: 0.25rem 0.75rem;
   border-radius: 0.25rem;
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .copy-button:hover {
-  background-color: #334155;
-  color: white;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 pre {
@@ -478,8 +493,8 @@ pre {
 }
 
 code {
-  font-family: 'Fira Code', 'Monaco', 'Courier New', monospace;
-  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
   line-height: 1.6;
 }
 
@@ -554,7 +569,7 @@ code {
 .hero {
   background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 50%, #083344 100%);
   color: var(--text-primary) !important;
-  padding: var(--space-12) 0;
+  padding: var(--space-8) 0;
   position: relative;
   overflow: hidden;
   border-bottom: 2px solid var(--primary-400);
@@ -587,13 +602,23 @@ code {
 .hero h4,
 .hero h5,
 .hero h6 {
-  color: var(--text-primary) !important;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  color: #e5e7eb !important;
+  text-shadow: none;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.hero h1 {
+  font-size: var(--text-4xl) !important;
+  margin-bottom: var(--space-3);
 }
 
 .hero p {
-  color: var(--text-secondary) !important;
-  opacity: 0.95;
+  color: #9ca3af !important;
+  opacity: 1;
+  font-size: var(--text-base);
+  line-height: 1.6;
 }
 
 /* Hero buttons - Teal Accent */
@@ -628,7 +653,11 @@ code {
 /* Responsive Hero */
 @media (max-width: 768px) {
   .hero {
-    padding: var(--space-8) 0;
+    padding: var(--space-6) 0;
+  }
+
+  .hero h1 {
+    font-size: var(--text-3xl) !important;
   }
 }
 
@@ -671,7 +700,7 @@ footer p {
   color: var(--text-secondary);
   text-decoration: none;
   transition: color var(--transition-base);
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
 }
 
 .footer-links a:hover {
@@ -785,7 +814,7 @@ footer p {
 .article-header {
   background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 50%, #083344 100%);
   color: var(--text-primary) !important;
-  padding: var(--space-12) 0;
+  padding: var(--space-8) 0;
   position: relative;
   overflow: hidden;
   border-bottom: 2px solid var(--primary-400);
@@ -832,7 +861,7 @@ footer p {
   max-width: 800px;
   margin: 0 auto;
   line-height: 1.8;
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
 }
 
 .article-content h2 {
@@ -943,12 +972,12 @@ footer p {
 }
 
 .consulting-cta h3 {
-  font-size: 1.875rem;
+  font-size: var(--text-3xl);
   margin-bottom: var(--space-4);
 }
 
 .consulting-cta p {
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
   opacity: 0.95;
   margin-bottom: var(--space-8);
 }
