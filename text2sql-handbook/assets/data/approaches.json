@@ -304,7 +304,71 @@
       ],
       "setupTime": "1-2 days",
       "productionReady": true
+    },
+    {
+      "id": "hvsr-human-verified-sql",
+      "title": "HVSR: Setting the Bar for Text-to-SQL with Human-Verified Repositories",
+      "slug": "hvsr",
+      "description": "Combine human SQL expertise with AI pattern-matching using Human-Verified SQL Repository (HVSR). This approach achieves gold-standard query quality by maintaining a curated repository of expert-verified queries that LLMs can match and adapt, eliminating the need for expensive fine-tuning.",
+      "shortDescription": "Human-verified SQL repository for gold-standard query quality without fine-tuning",
+      "articlePreview": "Learn how HVSR creates a medallion architecture for Text-to-SQL (Bronze to Gold) by capturing expert SQL knowledge in a reusable repository. Match new questions to verified queries, adapt them intelligently, and continuously improve query quality through human validation.",
+      "thumbnailImage": "assets/images/hvsr/intro.png",
+      "thumbnailGradient": "from-amber-500 to-yellow-500",
+      "thumbnailIcon": "⭐",
+      "readTime": "20 min read",
+      "difficulty": "intermediate",
+      "tags": ["HVSR", "Human Verification", "Knowledge Management", "Semantic Matching", "Query Optimization", "Denodo"],
+      "llmModel": "GPT-4",
+      "database": "Denodo / Any SQL Database",
+      "github": {
+        "url": "https://github.com/MKcodeshere/hvsr-text2sql",
+        "stars": 0,
+        "forks": 0
+      },
+      "medium": {
+        "url": "https://medium.com/data-science-collective/hvsr-setting-the-bar-for-text-to-sql-with-human-verified-repositories-ab59f4d0dff9",
+        "title": "HVSR: Setting the Bar for Text-to-SQL with Human-Verified Repositories"
+      },
+      "datePublished": "2025-01-29",
+      "featured": false,
+      "architecture": {
+        "imageUrl": "/assets/images/hvsr/architecture.png",
+        "components": [
+          "Expert Validation Interface",
+          "YAML/Database Storage",
+          "Semantic Question Matcher (LangChain)",
+          "Query Adaptation Engine",
+          "Denodo/Database API",
+          "Fallback Text-to-SQL"
+        ]
+      },
+      "pros": [
+        "Gold-standard query quality from human experts",
+        "No expensive fine-tuning required",
+        "Captures and shares institutional SQL knowledge",
+        "Consistent results for similar questions",
+        "Continuous improvement as repository grows",
+        "Works with existing Text-to-SQL as fallback",
+        "Performance optimizations built-in"
+      ],
+      "cons": [
+        "Requires initial human effort to build repository",
+        "Depends on semantic matching accuracy",
+        "Cold start problem with empty repository",
+        "Needs ongoing curation and validation",
+        "May not handle completely novel questions well"
+      ],
+      "bestFor": [
+        "Organizations with SQL expertise to capture",
+        "Production systems requiring query quality consistency",
+        "Environments where performance optimization matters",
+        "Teams wanting to avoid fine-tuning complexity",
+        "Applications with recurring query patterns",
+        "Compliance-heavy industries needing verified queries"
+      ],
+      "setupTime": "4-6 hours",
+      "productionReady": true
     }
-   
+
   ]
 }

@@ -14,7 +14,7 @@ let searchQuery = '';
 // Load approaches data
 async function loadApproaches() {
   try {
-    const response = await fetch('assets/data/approaches.json');
+    const response = await fetch('assets/data/approaches.json?v=3');
     const data = await response.json();
     allApproaches = data.approaches;
     filteredApproaches = [...allApproaches];
