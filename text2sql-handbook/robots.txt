@@ -1,0 +1,11 @@
+# robots.txt for Text2SQL Hub
+# https://text2sql-hub.dev/
+
+User-agent: *
+Allow: /
+
+# Disallow sample/testing folders
+Disallow: /sample/
+
+# Sitemap
+Sitemap: https://text2sql-hub.dev/sitemap.xml
