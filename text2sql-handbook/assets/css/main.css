@@ -1031,111 +1031,346 @@ footer p {
 .p-6 { padding: var(--space-6); }
 .p-8 { padding: var(--space-8); }
 
-/* Responsive Spacing */
+/* ========================================
+   COMPREHENSIVE MOBILE RESPONSIVE STYLES
+   ======================================== */
 @media (max-width: 768px) {
+
+  /* ===== BASE LAYOUT & SPACING ===== */
   .section {
-    padding: var(--space-12) 0;
+    padding: var(--space-8) 0 !important;
   }
 
   .section-compact {
-    padding: var(--space-8) 0;
+    padding: var(--space-6) 0 !important;
   }
 
   .container,
   .container-narrow {
-    padding: 0 var(--space-4);
+    padding: 0 var(--space-4) !important;
   }
 
-  /* Mobile-specific fixes for approach cards */
-  .approach-thumbnail,
-  .card img {
-    height: 180px !important;
-    object-fit: cover;
+  /* ===== TYPOGRAPHY ===== */
+  h1 {
+    font-size: 1.5rem !important; /* 24px */
+    line-height: 1.3 !important;
   }
 
-  /* Fix card spacing on mobile */
-  .card {
-    margin-bottom: 1.5rem;
+  h2 {
+    font-size: 1.25rem !important; /* 20px */
+    line-height: 1.3 !important;
   }
 
-  /* Fix grid layout on mobile - single column */
-  .grid {
-    grid-template-columns: 1fr !important;
-    gap: 1rem;
+  h3 {
+    font-size: 1.125rem !important; /* 18px */
   }
 
-  /* Reduce hero section size on mobile */
+  h4, h5, h6 {
+    font-size: 1rem !important; /* 16px */
+  }
+
+  p, .text-base {
+    font-size: 0.875rem !important; /* 14px */
+  }
+
+  .text-lg {
+    font-size: 0.9375rem !important; /* 15px */
+  }
+
+  .text-xl {
+    font-size: 1rem !important; /* 16px */
+  }
+
+  .text-2xl {
+    font-size: 1.125rem !important; /* 18px */
+  }
+
+  .text-3xl {
+    font-size: 1.375rem !important; /* 22px */
+  }
+
+  .text-4xl {
+    font-size: 1.625rem !important; /* 26px */
+  }
+
+  .text-5xl {
+    font-size: 1.875rem !important; /* 30px */
+  }
+
+  /* ===== ICONS & SVG ===== */
+  svg.w-6 { width: 1rem !important; height: 1rem !important; }
+  svg.w-5 { width: 0.875rem !important; height: 0.875rem !important; }
+  svg.w-4 { width: 0.75rem !important; height: 0.75rem !important; }
+
+  /* Icon containers */
+  .article-meta svg {
+    width: 0.875rem !important;
+    height: 0.875rem !important;
+  }
+
+  /* ===== HERO SECTIONS ===== */
   .hero {
-    padding: 3rem 0 2rem !important;
+    padding: 2rem 0 1.5rem !important;
     min-height: auto !important;
   }
 
   .hero h1 {
-    font-size: 1.875rem !important; /* 30px */
-    line-height: 1.2;
+    font-size: 1.5rem !important; /* 24px */
+    margin-bottom: 0.75rem !important;
   }
 
   .hero h2 {
-    font-size: 1.5rem !important; /* 24px */
+    font-size: 1.25rem !important; /* 20px */
   }
 
   .hero p {
     font-size: 0.875rem !important; /* 14px */
+    line-height: 1.5 !important;
   }
 
-  /* Button sizing */
+  /* ===== ABOUT PAGE - PROFILE IMAGE ===== */
+  .hero .w-48 {
+    width: 7rem !important; /* 112px instead of 192px */
+    height: 7rem !important;
+  }
+
+  .hero .h-48 {
+    height: 7rem !important;
+  }
+
+  /* Profile section spacing */
+  .hero .gap-12 {
+    gap: 1.5rem !important;
+  }
+
+  .hero .inline-block.mb-4 {
+    font-size: 0.75rem !important;
+    padding: 0.375rem 0.75rem !important;
+  }
+
+  .hero .flex-wrap span {
+    font-size: 0.75rem !important;
+    padding: 0.375rem 0.75rem !important;
+  }
+
+  /* ===== CARDS & GRIDS ===== */
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .card {
+    margin-bottom: 1rem !important;
+  }
+
+  .card h3 {
+    font-size: 1rem !important; /* 16px */
+  }
+
+  .card p {
+    font-size: 0.8125rem !important; /* 13px */
+  }
+
+  /* Card images and thumbnails */
+  .approach-thumbnail,
+  .card img,
+  .card > div:first-child {
+    height: 140px !important;
+    object-fit: cover;
+  }
+
+  /* Card meta info */
+  .card .flex.items-center span {
+    font-size: 0.6875rem !important; /* 11px */
+  }
+
+  .card .text-xs {
+    font-size: 0.6875rem !important; /* 11px */
+  }
+
+  /* Card tags */
+  .card .flex-wrap span {
+    font-size: 0.6875rem !important; /* 11px */
+    padding: 0.25rem 0.5rem !important;
+  }
+
+  /* ===== BUTTONS ===== */
   .btn-primary,
   .btn-secondary {
-    padding: 0.625rem 1.25rem;
-    font-size: 0.875rem;
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
   }
 
-  /* Featured card on mobile */
-  .featured-card {
-    padding: 1.5rem !important;
+  /* ===== NAVIGATION ===== */
+  .navbar {
+    padding: 0.75rem 0 !important;
   }
 
-  /* Article content on mobile */
-  .article-content {
-    padding: 1rem;
-  }
-
-  .article-content h1 {
-    font-size: 1.75rem !important;
-  }
-
-  .article-content h2 {
-    font-size: 1.5rem !important;
-  }
-
-  .article-content h3 {
+  .navbar .text-2xl {
     font-size: 1.25rem !important;
   }
 
+  /* ===== FEATURED CARD ===== */
+  .featured-card {
+    padding: 1rem !important;
+  }
+
+  .featured-card h3 {
+    font-size: 1.125rem !important;
+  }
+
+  .featured-card p {
+    font-size: 0.8125rem !important;
+  }
+
+  /* ===== ARTICLE PAGES ===== */
+  .article-header {
+    padding: 2rem 0 1.5rem !important;
+  }
+
+  .article-content {
+    padding: 0.5rem !important;
+  }
+
+  .article-content h1 {
+    font-size: 1.375rem !important; /* 22px */
+    margin-bottom: 0.75rem !important;
+  }
+
+  .article-content h2 {
+    font-size: 1.25rem !important; /* 20px */
+    margin-bottom: 0.75rem !important;
+  }
+
+  .article-content h3 {
+    font-size: 1.125rem !important; /* 18px */
+    margin-bottom: 0.5rem !important;
+  }
+
+  .article-content h4 {
+    font-size: 1rem !important;
+  }
+
+  .article-content p {
+    font-size: 0.875rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .article-content ul,
+  .article-content ol {
+    font-size: 0.875rem !important;
+  }
+
   .article-content img {
-    width: 100%;
-    height: auto;
+    width: 100% !important;
+    height: auto !important;
+    margin: 1rem 0 !important;
   }
 
-  /* Code blocks on mobile */
+  /* Article meta badges */
+  .article-meta span {
+    font-size: 0.75rem !important;
+    padding: 0.25rem 0.5rem !important;
+  }
+
+  .article-meta svg {
+    width: 0.875rem !important;
+    height: 0.875rem !important;
+  }
+
+  .difficulty-badge {
+    font-size: 0.6875rem !important;
+    padding: 0.25rem 0.5rem !important;
+  }
+
+  /* ===== CODE BLOCKS ===== */
   .code-block {
-    font-size: 0.75rem;
-    overflow-x: auto;
+    font-size: 0.6875rem !important; /* 11px */
+    overflow-x: auto !important;
+    margin: 0.75rem 0 !important;
   }
 
-  /* Social icons sizing */
+  .code-header {
+    font-size: 0.75rem !important;
+    padding: 0.5rem !important;
+  }
+
+  pre {
+    font-size: 0.6875rem !important;
+    padding: 0.75rem !important;
+  }
+
+  /* ===== CONSULTING CTA ===== */
+  .consulting-cta {
+    padding: 1.5rem !important;
+    margin: 1.5rem 0 !important;
+  }
+
+  .consulting-cta h2,
+  .consulting-cta h3 {
+    font-size: 1.125rem !important;
+  }
+
+  .consulting-cta p {
+    font-size: 0.875rem !important;
+  }
+
+  /* ===== SOCIAL ICONS ===== */
   .social-icons a {
-    width: 36px;
-    height: 36px;
+    width: 32px !important;
+    height: 32px !important;
   }
 
-  /* Footer on mobile */
+  .social-icons svg {
+    width: 0.875rem !important;
+    height: 0.875rem !important;
+  }
+
+  /* ===== FOOTER ===== */
   footer {
-    padding: 2rem 0;
+    padding: 1.5rem 0 !important;
+  }
+
+  footer h3 {
+    font-size: 1rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  footer p,
+  footer li,
+  footer a {
+    font-size: 0.8125rem !important;
   }
 
   footer .grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  /* ===== TABLES ===== */
+  table {
+    font-size: 0.75rem !important;
+  }
+
+  /* ===== SPACING UTILITIES ===== */
+  .py-16 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+  .py-12 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+  .py-8 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+  .py-6 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+
+  .mb-8 { margin-bottom: 1rem !important; }
+  .mb-6 { margin-bottom: 0.75rem !important; }
+  .mb-4 { margin-bottom: 0.5rem !important; }
+
+  .gap-8 { gap: 1rem !important; }
+  .gap-6 { gap: 0.75rem !important; }
+  .gap-4 { gap: 0.5rem !important; }
+
+  /* ===== MAX WIDTH ADJUSTMENTS ===== */
+  .max-w-5xl,
+  .max-w-4xl,
+  .max-w-3xl {
+    max-width: 100% !important;
   }
 }
