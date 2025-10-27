@@ -1101,11 +1101,20 @@ footer p {
   svg.w-6 { width: 1rem !important; height: 1rem !important; }
   svg.w-5 { width: 0.875rem !important; height: 0.875rem !important; }
   svg.w-4 { width: 0.75rem !important; height: 0.75rem !important; }
+  svg.w-3\.5 { width: 0.625rem !important; height: 0.625rem !important; } /* 10px - timer icon */
+  svg.w-3 { width: 0.625rem !important; height: 0.625rem !important; }
 
   /* Icon containers */
   .article-meta svg {
     width: 0.875rem !important;
     height: 0.875rem !important;
+  }
+
+  /* Timer icon specifically - make even smaller */
+  .card svg.w-3\.5,
+  .flex.items-center svg.w-3\.5 {
+    width: 0.625rem !important; /* 10px */
+    height: 0.625rem !important;
   }
 
   /* ===== HERO SECTIONS ===== */
