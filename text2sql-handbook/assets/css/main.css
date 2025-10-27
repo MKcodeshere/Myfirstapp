@@ -1180,12 +1180,35 @@ footer p {
     font-size: 0.8125rem !important; /* 13px */
   }
 
-  /* Card images and thumbnails */
+  /* Card images and thumbnails - UNIFORM SIZE */
   .approach-thumbnail,
-  .card img,
-  .card > div:first-child {
-    height: 180px !important; /* Increased from 140px to 180px for better proportions */
-    object-fit: cover;
+  .card > div:first-child,
+  .card .relative.h-40,
+  .card .h-40 {
+    height: 160px !important; /* Fixed consistent height */
+    min-height: 160px !important;
+    max-height: 160px !important;
+  }
+
+  .card img {
+    height: 160px !important;
+    width: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+
+  /* Featured card on homepage - also consistent */
+  .featured-card img,
+  .featured-card .relative.overflow-hidden {
+    height: 160px !important;
+    min-height: 160px !important;
+    max-height: 160px !important;
+  }
+
+  /* Icon-based thumbnails (no image) */
+  .card .flex.items-center.justify-center {
+    height: 160px !important;
+    font-size: 3rem !important; /* Adjust icon size */
   }
 
   /* Card meta info */
@@ -1472,21 +1495,37 @@ footer p {
   /* ===== MOBILE MENU ===== */
   .mobile-menu {
     padding: 1.5rem !important;
+    overflow-y: auto !important;
   }
 
   .mobile-menu .flex.flex-col {
     margin-top: 3rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important; /* Ensure vertical spacing */
+  }
+
+  .mobile-menu .space-y-6 > * + * {
+    margin-top: 1rem !important;
   }
 
   .mobile-menu a {
-    font-size: 1.125rem !important; /* 18px instead of 20px+ */
-    padding: 0.625rem 0 !important;
+    font-size: 1.125rem !important; /* 18px */
+    padding: 0.75rem 0 !important;
+    display: block !important; /* Force each link on new line */
+    width: 100% !important;
+    text-align: left !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
   }
 
   .mobile-menu .btn-primary {
     font-size: 0.9375rem !important;
     padding: 0.75rem 1.25rem !important;
-    margin-top: 0.5rem !important;
+    margin-top: 1rem !important;
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
   }
 
   /* Mobile menu button (hamburger) - FIX VISIBILITY */
