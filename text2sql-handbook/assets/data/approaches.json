@@ -368,7 +368,76 @@
       ],
       "setupTime": "4-6 hours",
       "productionReady": true
-    }
+    },
+    {
+  "id": "ambisql-ambiguity-detection",
+  "title": "AmbiSQL: Interactive Text-to-SQL with Ambiguity Detection & Resolution",
+  "slug": "ambisql",
+  "description": "AmbiSQL treats Text-to-SQL as an interactive process: it detects ambiguous or under-specified questions, proposes multiple precise interpretations, asks targeted clarifying questions, and converges on an executable, schema-aware SQL query with confidence scoring and constraint validation.",
+  "shortDescription": "Interactive Text-to-SQL that detects ambiguity and resolves it with clarifying questions.",
+  "articlePreview": "Learn how AmbiSQL improves query reliability by surfacing ambiguities early, generating candidate SQLs across interpretations, validating them against the schema/constraints, and guiding users through quick clarifications to reach the right query.",
+  "thumbnailImage": "assets/images/ambisql/intro.png",
+  "thumbnailGradient": "from-indigo-500 to-violet-600",
+  "thumbnailIcon": "🧭",
+  "readTime": " min read",
+  "difficulty": "advanced",
+  "tags": [
+    "AmbiSQL",
+    "Ambiguity Detection",
+    "Interactive Clarification",
+    "Text-to-SQL",
+    "LLM"
+  ],
+  "llmModel": "GPT-4",
+  "database": "Denodo / Any SQL Database",
+  "github": {
+    "url": "https://github.com/MKcodeshere/ambisql",
+    "stars": 0,
+    "forks": 0
+  },
+  "datePublished": "2025-10-29",
+  "featured": false,
+  "architecture": {
+    "imageUrl": "/assets/images/ambisql/architecture.png",
+    "components": [
+      "Ambiguity Detector (entity/constraint gaps)",
+      "Question Rewriter & Interpretation Generator",
+      "Candidate SQL Generator (beam search)",
+      "Schema-Aware Validator (tables, joins, types)",
+      "Constraint & Unit Test Checks (ROWCOUNT/rules)",
+      "Clarification Dialogue Agent (targeted questions)",
+      "Ranking & Confidence Scorer",
+      "Execution Sandbox & Error Repair",
+      "Feedback Logger for continuous improvement"
+    ]
+  },
+  "pros": [
+    "Catches ambiguous questions before execution",
+    "Guided clarifications yield higher accuracy",
+    "Multiple interpretations reduce failure modes",
+    "Schema/constraint validation prevents bad SQL",
+    "Confidence scores support safe fallbacks",
+    "Works with existing databases and schemas",
+    "Improves over time with feedback logs"
+  ],
+  "cons": [
+    "Adds interaction steps vs. one-shot generation",
+    "Needs high-quality schema metadata",
+    "Ranking depends on good scoring signals",
+    "Edge cases still require human judgment",
+    "Long/complex clarifications can fatigue users"
+  ],
+  "bestFor": [
+    "Production analytics where correctness matters",
+    "Enterprises with diverse schemas and users",
+    "Compliance or SLA-sensitive reporting",
+    "Teams adopting Text-to-SQL at scale",
+    "Workloads with frequent under-specified asks"
+  ],
+  "setupTime": "6-8 hours",
+  "productionReady": true
+ }
+
 
   ]
 }
