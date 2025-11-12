@@ -1,0 +1,32 @@
+# Text-to-SQL Self-Healing System Dependencies
+
+# Core SQL parsing and manipulation
+sqlglot>=23.0.0
+
+# LLM API client
+anthropic>=0.18.0
+
+# String similarity matching (optional but recommended for performance)
+python-Levenshtein>=0.21.0
+
+# Caching utilities
+cachetools>=5.3.0
+
+# Configuration management
+python-dotenv>=1.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.1
+
+# Database
+# SQLite is included in Python standard library
+
+# Development tools
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.4.0
+
+# Utilities
+pydantic>=2.0.0  # Data validation
