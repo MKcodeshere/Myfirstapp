@@ -7,7 +7,7 @@
       "description": "Imagine your warehouse: 240 cryptic tables, years of query history, and a GraphRAG approach that beats embedding RAG. Method, stack choices, and an honest critique.",
       "shortDescription": "A step-by-step guide to GraphRAG over query logs, with Python, DuckDB, and an honest critique",
       "articlePreview": "Imagine your warehouse: 240 cryptic tables, years of query history, and a GraphRAG approach that beats embedding RAG. Method, stack choices, and an honest critique.",
-      "thumbnailImage": "assets/images/schema-free-text-to-sql-query-logs/fig1-teaser.png",
+      "thumbnailImage": "assets/images/schema-free-text-to-sql-query-logs/hero.jpg",
       "thumbnailGradient": "from-indigo-600 to-violet-600",
       "thumbnailIcon": "🕸️",
       "readTime": "9 min read",
