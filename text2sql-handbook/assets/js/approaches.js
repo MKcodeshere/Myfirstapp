@@ -16,7 +16,7 @@ const itemsPerPage = 10;
 // Load approaches data
 async function loadApproaches() {
   try {
-    const response = await fetch('assets/data/approaches.json?v=5');
+    const response = await fetch('assets/data/approaches.json?v=6');
     const data = await response.json();
     allApproaches = data.approaches;
     filteredApproaches = [...allApproaches];

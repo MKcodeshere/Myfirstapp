@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The top 10 data platforms for AI agents, ranked by what ships in the box | Text2SQL Hub</title>
+  <meta name="description" content="No third-party tools. No custom work. I scored 65 products on 19 semantic capabilities, and the results surprised me.">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/main.css?v=7">
+
+  <!-- Prism.js for code highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="flex items-center justify-between py-4">
+        <a href="../index.html" class="text-2xl font-bold text-blue-600 hover:opacity-80 transition-opacity">
+          Text2SQL<span class="text-gray-200">Hub</span>
+        </a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="../what-is-text2sql.html" class="nav-link">What is Text-to-SQL?</a>
+          <a href="../approaches.html" class="nav-link active">Approaches</a>
+          <a href="../about.html" class="nav-link">About</a>
+          <a href="../consulting.html" class="btn-primary">Get In Touch</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Article Header -->
+  <section class="article-header">
+    <div class="container">
+      <div class="max-w-4xl mx-auto">
+        <a href="../approaches.html" class="text-white opacity-75 hover:opacity-100 mb-6 inline-block">← Back to All Approaches</a>
+
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">
+          The top 10 data platforms for AI agents, ranked by what ships in the box
+        </h1>
+
+        <div class="article-meta">
+          <span>📅 October 30, 2026</span>
+          <span>⏱️ 10 min read</span>
+          <span class="difficulty-badge difficulty-intermediate">intermediate</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Article Content -->
+  <div class="container py-12">
+    <div class="article-content">
+
+      <!-- Intro / teaser -->
+      <section>
+        <p class="text-xl font-semibold text-gray-200 mb-6">
+          No third-party tools. No custom work. I scored 65 products on 19 semantic capabilities, and the results surprised me.
+        </p>
+        <p class="text-lg text-gray-300 mb-4">
+          Your AI agent can reach your data. It still can't tell you what revenue means.
+        </p>
+        <p>
+          57 of 65 data products now ship an MCP server. Only 18 let you store a single verified query. I mapped the gap so you don't have to.
+        </p>
+      </section>
+
+      <!-- Image 1: Cover -->
+      <div class="my-8">
+        <img src="../assets/images/top-10-data-platforms-ai-agents/intro.png"
+             alt="Semantic Context Index: 65 products, 19 capabilities, one heatmap"
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">
+          Semantic Context Index: 65 products, 19 capabilities, one heatmap
+        </p>
+      </div>
+
+      <section>
+        <p>
+          Ask your shiny new data agent a simple question: "What was revenue last quarter?"
+        </p>
+        <p>
+          It answers in two seconds. The SQL looks clean. The number is wrong.
+        </p>
+        <p>
+          Revenue at your company excludes refunds. It counts the order date, not the ship date. It lives as a measure in a Power BI model, a metric in dbt, and a sentence in a Confluence page nobody updated since 2024. The agent saw none of that. It saw a column called <code>amount</code> and did its best.
+        </p>
+        <p>
+          I've built a few text-to-SQL agents on Snowflake and Denodo. Every project hit the same wall around week three. The model works. The plumbing works. The answers drift, because the agent has no idea what the business means by its own words.
+        </p>
+        <p>
+          The fix has a name. People call it a semantic layer, an ontology, a knowledge graph, or "context engineering" if they want a raise. The idea is the same. You give the agent governed definitions, trusted examples, and real descriptions, so it stops guessing.
+        </p>
+        <p>
+          Then you hit the second wall. Which of that does your platform already give you?
+        </p>
+      </section>
+
+      <section>
+        <h2>Nobody could answer that question</h2>
+        <p>
+          I tried. I wanted one page that said "Snowflake gives you metrics and verified queries out of the box, BigQuery gives you X, Fabric gives you Y, and for the rest you need Cube or dbt."
+        </p>
+        <p>
+          That page didn't exist.
+        </p>
+        <p>
+          Vendor docs describe features in their own words. Semantic view, metric view, analytic model, data module, topic, universe, worksheet. Release notes bury the difference between GA and preview. Products get renamed every few months. Comparison blogs go stale the week they publish, and most of them come from a vendor with a horse in the race.
+        </p>
+        <p>
+          So I built the page. It's called the <a href="https://mkcodeshere.github.io/semantic-layer-compare/" target="_blank" class="text-blue-400 underline">Semantic Context Index</a>. It's free, and every cell links to its source.
+        </p>
+      </section>
+
+      <section>
+        <h2>What's inside</h2>
+        <p>
+          The index compares <strong>65 products</strong> on <strong>19 capabilities</strong>. That makes <strong>1,235 cells</strong>, backed by <strong>1,326 source links</strong>.
+        </p>
+        <p>
+          The products cover the stack an analytics agent touches:
+        </p>
+        <ul>
+          <li><strong>Data platforms:</strong> Snowflake, Databricks, BigQuery, Microsoft Fabric, Redshift, Azure Synapse, Oracle, SAP Business Data Cloud, Teradata, Postgres, ClickHouse, MongoDB, and more</li>
+          <li><strong>Federation:</strong> Denodo, Dremio, Starburst, and Timbr</li>
+          <li><strong>Semantic layers:</strong> dbt, Cube, AtScale, Looker, Malloy, Wren AI, and Honeydew</li>
+          <li><strong>BI tools:</strong> Power BI, Tableau, Qlik, ThoughtSpot, Sigma, Strategy, Cognos, Omni, Hex, and more</li>
+          <li><strong>Catalogs:</strong> Unity Catalog, Purview, Snowflake Horizon, Google Knowledge Catalog, Alation, Atlan, Collibra, DataHub, and Informatica</li>
+          <li><strong>Knowledge graphs:</strong> Neo4j, Stardog, RelationalAI, and Palantir</li>
+        </ul>
+        <p>
+          Each cell gets one of five levels:
+        </p>
+        <ul>
+          <li><strong>Native, GA:</strong> the vendor ships it, and the docs show no preview label</li>
+          <li><strong>Native, preview:</strong> the docs call it preview or beta</li>
+          <li><strong>Partner or custom build:</strong> you need another product or your own code</li>
+          <li><strong>Not available:</strong> the docs don't include it</li>
+          <li><strong>Not verified:</strong> I couldn't find a primary source, so I say so</li>
+        </ul>
+        <p>
+          That last level matters more than it looks. A blank cell that pretends to know is worse than a cell that admits it doesn't.
+        </p>
+      </section>
+
+      <section>
+        <h2>The 19 capabilities, and why each one exists</h2>
+        <p>
+          I grouped them by the job they do for an agent.
+        </p>
+        <p>
+          <strong>Semantic model.</strong> This is the dictionary.
+          Metrics (governed definitions, not ad hoc SQL), dimensions, joins, synonyms, and verified SQL. Verified SQL means trusted question-and-answer pairs the agent can reuse. If you only pick one capability to care about, pick this one. A good example query beats a page of instructions.
+        </p>
+        <p>
+          <strong>Metadata enrichment.</strong> This is the grunt work you'll spend most of your time on.
+          AI-generated descriptions, bulk metadata writes, auto-classification, value matching, query-history mining, and column-level lineage. Value matching sounds boring until your agent writes <code>WHERE state = 'New York'</code> and your table stores <code>NY</code>.
+        </p>
+        <p>
+          <strong>Knowledge and graph.</strong>
+          Ontology (business entities above tables, like customers, contracts, and the links between them), graph query, and vector search.
+        </p>
+        <p>
+          <strong>AI access.</strong>
+          A first-party NL-to-SQL feature, an MCP server so external agents can connect, and evals that test accuracy or turn user feedback into verified examples.
+        </p>
+        <p>
+          <strong>Trust.</strong>
+          Governance (do semantic objects inherit row and column security?) and an open spec. Can you export your model, or does it live in one vendor forever? The open standard here was Open Semantic Interchange. It entered the Apache Incubator in June 2026 and now goes by Apache Ossie.
+        </p>
+      </section>
+
+      <!-- Image 2: Capability matrix -->
+      <div class="my-8">
+        <img src="../assets/images/top-10-data-platforms-ai-agents/capability-matrix.png"
+             alt="Filter the matrix to one capability group to read every finding"
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">
+          Filter the matrix to one capability group to read every finding
+        </p>
+      </div>
+
+      <section>
+        <h2>What the data says</h2>
+        <p>
+          I expected the big platforms to look similar. They don't. A few findings stood out.
+        </p>
+
+        <h3>Agents can connect. They still guess.</h3>
+        <p>
+          <strong>57 of 65 products</strong> ship a native MCP server, in GA or preview. Connecting an agent to your data is close to solved.
+        </p>
+        <p>
+          Accuracy isn't. Only <strong>18 products</strong> store verified SQL at GA. Only <strong>12</strong> model an ontology natively. Only <strong>20</strong> do value matching at GA.
+        </p>
+        <p>
+          Vendors raced to give agents a door into your data. Far fewer gave them the map.
+        </p>
+
+        <h3>Half the "AI features" won't say if they're finished</h3>
+        <p>
+          <strong>56 products</strong> have a first-party natural language query feature. I counted 84 of them in total.
+        </p>
+        <p>
+          For <strong>29 of those 84</strong>, the docs show no GA label and no preview label. I marked them "Unverified." If you're about to put one in front of your CFO, ask the vendor first.
+        </p>
+
+        <h3>The names won't sit still</h3>
+        <p>
+          In 2026 alone:
+        </p>
+        <ul>
+          <li>Snowflake Intelligence became Snowflake CoWork.</li>
+          <li>Databricks One became Genie, then Genie One.</li>
+          <li>Google renamed Dataplex Universal Catalog to Knowledge Catalog.</li>
+          <li>Open Semantic Interchange became Apache Ossie.</li>
+        </ul>
+        <p>
+          If your team searches docs with last year's names, you'll find last year's answers.
+        </p>
+
+        <h3>Preview is doing a lot of work</h3>
+        <p>
+          Microsoft Fabric covers a lot of ground. But 7 of its 19 capabilities are still in preview. Power BI Q&amp;A, the old natural language feature, retires in February 2027. One Microsoft page still says December 2026. I went with the newer Learn pages.
+        </p>
+
+        <h3>Semantic context does move the needle</h3>
+        <p>
+          The best public number I found came from dbt Labs, so treat it as vendor-run. They asked 11 questions, 20 times each, on an insurance dataset. On the raw schema, plain text-to-SQL scored 64.5% and their Semantic Layer scored 72.7%. After they added three dbt models, the Semantic Layer reached 98.2% with Sonnet 4.6 and 100% with GPT-5.3 Codex. Text-to-SQL reached 90.0% and 84.1%.
+        </p>
+        <p>
+          Small test. Real signal. Modeling work pays off for both approaches, and the semantic layer pays off more.
+        </p>
+      </section>
+
+      <section>
+        <h2>The ranking: what you get with no extra tools</h2>
+        <p>
+          I scored each product on one question. How much of the 19 does it give you natively, with no third-party tool and no custom work?
+        </p>
+        <p>
+          Native GA counts as 1. Native preview counts as 0.5. Partner and custom builds count as zero, because they aren't what the product ships. I left out the catalog rows that belong to a platform, so no vendor counts twice.
+        </p>
+
+        <div class="overflow-x-auto my-8">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-600">
+                <th class="py-3 pr-4">Rank</th>
+                <th class="py-3 pr-4">Product</th>
+                <th class="py-3">Score (of 19)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4">1</td><td class="py-2 pr-4">Databricks</td><td class="py-2">17.0</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4">2</td><td class="py-2 pr-4">Snowflake</td><td class="py-2">16.5</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4">3</td><td class="py-2 pr-4">Alation</td><td class="py-2">14.5</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4">4</td><td class="py-2 pr-4">Denodo</td><td class="py-2">14.0</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4">5</td><td class="py-2 pr-4">Timbr</td><td class="py-2">14.0</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4">6</td><td class="py-2 pr-4">Omni</td><td class="py-2">13.0</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4">7</td><td class="py-2 pr-4">Qlik</td><td class="py-2">13.0</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4">8</td><td class="py-2 pr-4">SAP Business Data Cloud</td><td class="py-2">13.0</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4">9</td><td class="py-2 pr-4">Tableau</td><td class="py-2">13.0</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4">10</td><td class="py-2 pr-4">dbt Semantic Layer</td><td class="py-2">12.5</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Databricks and Snowflake each ship 16 of the 19 as native and GA. Below them the field thins out fast. <strong>17 of the 24 data platforms</strong> I checked ship fewer than 10.
+        </p>
+        <p>
+          Read this as breadth, not quality. A product with a lower score can still be the right call for your stack. Postgres scores low, and you can still run a great agent on it. You'll just build more of the context yourself.
+        </p>
+      </section>
+
+      <section>
+        <h2>How to use it on your own project</h2>
+        <p>
+          The ranking gets the clicks. The tools on the page do the useful work.
+        </p>
+        <p>
+          <strong>Capability matrix.</strong> The default view is a heatmap of every product against every capability. Click a group, like Semantic model, and the matrix narrows to those five columns. Each header shows the definition, and each cell shows the finding in plain words. Click any cell to open the evidence and the source link.
+        </p>
+        <p>
+          <strong>Compare.</strong> Pick up to four products and put them side by side. A teal bar marks every capability where they differ. This view settles most "should we use X or Y" debates in about two minutes.
+        </p>
+        <p>
+          <strong>Stack coverage.</strong> This is the view I wish I'd had on my last project. Pick your data platform, semantic layer, BI tool, and catalog. The page shows the best level your stack reaches for each capability, and which product supplies it. A red bar marks every gap.
+        </p>
+        <p>
+          Try Postgres plus Metabase. You'll see 10 capabilities covered natively at GA and four with nothing at all. That's your backlog, written for you.
+        </p>
+      </section>
+
+      <!-- Image 3: Stack coverage -->
+      <div class="my-8">
+        <img src="../assets/images/top-10-data-platforms-ai-agents/stack-coverage.png"
+             alt="Stack coverage shows what your stack covers and what you must add"
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">
+          Stack coverage shows what your stack covers and what you must add
+        </p>
+      </div>
+
+      <section>
+        <p>
+          <strong>NLQ features.</strong> A list of every first-party natural language query feature, with its release status, its output (SQL, DAX, KQL, MQL, Cypher, or a plain answer), and whether you can call it from an API or MCP.
+        </p>
+        <p>
+          <strong>Data catalogs.</strong> Two lanes. Platform catalogs like Unity Catalog, Purview, Horizon, and Knowledge Catalog sit on the left. Standalone catalogs like Alation, Atlan, Collibra, and DataHub sit on the right. If most of your data lives on one platform, start on the left. If it's spread out, start on the right.
+        </p>
+      </section>
+
+      <section>
+        <h2>How I checked it</h2>
+        <p>
+          Every cell comes from a vendor doc, a release note, or an official engineering blog. Before anything went on the page, I set a rule: a wrong claim is worse than a missing one.
+        </p>
+        <p>
+          Then I ran a separate fact-check on the 10 highest-risk claims and 20 random cells, against primary sources only. It caught real mistakes. Apache Ossie entered the incubator on June 22, not July 10. Tableau's "graph query" turned out to be a metadata lookup API, so I moved it to zero. A dbt benchmark note had its numbers paired wrong. I fixed all ten corrections and published the full report in the repo, along with a link check of every URL.
+        </p>
+        <p>
+          Five cells still say "Not verified." Three are IBM Cognos, whose AI docs wouldn't load for any tool I tried. Two are Informatica, where the only source was an old sales deck. I'd rather show the gap than fill it with a guess.
+        </p>
+      </section>
+
+      <section>
+        <h2>Help me keep it honest</h2>
+        <p>
+          This field moves every month. Some cell on the page is already out of date.
+        </p>
+        <p>
+          If you spot one, <a href="https://github.com/MKcodeshere/semantic-layer-compare/issues" target="_blank" class="text-blue-400 underline">open an issue on GitHub</a> with a link to the vendor's docs or release notes. I'll update the cell. Vendors, that includes you. If your product does something I scored as missing, show me the page and I'll fix it.
+        </p>
+        <p>
+          And if you're about to start a semantic layer, an ontology, or a knowledge graph project, open the <a href="https://mkcodeshere.github.io/semantic-layer-compare/" target="_blank" class="text-blue-400 underline">Semantic Context Index</a> before your first design meeting. Pick your stack. Look at the red bars. That's the work.
+        </p>
+        <p>
+          I'd like to hear what you're building on, and what you had to add yourself.
+        </p>
+      </section>
+
+      <!-- Project CTA -->
+      <section class="consulting-cta p-8 md:p-12 rounded-2xl my-12">
+        <h2 class="text-white text-center mb-4">Explore the Semantic Context Index</h2>
+        <p class="text-xl text-center mb-8 opacity-90">
+          65 products · 19 capabilities · every cell linked to a source
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="https://mkcodeshere.github.io/semantic-layer-compare/" target="_blank" class="btn-primary text-blue-600 hover:bg-gray-800 text-center">
+            Open the Index →
+          </a>
+          <a href="https://github.com/MKcodeshere/semantic-layer-compare" target="_blank" class="btn-primary text-blue-600 hover:bg-gray-800 text-center">
+            View on GitHub →
+          </a>
+        </div>
+      </section>
+
+      <!-- Consulting CTA -->
+      <div class="consulting-cta">
+        <h3>Need Help Implementing This?</h3>
+        <p>I offer consulting services for Text-to-SQL systems. Let's discuss your requirements.</p>
+        <a href="../consulting.html" class="btn-primary text-blue-600 hover:bg-gray-800">
+          Schedule a Consultation
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">Text2SQLHandbook</h3>
+          <p class="text-gray-400">Your comprehensive guide to Text-to-SQL systems with GenAI.</p>
+        </div>
+        <div class="footer-links">
+          <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../approaches.html">All Approaches</a></li>
+            <li><a href="../about.html">About</a></li>
+            <li><a href="../consulting.html">Consulting</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4">Connect</h3>
+          <p class="text-gray-400 text-sm">your@email.com</p>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
+        <p>&copy; 2025 Text2SQLHandbook</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="../assets/js/main.js"></script>
+
+</body>
+</html>
