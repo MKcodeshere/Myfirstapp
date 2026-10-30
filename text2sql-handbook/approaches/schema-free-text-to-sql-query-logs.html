@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Build Text-to-SQL for 200+ Cryptic Tables Without Schema Docs | Text2SQL Hub</title>
+  <meta name="description" content="Imagine your warehouse: 240 cryptic tables, years of query history, and a GraphRAG approach that beats embedding RAG. Method, stack choices, and an honest critique.">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/main.css?v=7">
+
+  <!-- Prism.js for code highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="flex items-center justify-between py-4">
+        <a href="../index.html" class="text-2xl font-bold text-blue-600 hover:opacity-80 transition-opacity">
+          Text2SQL<span class="text-gray-200">Hub</span>
+        </a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="../what-is-text2sql.html" class="nav-link">What is Text-to-SQL?</a>
+          <a href="../approaches.html" class="nav-link active">Approaches</a>
+          <a href="../about.html" class="nav-link">About</a>
+          <a href="../consulting.html" class="btn-primary">Get In Touch</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Article Header -->
+  <section class="article-header">
+    <div class="container">
+      <div class="max-w-4xl mx-auto">
+        <a href="../approaches.html" class="text-white opacity-75 hover:opacity-100 mb-6 inline-block">← Back to All Approaches</a>
+
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">
+          How to Build Text-to-SQL for 200+ Cryptic Tables Without Schema Docs
+        </h1>
+
+        <div class="article-meta">
+          <span>📅 October 30, 2026</span>
+          <span>⏱️ 9 min read</span>
+          <span class="difficulty-badge difficulty-advanced">advanced</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Article Content -->
+  <div class="container py-12">
+    <div class="article-content">
+
+      <section>
+<p class="text-xl font-semibold text-gray-200 mb-6">
+          A step-by-step guide to GraphRAG over query logs, with Python, DuckDB, and an honest critique
+        </p>
+
+        <p>
+          Imagine your warehouse. You&#x27;ve got 240 tables in the gold layer with names like <code>f_pto_agg</code> and <code>d_wfm_fclty_pop_dfntn_mnl</code>. Nobody wrote descriptions. The foreign keys live in the heads of three senior engineers, and one of them just gave notice.
+        </p>
+
+        <p>
+          You also have years of query history: hundreds of thousands of SELECT statements your analysts ran to answer real questions.
+        </p>
+
+        <p>
+          Your VP wants a data agent. Where do you start? Most teams embed table descriptions for a RAG retriever, spend six months on a semantic layer in YAML, or document the schema by hand.
+        </p>
+
+        <p>
+          What if I told you that you can start without any of them and ship an agent whose SQL your data engineers prefer 70% of the time?
+        </p>
+
+        <p>
+          A <a href="https://arxiv.org/abs/2610.33946" target="_blank" class="text-blue-400 underline">paper from Amazon and USC</a> posted this October makes that claim. I rebuilt its first stage in DuckDB. Below you&#x27;ll get the method, stack choices, and a critique.
+        </p>
+
+      <div class="my-8">
+        <img src="../assets/images/schema-free-text-to-sql-query-logs/fig1-teaser.png"
+             alt="Figure 1 from the paper: what SOTA requires vs. what enterprises have"
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">
+          Figure 1 from the paper: what SOTA requires vs. what enterprises have
+        </p>
+      </div>
+      </section>
+
+      <section>
+<h2>The problem: your schema can&#x27;t explain itself</h2>
+
+        <p>
+          A user asks about &quot;approved time-off requests,&quot; and the right table is <code>f_pto_agg</code>. Embedding similarity can&#x27;t connect those two strings. They share no words. The authors call this the <em>schema ambiguity problem</em>.
+        </p>
+
+        <p>
+          Their fix rests on one observation. Your query logs already record which tables people join, on which keys, and how often. When an analyst writes <code>JOIN d_emp_mstr ON emp_id</code>, the log keeps that join for you.
+        </p>
+      </section>
+
+      <section>
+<h2>The method in one picture</h2>
+
+        <p>
+          Offline, you turn the logs into a knowledge graph. Tables become nodes. Joins become edges, weighted by frequency. An LLM annotates each node with a description and a list of business terms.
+        </p>
+
+        <p>
+          Online, you pull business terms out of a question, match them to nodes, walk the graph to find bridge tables, and hand the LLM a small context: tables, join paths, and similar past queries.
+        </p>
+
+      <div class="my-8">
+        <img src="../assets/images/schema-free-text-to-sql-query-logs/fig2-architecture.png"
+             alt="Figure 2 from the paper: offline graph construction and online retrieval"
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">
+          Figure 2 from the paper: offline graph construction and online retrieval
+        </p>
+      </div>
+      </section>
+
+      <section>
+<h2>Who builds what: LLM calls or Python?</h2>
+
+        <p>
+          The authors built the graph with <strong>plain LLM API calls plus Python</strong>. They didn&#x27;t use an agent harness anywhere in the pipeline.
+        </p>
+
+        <div class="overflow-x-auto my-8">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-600"><th class="py-3 pr-4">Job</th><th class="py-3 pr-4">What the paper used</th><th class="py-3 pr-4">Output</th></tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Extract joins from each query</td><td class="py-2 pr-4 align-top">LLM prompt (Appendix B.2)</td><td class="py-2 pr-4 align-top">JSON join triplets</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Write table metadata</td><td class="py-2 pr-4 align-top">Claude 3.7 Sonnet, temperature 0</td><td class="py-2 pr-4 align-top">JSON per table</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Extract business entities</td><td class="py-2 pr-4 align-top">Claude 3.7 Sonnet, temperature 0</td><td class="py-2 pr-4 align-top">JSON array</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Store graph, BFS, PageRank</td><td class="py-2 pr-4 align-top">NetworkX (no LLM)</td><td class="py-2 pr-4 align-top">Graph in memory</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Embedding signal</td><td class="py-2 pr-4 align-top">E5-base-v2</td><td class="py-2 pr-4 align-top">Vectors</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Generate SQL</td><td class="py-2 pr-4 align-top">Claude 3.7 Sonnet</td><td class="py-2 pr-4 align-top">SQL</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The paper names Claude 3.7 Sonnet for graph construction. For the join prompt, it says &quot;an LLM&quot; without naming a separate model.
+        </p>
+      </section>
+
+      <section>
+<h2>Pick your stack by size</h2>
+
+        <p>
+          The paper used NetworkX for 240 tables. My rule of thumb for bigger setups:
+        </p>
+
+        <div class="overflow-x-auto my-8">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-600"><th class="py-3 pr-4">Piece</th><th class="py-3 pr-4">Up to ~1,000 tables</th><th class="py-3 pr-4">1,000 to 10,000 tables</th><th class="py-3 pr-4">Shared across teams</th></tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Graph store</td><td class="py-2 pr-4 align-top">NetworkX, saved as JSON</td><td class="py-2 pr-4 align-top">Node and edge tables in DuckDB or your warehouse</td><td class="py-2 pr-4 align-top">Neo4j with Graph Data Science</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Embeddings</td><td class="py-2 pr-4 align-top">E5-base-v2 on a laptop</td><td class="py-2 pr-4 align-top">DuckDB <code>vss</code> extension or pgvector</td><td class="py-2 pr-4 align-top">Your existing vector store</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">LLM batch jobs</td><td class="py-2 pr-4 align-top">Plain API calls</td><td class="py-2 pr-4 align-top">Anthropic Message Batches API</td><td class="py-2 pr-4 align-top">Batches plus a cache keyed by table</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Log parsing</td><td class="py-2 pr-4 align-top">sqlglot</td><td class="py-2 pr-4 align-top">sqlglot with query fingerprints</td><td class="py-2 pr-4 align-top">A Spark job</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Don&#x27;t pick Neo4j for size alone. NetworkX holds tens of thousands of nodes in memory. Reach for Neo4j when several teams need to edit the graph at once, or when you want lineage and access control in one place. Its Graph Data Science library ships PageRank with source nodes, so Step 4 ports over.
+        </p>
+      </section>
+
+      <section>
+<h2>Step 1: Mine the logs for tables and joins</h2>
+
+        <p>
+          Parse every query. Count how often each table appears, and pull out every equality between columns from two different tables. That catches <code>JOIN ... ON</code> clauses and old-style joins buried in <code>WHERE</code>.
+        </p>
+
+        <p>
+          Pull the logs from <code>SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY</code>, BigQuery&#x27;s <code>INFORMATION_SCHEMA.JOBS</code>, or Databricks&#x27; <code>system.query.history</code>.
+        </p>
+
+        <p>
+          I tested this on TPC-DS in DuckDB: 24 tables, columns like <code>ss_sold_date_sk</code>, and zero declared foreign keys. Its 99 benchmark queries played the role of the log. This step used no LLM.
+        </p>
+
+        <pre class="my-6 p-4 rounded-lg overflow-x-auto bg-gray-950 text-sm"><code class="language-python">import collections
+import sqlglot
+from sqlglot import exp
+
+table_freq = collections.Counter()
+join_freq = collections.Counter()
+
+for sql in query_log:
+    tree = sqlglot.parse_one(sql, read=&quot;duckdb&quot;)
+    table_freq.update({t.name for t in tree.find_all(exp.Table)})
+    for eq in tree.find_all(exp.EQ):
+        left, right = eq.left, eq.right
+        if isinstance(left, exp.Column) and isinstance(right, exp.Column):
+            a, b = owner(left), owner(right)  # column -&gt; table
+            if a and b and a != b:
+                edge = tuple(sorted([(a, left.name), (b, right.name)]))
+                join_freq[edge] += 1</code></pre>
+
+        <p>
+          <code>owner()</code> maps a column to its table using <code>information_schema</code>. The parser recovered 79 join edges. The top one, <code>store_sales.ss_sold_date_sk = date_dim.d_date_sk</code>, appeared 64 times, and DuckDB&#x27;s catalog has no record of it.
+        </p>
+
+        <p>
+          CTEs, multi-way joins, and subqueries break simple syntax rules, so the authors send each query to an LLM and get back join triplets:
+        </p>
+
+        <pre class="my-6 p-4 rounded-lg overflow-x-auto bg-gray-950 text-sm"><code class="language-json">{
+  &quot;left_table&quot;: &quot;schema.employees&quot;,
+  &quot;right_table&quot;: &quot;schema.attendance&quot;,
+  &quot;join_type&quot;: &quot;INNER&quot;,
+  &quot;join_conditions&quot;: &quot;employees.id = attendance.emp_id&quot;,
+  &quot;relationship_type&quot;: &quot;EXPLICIT&quot;,
+  &quot;frequency&quot;: 342
+}</code></pre>
+
+        <p>
+          On Amazon&#x27;s warehouse, this produced 1,847 join edges from about 500,000 queries.
+        </p>
+
+        <p>
+          <strong>Pro tip:</strong> strip literals and fingerprint each query first. Dashboards rerun the same SQL thousands of times, so 500K queries often collapse to a few thousand shapes. Run the parser on those and send the LLM the leftovers.
+        </p>
+      </section>
+
+      <section>
+<h2>Step 2: Let the LLM write the docs you never had</h2>
+
+        <p>
+          Logs don&#x27;t tell you what a table means. For each table, the authors give Claude 3.7 Sonnet sample queries that touch it and ask for this JSON:
+        </p>
+
+        <pre class="my-6 p-4 rounded-lg overflow-x-auto bg-gray-950 text-sm"><code class="language-json">{
+  &quot;table_name&quot;: &quot;f_pto_agg&quot;,
+  &quot;description&quot;: &quot;...&quot;,
+  &quot;columns&quot;: [{&quot;name&quot;: &quot;...&quot;, &quot;description&quot;: &quot;...&quot;, &quot;type&quot;: &quot;...&quot;}],
+  &quot;key_columns&quot;: [&quot;...&quot;],
+  &quot;common_joins&quot;: [&quot;...&quot;],
+  &quot;common_filters&quot;: [&quot;...&quot;]
+}</code></pre>
+
+        <p>
+          If analysts keep writing <code>SUM(nbr_swap_approved) / SUM(nbr_swap_request)</code> against a table, the model can guess you&#x27;re looking at shift swap approval rates.
+        </p>
+
+        <p>
+          <strong>Pro tip:</strong> validate every response against a JSON schema and retry on failure. Store the output in git so a data engineer can review and correct it.
+        </p>
+      </section>
+
+      <section>
+<h2>Step 3: Tag each table with business entities</h2>
+
+        <p>
+          This step drives most of the gains. From each table&#x27;s metadata, the same model returns a JSON array of business terms: <code>[&quot;employee&quot;, &quot;time-off&quot;, &quot;approval rate&quot;, &quot;facility&quot;]</code>. The prompt tells it to skip IDs and dates. Users ask about shift swaps, not <code>d_shft_swp_agg</code>.
+        </p>
+
+        <p>
+          <strong>Pro tip:</strong> lowercase and dedupe entities across tables, then have a domain expert merge synonyms like &quot;PTO&quot; and &quot;time-off.&quot;
+        </p>
+      </section>
+
+      <section>
+<h2>Step 4: Retrieve with entities first, embeddings last</h2>
+
+        <p>
+          When a question arrives, run the same entity extractor on it. &quot;How many PTO requests were approved at each facility last quarter?&quot; gives you PTO, approval, and facility. Then score every table:
+        </p>
+
+        <div class="overflow-x-auto my-8">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-600"><th class="py-3 pr-4">Signal</th><th class="py-3 pr-4">Weight</th><th class="py-3 pr-4">What it catches</th></tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Exact entity match</td><td class="py-2 pr-4 align-top">0.5</td><td class="py-2 pr-4 align-top">&quot;facility&quot; to <code>facility</code></td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Substring match</td><td class="py-2 pr-4 align-top">0.3</td><td class="py-2 pr-4 align-top">&quot;approval&quot; to &quot;approval rate&quot;</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Embedding similarity (E5-base-v2)</td><td class="py-2 pr-4 align-top">0.2</td><td class="py-2 pr-4 align-top">Paraphrases the first two miss</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The top tables become seeds. Run a breadth-first search up to five hops and score each path by entity coverage plus edge frequency. This finds bridge tables nobody mentioned. Then run Personalized PageRank from the seeds:
+        </p>
+
+        <pre class="my-6 p-4 rounded-lg overflow-x-auto bg-gray-950 text-sm"><code class="language-python">import networkx as nx
+
+scores = nx.pagerank(G, personalization={t: 1 for t in seed_tables})</code></pre>
+      </section>
+
+      <section>
+<h2>Step 5: Assemble a tight context and generate</h2>
+
+        <p>
+          Claude 3.7 Sonnet gets three blocks: table metadata, join paths with frequencies (<code>shift_swap_agg.facility_id -&gt; facility_dim.facility_id (freq: 847)</code>), and similar past queries as few-shot examples.
+        </p>
+
+        <p>
+          The prompt tells the model to use listed tables and columns and nothing else, and to say so when a column is missing. On the BEAVER benchmark, this grounding won 60 rubric comparisons on schema validity, against 17 for the RAG baseline.
+        </p>
+
+        <p>
+          <strong>Pro tip:</strong> run the generated SQL under a read-only role with a row limit and a timeout.
+        </p>
+      </section>
+
+      <section>
+<h2>The results</h2>
+
+        <p>
+          On the public BEAVER benchmark (209 questions, 463 tables), with Claude 3.7 Sonnet generating SQL for both systems:
+        </p>
+
+        <div class="overflow-x-auto my-8">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-600"><th class="py-3 pr-4">Metric</th><th class="py-3 pr-4">Graph approach</th><th class="py-3 pr-4">Embedding RAG</th></tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">SQL that executes</td><td class="py-2 pr-4 align-top">95.7%</td><td class="py-2 pr-4 align-top">60.8%</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">LLM judge wins</td><td class="py-2 pr-4 align-top">45.5%</td><td class="py-2 pr-4 align-top">34.0%</td></tr>
+              <tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Rubric judge wins</td><td class="py-2 pr-4 align-top">47.8%</td><td class="py-2 pr-4 align-top">30.6%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          On Amazon&#x27;s warehouse, two data engineers compared outputs blind and preferred the graph system 70% to 10%. Removing entity matching dropped the open-ended score by 5.4%, more than removing graph traversal (2.1%) or PageRank (1.7%).
+        </p>
+      </section>
+
+      <section>
+<h2>My critique</h2>
+
+        <p>
+          Read the numbers twice before you pitch this to your boss.
+        </p>
+
+        <p>
+          <strong>&quot;Executes&quot; doesn&#x27;t mean &quot;correct.&quot;</strong> The 95.7% counts queries that run without errors. On deterministic questions, judges preferred BEAVER&#x27;s human-written gold SQL 64.9% of the time against 26.3% for the system.
+        </p>
+
+        <p>
+          <strong>BEAVER had no query logs.</strong> The authors built that graph from 127 declared keys plus 1,113 joins an LLM inferred from column names, all weighted 1.0. The log-mining idea gets tested on Amazon&#x27;s private data alone, as the authors admit.
+        </p>
+
+        <p>
+          <strong>The private test set is small.</strong> It has 35 questions, 25 of them LLM-generated, judged by two engineers.
+        </p>
+
+        <p>
+          <strong>The baseline is modest.</strong> BEAVER results include no CHASE-SQL or agentic baseline.
+        </p>
+
+        <p>
+          <strong>Embeddings didn&#x27;t go away.</strong> They carry 20% of the score. If you already run an embedding retriever, keep it and add entity matching on top.
+        </p>
+
+        <p>
+          <strong>Logs carry your history&#x27;s mistakes.</strong> Tables nobody queried stay invisible, and deprecated joins keep high counts. Weight recent queries higher, rebuild the graph weekly, and scrub PII from literals before an LLM reads them.
+        </p>
+      </section>
+
+      <section>
+<h2>Where I&#x27;d start on Monday</h2>
+
+        <p>
+          Pull 90 days of query history and run the parser from Step 1. Show the top 50 join edges to a senior engineer and ask which ones look wrong. If the list holds up, generate metadata for your 20 busiest tables and test against 30 real questions from your team&#x27;s Slack channel.
+        </p>
+
+        <hr class="my-10 border-gray-700">
+      </section>
+
+      <section>
+<h2>Sources</h2>
+
+        <ul class="list-disc pl-6 space-y-2 my-4">
+          <li>Ömer Faruk Akgül, Nikhil Kapahi, and Prajit Reddy Muppidi. <a href="https://arxiv.org/abs/2610.33946" target="_blank" class="text-blue-400 underline">Schema-Free Text-to-SQL: Learning Enterprise Database Structure from Query Logs</a>. arXiv:2610.33946, October 2026.</li>
+          <li>Peter Baile Chen et al. <a href="https://arxiv.org/abs/2409.02038" target="_blank" class="text-blue-400 underline">BEAVER: An Enterprise Benchmark for Text-to-SQL</a>. arXiv:2409.02038.</li>
+        </ul>
+      </section>
+
+      <!-- Consulting CTA -->
+      <div class="consulting-cta">
+        <h3>Need Help Implementing This?</h3>
+        <p>I offer consulting services for Text-to-SQL systems. Let's discuss your requirements.</p>
+        <a href="../consulting.html" class="btn-primary text-blue-600 hover:bg-gray-800">
+          Schedule a Consultation
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">Text2SQLHandbook</h3>
+          <p class="text-gray-400">Your comprehensive guide to Text-to-SQL systems with GenAI.</p>
+        </div>
+        <div class="footer-links">
+          <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../approaches.html">All Approaches</a></li>
+            <li><a href="../about.html">About</a></li>
+            <li><a href="../consulting.html">Consulting</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4">Connect</h3>
+          <p class="text-gray-400 text-sm">your@email.com</p>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
+        <p>&copy; 2025 Text2SQLHandbook</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="../assets/js/main.js"></script>
+
+</body>
+</html>
