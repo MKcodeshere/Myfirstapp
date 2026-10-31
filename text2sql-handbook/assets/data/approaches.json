@@ -2,7 +2,7 @@
   "approaches": [
     {
       "id": "adventureworks-ontology",
-      "title": "How to Build an Ontology Layer for Text-to-SQL on AdventureWorks",
+      "title": "How I Built a Business Ontology for AdventureWorks Using LLMs",
       "slug": "adventureworks-ontology",
       "description": "I used AdventureWorks for a decade without fully understanding its business concepts. Here is how I built an ontology for Text-to-SQL, measured it on 30 questions, and open sourced the stack.",
       "shortDescription": "Scrambled warehouse views, business docs, a YAML ontology, retrieval, and a 30 question eval across three models",
@@ -29,7 +29,7 @@
       },
       "medium": {
         "url": "#",
-        "title": "How to Build an Ontology Layer for Text-to-SQL on AdventureWorks"
+        "title": "How I Built a Business Ontology for AdventureWorks Using LLMs"
       },
       "datePublished": "2026-10-31",
       "featured": true,
