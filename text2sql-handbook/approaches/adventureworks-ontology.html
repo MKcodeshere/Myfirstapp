@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>How I Built a Business Ontology for AdventureWorks Using LLMs | Text2SQL Hub</title>
-  <meta name="description" content="I used AdventureWorks for a decade without fully understanding its business concepts. Here is how I built an ontology for Text-to-SQL, measured it on 30 questions, and open sourced the stack.">
+  <meta name="description" content="I used AdventureWorks for a decade without fully understanding its business concepts. Here is how I built an ontology for Text-to-SQL, measured it on 30 questions, and mapped the same pattern to an enterprise stack.">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -50,7 +50,7 @@
 
         <div class="article-meta">
           <span>📅 October 31, 2026</span>
-          <span>⏱️ 8 min read</span>
+          <span>⏱️ 10 min read</span>
           <span class="difficulty-badge difficulty-intermediate">intermediate</span>
         </div>
       </div>
@@ -65,25 +65,16 @@
 <p class="text-xl font-semibold text-gray-200 mb-6">
           Scrambled warehouse views, business docs, a YAML ontology, retrieval, and a 30 question eval across three models
         </p>
-
 <p>
-          I have used AdventureWorks for almost a decade. Workshops. Sample warehouses. Late night demos. I could write the joins. I still did not fully understand the business.
+          I have used AdventureWorks for almost a decade on sample data engineering and analytics projects. I could write the joins in my sleep. I still did not fully understand the business concepts behind the tables: product line codes, a fiscal year that starts in July, internet versus reseller, finished goods versus components, store specialty buried in survey XML.
         </p>
 
         <p>
-          Product line codes. A fiscal year that starts in July. Internet versus reseller. Finished goods versus components. Store specialty buried in survey XML.
+          So I built an ontology for it: cryptic warehouse names on one side, business language and docs on the other. I asked the same 30 questions with and without that ontology across three models. Every model with the ontology beat every model without it, and the weakest model gained the most.
         </p>
 
         <p>
-          So I built an ontology for it. Cryptic warehouse names on one side. Business language and docs on the other. Then I asked the same 30 questions with and without that ontology, across three models.
-        </p>
-
-        <p>
-          The result: every model with the ontology beat every model without it. The weakest model gained the most.
-        </p>
-
-        <p>
-          The project is open source: <a href="https://github.com/MKcodeshere/adventureworks-ontology" target="_blank" class="text-blue-400 underline">adventureworks-ontology</a>. Below is the walkthrough so you can build the same pattern on your own data.
+          This is a ground level build. It covers the basics of creating an ontology for Text-to-SQL, with enough eval to trust the pattern. To keep it easy to follow, I built everything in plain Python, YAML and SQL. No ontology framework, no graph database. The only infrastructure is Postgres (open source). Helper libraries show up where they help (psycopg2, PyYAML, matplotlib, Streamlit), but there is no ontology or graph stack. The same ideas carry to enterprise scale later in the article, where I map this to Neo4j, semantic layers, catalogs and the rest. The project is open source at <a href="https://github.com/MKcodeshere/adventureworks-ontology" target="_blank" class="text-blue-400 underline">adventureworks-ontology</a>.
         </p>
 
         </section>
@@ -92,11 +83,11 @@
 <h2>Why a schema alone is not enough</h2>
 
         <p>
-          AdventureWorks is a classic OLTP sample. The clean Microsoft names are also a problem for Text-to-SQL evals. Models have memorized <code>SalesOrderHeader.OnlineOrderFlag</code>. Give them those names and they answer from memory. You never learn what your ontology actually added.
+          AdventureWorks is a classic OLTP sample, and the clean Microsoft names are a problem for Text-to-SQL evals. Models have memorized <code>SalesOrderHeader.OnlineOrderFlag</code>. Give them those names and they answer from memory, so you never learn what your ontology actually added.
         </p>
 
         <p>
-          So I load the real tables into Postgres, then expose a scrambled <code>wh</code> schema. Thirty three views. Same data. Cryptic names.
+          I load the real tables into Postgres, then expose a scrambled <code>wh</code> schema: thirty three views, same data, cryptic names.
         </p>
 
         <pre class="language-sql"><code class="language-sql">CREATE OR REPLACE VIEW wh.sls_ord_hdr AS
@@ -110,11 +101,7 @@ SELECT
   ...</code></pre>
 
         <p>
-          <code>onlineorderflag</code> becomes <code>onl_flg</code>. <code>finishedgoodsflag</code> becomes <code>fg_flg</code>. The mapping file is for humans debugging gold SQL. It never goes to the LLM.
-        </p>
-
-        <p>
-          That is the point. Real warehouses look like this. Your Text-to-SQL stack has to survive it.
+          <code>onlineorderflag</code> becomes <code>onl_flg</code>. <code>finishedgoodsflag</code> becomes <code>fg_flg</code>. The mapping file is for humans debugging gold SQL. It never goes to the LLM. Real warehouses look like this, and your Text-to-SQL stack has to survive it.
         </p>
 
         </section>
@@ -134,7 +121,7 @@ SELECT
 <h2>Add the docs the tables cannot tell you</h2>
 
         <p>
-          The other half lives in <code>docs/</code>. Markdown files for company rules, product codes, and store surveys. Sources are Microsoft Learn pages plus text and XML exported from the loaded database. <code>docs/SOURCES.md</code> lists every link.
+          The other half lives in <code>docs/</code>: markdown for company rules, product codes, and store surveys. Sources are Microsoft Learn pages plus text and XML exported from the loaded database. <code>docs/SOURCES.md</code> lists every link.
         </p>
 
         <p>
@@ -144,7 +131,7 @@ SELECT
         <ul class="list-disc pl-6 space-y-2 my-4"><li>Fiscal year starts July 1. FY2024 runs from 2023-07-01 to 2024-06-30.</li><li>Internet orders have <code>onl_flg = TRUE</code>. Reseller orders have <code>onl_flg = FALSE</code>.</li><li>Finished goods have <code>fg_flg = TRUE</code>.</li><li>Product line codes: R Road, M Mountain, T Touring, S Standard.</li></ul>
 
         <p>
-          Without those rules, "how many internet orders" is a guessing game over cryptic flags.
+          Without those rules, "how many internet orders" is a guessing game over cryptic flags. One clarifying point for the needs docs questions later: doc knowledge becomes ontology rules, and the answer is still SQL on the warehouse. The fiscal year rule comes from <code>company_overview.md</code> and turns into a date filter on <code>ord_dt</code>. Pure document Q&amp;A is a RAG problem and is out of scope here.
         </p>
 
         </section>
@@ -153,7 +140,7 @@ SELECT
 <h2>Write the ontology as YAML</h2>
 
         <p>
-          One file: <code>ontology/ontology.yaml</code>. Six sections. Each answers a question the LLM cannot answer from column names alone.
+          One file does the work: <code>ontology/ontology.yaml</code>. Six sections, each answering something column names cannot.
         </p>
 
         <p>
@@ -192,7 +179,7 @@ sql_hint: onl_flg = TRUE  -- internet; onl_flg = FALSE -- reseller
 provenance: docs/business/kpi_definitions.md</code></pre>
 
         <p>
-          <strong>Metrics (4).</strong> What "revenue" means. Line sales is <code>unit_prc &lt;em&gt; qty &lt;/em&gt; (1 - disc_pct)</code>. Order subtotal is the header <code>sub_amt</code>. Pick one and stick to it.
+          <strong>Metrics (4).</strong> What "revenue" means. Line sales is <code>unit_prc * qty * (1 - disc_pct)</code>. Order subtotal is the header <code>sub_amt</code>. Pick one and stick to it.
         </p>
 
         <p>
@@ -204,7 +191,7 @@ provenance: docs/business/kpi_definitions.md</code></pre>
         </p>
 
         <p>
-          You can draft a first pass with <code>scripts/draft_ontology.py</code>. It packs the schema profile and the docs into a prompt and calls whichever LLM your <code>.env</code> names. Review the draft. Curate by hand. Synonyms should be business language, not copies of your eval questions.
+          You can draft a first pass with <code>scripts/draft_ontology.py</code>, which packs the profile and docs into a prompt for whichever LLM your <code>.env</code> names. Review the draft, then curate by hand. Synonyms should be business language, not copies of your eval questions.
         </p>
 
         <div class="my-8">
@@ -220,31 +207,21 @@ provenance: docs/business/kpi_definitions.md</code></pre>
 <h2>Retrieve a slice, do not dump the whole file</h2>
 
         <p>
-          The full YAML is about 18.8k characters. A modern model could swallow all of it. I still retrieve a slice per question.
+          The full YAML is about 18.8k characters, and a modern model could swallow all of it. I still retrieve a slice per question: company ontologies have hundreds of entities, irrelevant tables invite wrong joins, deterministic scores are easy to show in a UI, and retrieval itself is cheap.
         </p>
-
-        <p>
-          Why:
-        </p>
-
-        <ol class="list-decimal pl-6 space-y-2 my-4"><li><strong>Scale.</strong> AdventureWorks has 24 entities. A company ontology has hundreds. The tutorial should teach the pattern that survives.</li><li><strong>Less noise.</strong> Irrelevant tables invite wrong joins.</li><li><strong>Explainability.</strong> Deterministic retrieval lets the UI show scores and doc sources.</li><li><strong>Cost.</strong> Retrieval is free, fast, and stable across runs.</li></ol>
 
         <p>
           How it works in <code>scripts/ask.py</code>:
         </p>
 
-        <ol class="list-decimal pl-6 space-y-2 my-4"><li>Tokenize the question. Light stemming. Drop stopwords.</li><li>Expand through the synonyms index, but only for distinctive words. "Sales" cannot drag in half the ontology.</li><li>Score every entity with IDF weighting. Rare words count more than common ones. Name hits beat synonym hits.</li><li>Keep top seeds. Anything below 40% of the best score is cut. Max 5 seeds.</li><li>Multi hop BFS fills join bridges, up to 3 hops.</li><li>Rules, metrics, and value meanings make the cut only when the question hits their distinctive words.</li></ol>
+        <ol class="list-decimal pl-6 space-y-2 my-4"><li>Tokenize the question with light stemming, and drop stopwords.</li><li>Expand through the synonyms index, but only for distinctive words. "Sales" cannot drag in half the ontology.</li><li>Score every entity with IDF weighting. Rare words count more than common ones, and name hits beat synonym hits.</li><li>Keep top seeds. Anything below 40% of the best score is cut, with a max of 5 seeds.</li><li>A multi hop BFS fills join bridges, up to 3 hops.</li><li>Rules, metrics, and value meanings make the cut only when the question hits their distinctive words.</li></ol>
 
         <p>
-          For "How many internet sales orders are there?" the slice is just <code>SalesOrder</code> plus the <code>internet_vs_reseller</code> rule. Earlier retrieval pulled eight entities, including PurchaseOrder and WorkOrder. Tighter is better.
+          For "How many internet sales orders are there?" the slice is just <code>SalesOrder</code> plus the <code>internet_vs_reseller</code> rule. An earlier, noisier retrieval pulled eight entities, including PurchaseOrder and WorkOrder. Tighter is better.
         </p>
 
         <p>
-          A typical ontology prompt is 3.5k to 4.5k characters. The schema only baseline is about 5.5k. Smaller prompt. Higher accuracy.
-        </p>
-
-        <p>
-          Be honest about the weakness. Keyword retrieval is brittle with paraphrases. If someone says "ecommerce" and that phrase is missing from synonyms, you miss. Production should move to embeddings, a cheap LLM reranker, and graph traversal. HelixDB and similar graph stores fit that v2 well.
+          A typical ontology prompt is 3.5k to 4.5k characters, against about 5.5k for the schema only baseline. Smaller prompt, higher accuracy. Keyword retrieval is still brittle with paraphrases: say "ecommerce" when that phrase is missing from synonyms, and you miss. Production moves to embeddings, an LLM reranker, and graph traversal. That is the bridge into the enterprise stack below.
         </p>
 
         </section>
@@ -257,7 +234,7 @@ provenance: docs/business/kpi_definitions.md</code></pre>
         </p>
 
         <p>
-          <code>scripts/llm.py</code> talks to Ollama (local or Cloud), Gemini, OpenAI, or Anthropic through <code>.env</code>. Swap the key. Keep the ontology. The stack is model agnostic on purpose.
+          <code>scripts/llm.py</code> talks to Ollama (local or Cloud), Gemini, OpenAI, or Anthropic through <code>.env</code>. Swap the key, keep the ontology. The stack is model agnostic on purpose.
         </p>
 
         <p>
@@ -284,15 +261,11 @@ provenance: docs/business/kpi_definitions.md</code></pre>
 <h2>Evaluate with denotation, not SQL text</h2>
 
         <p>
-          Thirty questions. Ten simple, twelve medium, eight complex. Tags: 15 structured, 7 needs docs, 8 both. Gold SQL is hand written against <code>wh</code>. Gold result rows are frozen in <code>eval/gold_results/</code>.
+          I wrote thirty questions: ten simple, twelve medium, eight complex, tagged as 15 structured, 7 needs docs, and 8 both. Gold SQL is hand written against <code>wh</code>, with result rows frozen in <code>eval/gold_results/</code>.
         </p>
 
         <p>
-          Scoring compares result sets, not SQL strings. Two different queries that return the same data both pass. The tiers are in <code>eval/COMPARISON.md</code>: full bag match, projection match, and numeric bag match. Numbers round to 2 decimals. Strings trim and lowercase.
-        </p>
-
-        <p>
-          Each model runs both modes: schema only, and with the ontology.
+          Scoring compares result sets, not SQL strings, so two different queries that return the same data both pass. The tiers in <code>eval/COMPARISON.md</code> cover full bag match, projection match, and numeric bag match. Each model runs schema only and with the ontology.
         </p>
 
         </section>
@@ -301,13 +274,13 @@ provenance: docs/business/kpi_definitions.md</code></pre>
 <h2>What the numbers say</h2>
 
         <p>
-          Three models. Temperature 0. Same 30 questions.
+          Three models, temperature 0, same 30 questions.
         </p>
 
         <div class="overflow-x-auto my-8"><table class="w-full text-left border-collapse"><thead><tr class="border-b border-gray-600"><th class="py-3 pr-4">Model</th><th class="py-3 pr-4">Schema only</th><th class="py-3 pr-4">With ontology</th><th class="py-3 pr-4">Gain</th></tr></thead><tbody><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Gemini 2.5 Flash</td><td class="py-2 pr-4 align-top">53%</td><td class="py-2 pr-4 align-top">87%</td><td class="py-2 pr-4 align-top">+34 pp</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">gpt-oss 120B</td><td class="py-2 pr-4 align-top">33%</td><td class="py-2 pr-4 align-top">73%</td><td class="py-2 pr-4 align-top">+40 pp</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Nemotron 3 Super</td><td class="py-2 pr-4 align-top">47%</td><td class="py-2 pr-4 align-top">70%</td><td class="py-2 pr-4 align-top">+23 pp</td></tr></tbody></table></div>
 
         <p>
-          Gemini's run used an earlier retrieval version. The Ollama models used the tighter IDF retrieval above. The headline does not change either way.
+          Gemini's run used an earlier retrieval version; the Ollama models used the tighter IDF retrieval above. The headline holds either way.
         </p>
 
         <div class="my-8">
@@ -325,7 +298,7 @@ provenance: docs/business/kpi_definitions.md</code></pre>
       </div>
 
         <p>
-          The misses are useful too. Q22, Q26, and Q27 fail for every model even with the ontology. Q26 asks for average annual sales from the store survey for Road specialty stores. That needs <code>xpath</code> over an XML column. The ontology says the survey exists. It does not teach the XML shape. That is an ontology gap, not a model gap. Fix the YAML before you chase a bigger model.
+          Q22, Q26, and Q27 still fail for every model. Q26 needs <code>xpath</code> over store survey XML for Road specialty stores. The ontology says the survey exists; it does not teach the XML shape. That is an ontology gap, not a model gap. Fix the YAML before you chase a bigger model.
         </p>
 
         </section>
@@ -336,7 +309,7 @@ provenance: docs/business/kpi_definitions.md</code></pre>
         <pre class="language-bash"><code class="language-bash">streamlit run app/app.py</code></pre>
 
         <p>
-          The Ask tab walks one question step by step: tokens, entity scores, multi hop bridges, rules with From tables versus From docs, the prompt, the SQL, and the live rows. Compare both modes side by side when you want to see the baseline guess next to the ontology answer.
+          The Ask tab walks one question through tokens, entity scores, multi hop bridges, doc provenance, the prompt, the SQL, and the live rows. Compare both modes when you want the baseline guess next to the ontology answer.
         </p>
 
         <div class="my-8">
@@ -349,9 +322,17 @@ provenance: docs/business/kpi_definitions.md</code></pre>
         </section>
 
       <section>
-<h2>What I would do next on a real warehouse</h2>
+<h2>Taking this to enterprise scale</h2>
 
-        <ol class="list-decimal pl-6 space-y-2 my-4"><li>Start with scrambled names or your real cryptic ones. Do not eval on famous clean schemas.</li><li>Write rules with provenance. Every business rule should point at a doc.</li><li>Keep retrieval explainable at first. Move to embeddings plus graph traversal when synonyms stop scaling.</li><li>Score by denotation. Wrong SQL text that returns the right rows is still useful. Right looking SQL that returns the wrong rows is not.</li><li>Treat eval misses as ontology bugs. Q26 taught me more than any chart.</li></ol>
+        <p>
+          If you bring this pattern into a real company, keep the same mental model and upgrade the storage around it. YAML on disk is a teaching tool. At scale you need graph storage for relationships, a semantic layer for metrics, a catalog for owners, and CI that catches ontology regressions.
+        </p>
+
+        <div class="overflow-x-auto my-8"><table class="w-full text-left border-collapse"><thead><tr class="border-b border-gray-600"><th class="py-3 pr-4">This repo</th><th class="py-3 pr-4">Enterprise choice</th><th class="py-3 pr-4">Why</th></tr></thead><tbody><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top"><code>ontology.yaml</code> on disk</td><td class="py-2 pr-4 align-top">Neo4j (Cypher) as the default; Memgraph for lower latency; Apache AGE inside Postgres; HelixDB for graph plus native vector and full text</td><td class="py-2 pr-4 align-top">Relationships stop fitting flat files. Neo4j also has GraphRAG and an LLM Knowledge Graph Builder. Kuzu was a strong embedded option, but Apple acquired it in Oct 2025 and the repo was archived the next day, so I would not start a new project on it.</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Rules and value meanings in YAML</td><td class="py-2 pr-4 align-top">Optional OWL/RDF/SHACL with Apache Jena, GraphDB, or Stardog</td><td class="py-2 pr-4 align-top">Use formal ontologies when you need reasoning, constraint validation, and heavy governance. Most Text-to-SQL teams do not need that on day one.</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Metrics block in the ontology</td><td class="py-2 pr-4 align-top">dbt Semantic Layer / MetricFlow, Cube, or AtScale</td><td class="py-2 pr-4 align-top">Metrics belong in a semantic layer that compiles to warehouse SQL. The ontology should hold meaning, joins, and rules, not become your only metric store.</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Keyword + IDF retrieval</td><td class="py-2 pr-4 align-top">Hybrid: embeddings + keywords + graph traversal, with pgvector or the graph DB's vector index, plus an LLM reranker</td><td class="py-2 pr-4 align-top">Paraphrases break pure lexical matching. Hybrid retrieval is the production default.</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Hand curated <code>docs/</code> markdown</td><td class="py-2 pr-4 align-top">LLM extraction from PDFs, wikis, and Confluence into candidate rules, with human review and provenance</td><td class="py-2 pr-4 align-top">Scale the drafting, not the approval. Every rule still needs a source link.</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Manual schema profile</td><td class="py-2 pr-4 align-top">DataHub or OpenMetadata</td><td class="py-2 pr-4 align-top">Catalogs give you tables, owners, and lineage as the structured input to the ontology.</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top"><code>evaluate.py</code> on demand</td><td class="py-2 pr-4 align-top">Growing gold set, CI on every ontology change, ontology versioned like code</td><td class="py-2 pr-4 align-top">If the ontology can ship without an eval gate, it will drift.</td></tr></tbody></table></div>
+
+        <p>
+          My advice is boring on purpose. Start with Postgres plus curated YAML until the joins and rules hurt. Move relationships into Neo4j or AGE when multi hop retrieval becomes the bottleneck. Put metrics in dbt MetricFlow, Cube, or AtScale so "revenue" means one thing in BI and in the agent. Add OWL only if you truly need reasoning. Keep Helix Foundry on the shortlist when you want ontology drafting with graph plus vector storage in one place.
+        </p>
 
         </section>
 

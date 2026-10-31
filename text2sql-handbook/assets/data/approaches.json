@@ -4,13 +4,13 @@
       "id": "adventureworks-ontology",
       "title": "How I Built a Business Ontology for AdventureWorks Using LLMs",
       "slug": "adventureworks-ontology",
-      "description": "I used AdventureWorks for a decade without fully understanding its business concepts. Here is how I built an ontology for Text-to-SQL, measured it on 30 questions, and open sourced the stack.",
-      "shortDescription": "Scrambled warehouse views, business docs, a YAML ontology, retrieval, and a 30 question eval across three models",
-      "articlePreview": "I used AdventureWorks for a decade without fully understanding its business concepts. Here is how I built an ontology for Text-to-SQL, measured it on 30 questions, and open sourced the stack.",
+      "description": "I used AdventureWorks for a decade without fully understanding its business concepts. Here is how I built an ontology for Text-to-SQL, measured it on 30 questions, and mapped the same pattern to an enterprise stack.",
+      "shortDescription": "Ground level ontology for Text-to-SQL on AdventureWorks, with evals and an enterprise scale map",
+      "articlePreview": "I used AdventureWorks for a decade without fully understanding its business concepts. Here is how I built an ontology for Text-to-SQL, measured it on 30 questions, and mapped the same pattern to an enterprise stack.",
       "thumbnailImage": "assets/images/adventureworks-ontology/model_comparison.png",
       "thumbnailGradient": "from-emerald-600 to-teal-600",
       "thumbnailIcon": "\ud83e\udded",
-      "readTime": "8 min read",
+      "readTime": "10 min read",
       "difficulty": "intermediate",
       "tags": [
         "Ontology",
@@ -48,7 +48,7 @@
         "Model agnostic stack via .env (Ollama, Gemini, OpenAI, Anthropic)",
         "Ontology lifts every model 23 to 40 points on 30 questions",
         "Cryptic warehouse names stop memorization cheating",
-        "Provenance ties rules back to docs in the UI",
+        "Maps the same pattern to Neo4j, semantic layers, and catalogs",
         "Open source repo you can clone and run"
       ],
       "cons": [
