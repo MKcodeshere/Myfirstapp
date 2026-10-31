@@ -74,7 +74,7 @@
         </p>
 
         <p>
-          This is a ground level build. It covers the basics of creating an ontology, with enough eval to trust the pattern. To keep it easy to follow, I built everything in plain Python, YAML and SQL. No ontology framework, no graph database. The only infrastructure is Postgres, which is open source. Later I map each piece to what you would use at enterprise scale, Neo4j included. The project is open source at <a href="https://github.com/MKcodeshere/adventureworks-ontology" target="_blank" class="text-blue-400 underline">adventureworks-ontology</a>.
+          This is a ground level build. It covers the basics of creating an ontology, with enough eval to trust the pattern. To keep it easy to follow, I built everything in plain Python, YAML and SQL. No ontology framework, no graph database. The only infrastructure is Postgres, which is open source. Later I map each piece to what you would use at enterprise scale, Neo4j included.
         </p>
 
         </section>
@@ -109,7 +109,7 @@ SELECT
       <section>
 <h2>Load the data, then profile it</h2>
 
-        <ol class="list-decimal pl-6 space-y-2 my-4"><li>Start Postgres 16 (<code>docker compose up -d</code> in the repo).</li><li>Run <code>scripts/load_adventureworks.sh</code>. It pulls the official AdventureWorks 2014 CSVs and the MIT Postgres port from <a href="https://github.com/lorint/AdventureWorks-for-Postgres" target="_blank" class="text-blue-400 underline">lorint/AdventureWorks-for-Postgres</a>.</li><li>Apply <code>sql/01_create_wh_views.sql</code> to create the scrambled layer.</li><li>Run <code>scripts/profile_schema.py</code>. It reads <code>information_schema</code>, samples values, and writes <code>artifacts/schema_profile.json</code>.</li></ol>
+        <ol class="list-decimal pl-6 space-y-2 my-4"><li>Start Postgres 16 (<code>docker compose up -d</code> in the repo).</li><li>Run <code>scripts/load_adventureworks.sh</code>. It pulls the official AdventureWorks 2014 CSVs and the MIT Postgres port (linked in Resources at the end).</li><li>Apply <code>sql/01_create_wh_views.sql</code> to create the scrambled layer.</li><li>Run <code>scripts/profile_schema.py</code>. It reads <code>information_schema</code>, samples values, and writes <code>artifacts/schema_profile.json</code>.</li></ol>
 
         <p>
           The profile records column types, distinct counts, sample values (<code>stat_cd</code> is 1 to 6), and likely join keys. That file is the structured half of the ontology input.
