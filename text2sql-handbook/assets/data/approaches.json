@@ -1,6 +1,71 @@
 {
   "approaches": [
     {
+      "id": "adventureworks-ontology",
+      "title": "How to Build an Ontology Layer for Text-to-SQL on AdventureWorks",
+      "slug": "adventureworks-ontology",
+      "description": "I used AdventureWorks for a decade without fully understanding its business concepts. Here is how I built an ontology for Text-to-SQL, measured it on 30 questions, and open sourced the stack.",
+      "shortDescription": "Scrambled warehouse views, business docs, a YAML ontology, retrieval, and a 30 question eval across three models",
+      "articlePreview": "I used AdventureWorks for a decade without fully understanding its business concepts. Here is how I built an ontology for Text-to-SQL, measured it on 30 questions, and open sourced the stack.",
+      "thumbnailImage": "assets/images/adventureworks-ontology/model_comparison.png",
+      "thumbnailGradient": "from-emerald-600 to-teal-600",
+      "thumbnailIcon": "\ud83e\udded",
+      "readTime": "8 min read",
+      "difficulty": "intermediate",
+      "tags": [
+        "Ontology",
+        "AdventureWorks",
+        "Text-to-SQL",
+        "Retrieval",
+        "Evaluation",
+        "Streamlit"
+      ],
+      "llmModel": "Any (Ollama / Gemini / OpenAI / Anthropic)",
+      "database": "AdventureWorks / Postgres",
+      "github": {
+        "url": "https://github.com/MKcodeshere/adventureworks-ontology",
+        "stars": 0,
+        "forks": 0
+      },
+      "medium": {
+        "url": "#",
+        "title": "How to Build an Ontology Layer for Text-to-SQL on AdventureWorks"
+      },
+      "datePublished": "2026-10-31",
+      "featured": true,
+      "architecture": {
+        "imageUrl": "/assets/images/adventureworks-ontology/app-ontology-metrics.png",
+        "components": [
+          "Scrambled wh schema",
+          "Schema profile",
+          "Business docs",
+          "Ontology YAML",
+          "IDF retrieval + multi-hop",
+          "Denotation eval"
+        ]
+      },
+      "pros": [
+        "Model agnostic stack via .env (Ollama, Gemini, OpenAI, Anthropic)",
+        "Ontology lifts every model 23 to 40 points on 30 questions",
+        "Cryptic warehouse names stop memorization cheating",
+        "Provenance ties rules back to docs in the UI",
+        "Open source repo you can clone and run"
+      ],
+      "cons": [
+        "Keyword retrieval is brittle with paraphrases",
+        "Three hard questions still fail (XML xpath gap in the ontology)",
+        "AdventureWorks scale is small vs a real company ontology",
+        "Curating YAML still needs human review"
+      ],
+      "bestFor": [
+        "Teams building Text-to-SQL over cryptic warehouse schemas",
+        "Anyone who wants a measurable ontology before buying a semantic layer",
+        "Builders who want a model agnostic tutorial with real eval charts"
+      ],
+      "setupTime": "1 to 2 hours with Docker and an LLM key",
+      "productionReady": false
+    },
+    {
       "id": "schema-free-text-to-sql-query-logs",
       "title": "How to Build Text-to-SQL for 200+ Cryptic Tables Without Schema Docs",
       "slug": "schema-free-text-to-sql-query-logs",
@@ -9,7 +74,7 @@
       "articlePreview": "Imagine your warehouse: 240 cryptic tables, years of query history, and a GraphRAG approach that beats embedding RAG. Method, stack choices, and an honest critique.",
       "thumbnailImage": "assets/images/schema-free-text-to-sql-query-logs/hero.jpg",
       "thumbnailGradient": "from-indigo-600 to-violet-600",
-      "thumbnailIcon": "🕸️",
+      "thumbnailIcon": "\ud83d\udd78\ufe0f",
       "readTime": "9 min read",
       "difficulty": "advanced",
       "tags": [
@@ -72,10 +137,10 @@
       "slug": "top-10-data-platforms-ai-agents",
       "description": "No third-party tools. No custom work. I scored 65 products on 19 semantic capabilities, and the results surprised me.",
       "shortDescription": "65 products scored on 19 semantic capabilities for AI agents",
-      "articlePreview": "A ranking of data platforms, semantic layers, BI tools, and catalogs by how much semantic context they ship natively for AI agents—no third-party tools, no custom work.",
+      "articlePreview": "A ranking of data platforms, semantic layers, BI tools, and catalogs by how much semantic context they ship natively for AI agents\u2014no third-party tools, no custom work.",
       "thumbnailImage": "assets/images/top-10-data-platforms-ai-agents/intro.png",
       "thumbnailGradient": "from-teal-500 to-cyan-600",
-      "thumbnailIcon": "📊",
+      "thumbnailIcon": "\ud83d\udcca",
       "readTime": "10 min read",
       "difficulty": "intermediate",
       "tags": [
@@ -119,7 +184,7 @@
       ],
       "cons": [
         "Breadth score is not the same as quality for your use case",
-        "Field moves monthly—some cells will go stale",
+        "Field moves monthly\u2014some cells will go stale",
         "Preview vs GA labeling varies by vendor docs",
         "Five cells remain Not verified where sources were missing"
       ],
@@ -136,12 +201,12 @@
       "id": "agentic-text-to-sql",
       "title": "Building Agentic Text-to-SQL: Why RAG Fails on Enterprise Data Lakes",
       "slug": "agentic-text-to-sql",
-      "description": "How I reduced LLM costs by 85% on Snowflake using hierarchical discovery instead of retrieval — tested on 100+ databases with zero documentation.",
+      "description": "How I reduced LLM costs by 85% on Snowflake using hierarchical discovery instead of retrieval \u2014 tested on 100+ databases with zero documentation.",
       "shortDescription": "Agentic hierarchical discovery for 85% lower costs on Snowflake",
       "articlePreview": "Learn how to build a text-to-SQL system that explores databases, fixes its own mistakes, and costs 85% less than standard RAG approaches using hierarchical discovery.",
       "thumbnailImage": "assets/images/agentic-text2sql/hero.png",
       "thumbnailGradient": "from-blue-600 to-indigo-600",
-      "thumbnailIcon": "🤖",
+      "thumbnailIcon": "\ud83e\udd16",
       "readTime": "10 min read",
       "difficulty": "advanced",
       "tags": [
@@ -204,7 +269,7 @@
       "articlePreview": "Learn how semantic caching makes Text-to-SQL 9X faster using vector embeddings, FAISS, and intelligent query modification instead of regenerating SQL from scratch.",
       "thumbnailImage": "assets/images/semantic-caching/intro.png",
       "thumbnailGradient": "from-emerald-500 to-teal-500",
-      "thumbnailIcon": "⚡",
+      "thumbnailIcon": "\u26a1",
       "readTime": "15 min read",
       "difficulty": "intermediate",
       "tags": [
@@ -267,7 +332,7 @@
       "articlePreview": "Learn how to build a Text2SQL agent with long-term memory that remembers user preferences, custom terminology, and context across sessions using PostgreSQL, pgvector, and the Mem0 architecture principles.",
       "thumbnailImage": "assets/images/article2/intro.png",
       "thumbnailGradient": "from-purple-500 to-indigo-500",
-      "thumbnailIcon": "🧠",
+      "thumbnailIcon": "\ud83e\udde0",
       "readTime": "15 min read",
       "difficulty": "advanced",
       "tags": [
@@ -331,7 +396,7 @@
       "articlePreview": "Discover how SQL-of-Thought uses a collaborative team of 6 specialized agents (Schema, Question, SQL Generation, Validation, Execution, and Reflection) to achieve high accuracy through iterative error correction and guided refinement.",
       "thumbnailImage": "assets/images/sql-of-thought/intro.png",
       "thumbnailGradient": "from-cyan-500 to-blue-500",
-      "thumbnailIcon": "🧩",
+      "thumbnailIcon": "\ud83e\udde9",
       "readTime": "20 min read",
       "difficulty": "advanced",
       "tags": [
@@ -400,7 +465,7 @@
       "articlePreview": "Learn how to build a Text-to-SQL system that explores databases dynamically using SQL Probes instead of vector databases. Achieves 85% accuracy using LSH, GPT-4, and a 4-stage pipeline with real-time trace visualization.",
       "thumbnailImage": "assets/images/sql-probes/intro.png",
       "thumbnailGradient": "from-orange-500 to-red-500",
-      "thumbnailIcon": "🔍",
+      "thumbnailIcon": "\ud83d\udd0d",
       "readTime": "18 min read",
       "difficulty": "advanced",
       "tags": [
@@ -470,7 +535,7 @@
       "articlePreview": "Discover how to build Text-to-SQL systems that learn from mistakes and improve over time using Stanford's ACE framework. Features 86.9% faster adaptation, structured knowledge management, and automatic performance optimization.",
       "thumbnailImage": "assets/images/ace-sql/intro.png",
       "thumbnailGradient": "from-violet-500 to-purple-500",
-      "thumbnailIcon": "🧠",
+      "thumbnailIcon": "\ud83e\udde0",
       "readTime": "16 min read",
       "difficulty": "advanced",
       "tags": [
@@ -541,7 +606,7 @@
       "articlePreview": "Learn how HVSR creates a medallion architecture for Text-to-SQL (Bronze to Gold) by capturing expert SQL knowledge in a reusable repository. Match new questions to verified queries, adapt them intelligently, and continuously improve query quality through human validation.",
       "thumbnailImage": "assets/images/hvsr/intro.png",
       "thumbnailGradient": "from-amber-500 to-yellow-500",
-      "thumbnailIcon": "⭐",
+      "thumbnailIcon": "\u2b50",
       "readTime": "20 min read",
       "difficulty": "intermediate",
       "tags": [
@@ -612,7 +677,7 @@
       "articlePreview": "Learn how AmbiSQL improves query reliability by surfacing ambiguities early, generating candidate SQLs across interpretations, validating them against the schema/constraints, and guiding users through quick clarifications to reach the right query.",
       "thumbnailImage": "assets/images/ambisql/intro.png",
       "thumbnailGradient": "from-indigo-500 to-violet-600",
-      "thumbnailIcon": "🧭",
+      "thumbnailIcon": "\ud83e\udded",
       "readTime": " min read",
       "difficulty": "advanced",
       "tags": [
@@ -677,10 +742,10 @@
       "slug": "rethinking-text-to-sql",
       "description": "DySQL-Bench proves static query evaluation was always broken and shows what happens when you test SQL agents against real multi-turn conversations, including CRUD, Pass@k stability, hallucination control, and cost trade-offs.",
       "shortDescription": "Dynamic multi-turn Text-to-SQL benchmarking with DySQL-Bench and real agents.",
-      "articlePreview": "See how DySQL-Bench’s triadic interaction model, full CRUD coverage, and Pass@k stability expose real-world failure modes—and how a Formula 1 and European football SQL agent performs in production.",
+      "articlePreview": "See how DySQL-Bench\u2019s triadic interaction model, full CRUD coverage, and Pass@k stability expose real-world failure modes\u2014and how a Formula 1 and European football SQL agent performs in production.",
       "thumbnailImage": "assets/images/rethinking/rethinking-header.png",
       "thumbnailGradient": "from-sky-500 to-blue-700",
-      "thumbnailIcon": "🎯",
+      "thumbnailIcon": "\ud83c\udfaf",
       "readTime": "12 min read",
       "difficulty": "intermediate",
       "tags": [
@@ -711,7 +776,7 @@
           "Dynamic Multi-Turn Conversations",
           "Tree-Structured Data Synthesis",
           "Quality Verification Committee",
-          "Explore → Peek → Execute Pattern",
+          "Explore \u2192 Peek \u2192 Execute Pattern",
           "CRUD-Aware Tooling (SELECT/INSERT/UPDATE/DELETE)"
         ]
       },

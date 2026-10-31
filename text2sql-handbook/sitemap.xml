@@ -39,6 +39,13 @@
 
   <!-- Approach Articles -->
   <url>
+    <loc>https://text2sql-hub.dev/approaches/adventureworks-ontology.html</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://text2sql-hub.dev/approaches/schema-free-text-to-sql-query-logs.html</loc>
     <lastmod>2026-10-30</lastmod>
     <changefreq>monthly</changefreq>

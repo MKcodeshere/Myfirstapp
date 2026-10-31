@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Build an Ontology Layer for Text-to-SQL on AdventureWorks | Text2SQL Hub</title>
+  <meta name="description" content="I used AdventureWorks for a decade without fully understanding its business concepts. Here is how I built an ontology for Text-to-SQL, measured it on 30 questions, and open sourced the stack.">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/main.css?v=7">
+
+  <!-- Prism.js for code highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="flex items-center justify-between py-4">
+        <a href="../index.html" class="text-2xl font-bold text-blue-600 hover:opacity-80 transition-opacity">
+          Text2SQL<span class="text-gray-200">Hub</span>
+        </a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="../what-is-text2sql.html" class="nav-link">What is Text-to-SQL?</a>
+          <a href="../approaches.html" class="nav-link active">Approaches</a>
+          <a href="../about.html" class="nav-link">About</a>
+          <a href="../consulting.html" class="btn-primary">Get In Touch</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Article Header -->
+  <section class="article-header">
+    <div class="container">
+      <div class="max-w-4xl mx-auto">
+        <a href="../approaches.html" class="text-white opacity-75 hover:opacity-100 mb-6 inline-block">← Back to All Approaches</a>
+
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">
+          How to Build an Ontology Layer for Text-to-SQL on AdventureWorks
+        </h1>
+
+        <div class="article-meta">
+          <span>📅 October 31, 2026</span>
+          <span>⏱️ 8 min read</span>
+          <span class="difficulty-badge difficulty-intermediate">intermediate</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Article Content -->
+  <div class="container py-12">
+    <div class="article-content">
+
+      <section>
+<p class="text-xl font-semibold text-gray-200 mb-6">
+          Scrambled warehouse views, business docs, a YAML ontology, retrieval, and a 30 question eval across three models
+        </p>
+
+<p>
+          I have used AdventureWorks for almost a decade. Workshops. Sample warehouses. Late night demos. I could write the joins. I still did not fully understand the business.
+        </p>
+
+        <p>
+          Product line codes. A fiscal year that starts in July. Internet versus reseller. Finished goods versus components. Store specialty buried in survey XML.
+        </p>
+
+        <p>
+          So I built an ontology for it. Cryptic warehouse names on one side. Business language and docs on the other. Then I asked the same 30 questions with and without that ontology, across three models.
+        </p>
+
+        <p>
+          The result: every model with the ontology beat every model without it. The weakest model gained the most.
+        </p>
+
+        <p>
+          The project is open source: <a href="https://github.com/MKcodeshere/adventureworks-ontology" target="_blank" class="text-blue-400 underline">adventureworks-ontology</a>. Below is the walkthrough so you can build the same pattern on your own data.
+        </p>
+
+        </section>
+
+      <section>
+<h2>Why a schema alone is not enough</h2>
+
+        <p>
+          AdventureWorks is a classic OLTP sample. The clean Microsoft names are also a problem for Text-to-SQL evals. Models have memorized <code>SalesOrderHeader.OnlineOrderFlag</code>. Give them those names and they answer from memory. You never learn what your ontology actually added.
+        </p>
+
+        <p>
+          So I load the real tables into Postgres, then expose a scrambled <code>wh</code> schema. Thirty three views. Same data. Cryptic names.
+        </p>
+
+        <pre class="language-sql"><code class="language-sql">CREATE OR REPLACE VIEW wh.sls_ord_hdr AS
+SELECT
+  salesorderid     AS ord_id,
+  orderdate        AS ord_dt,
+  status           AS stat_cd,
+  onlineorderflag  AS onl_flg,
+  subtotal         AS sub_amt,
+  totaldue         AS net_amt,
+  ...</code></pre>
+
+        <p>
+          <code>onlineorderflag</code> becomes <code>onl_flg</code>. <code>finishedgoodsflag</code> becomes <code>fg_flg</code>. The mapping file is for humans debugging gold SQL. It never goes to the LLM.
+        </p>
+
+        <p>
+          That is the point. Real warehouses look like this. Your Text-to-SQL stack has to survive it.
+        </p>
+
+        </section>
+
+      <section>
+<h2>Load the data, then profile it</h2>
+
+        <ol class="list-decimal pl-6 space-y-2 my-4"><li>Start Postgres 16 (<code>docker compose up -d</code> in the repo).</li><li>Run <code>scripts/load_adventureworks.sh</code>. It pulls the official AdventureWorks 2014 CSVs and the MIT Postgres port from <a href="https://github.com/lorint/AdventureWorks-for-Postgres" target="_blank" class="text-blue-400 underline">lorint/AdventureWorks-for-Postgres</a>.</li><li>Apply <code>sql/01_create_wh_views.sql</code> to create the scrambled layer.</li><li>Run <code>scripts/profile_schema.py</code>. It reads <code>information_schema</code>, samples values, and writes <code>artifacts/schema_profile.json</code>.</li></ol>
+
+        <p>
+          The profile records column types, distinct counts, sample values (<code>stat_cd</code> is 1 to 6), and likely join keys. That file is the structured half of the ontology input.
+        </p>
+
+        </section>
+
+      <section>
+<h2>Add the docs the tables cannot tell you</h2>
+
+        <p>
+          The other half lives in <code>docs/</code>. Markdown files for company rules, product codes, and store surveys. Sources are Microsoft Learn pages plus text and XML exported from the loaded database. <code>docs/SOURCES.md</code> lists every link.
+        </p>
+
+        <p>
+          These docs hold rules the columns never state:
+        </p>
+
+        <ul class="list-disc pl-6 space-y-2 my-4"><li>Fiscal year starts July 1. FY2024 runs from 2023-07-01 to 2024-06-30.</li><li>Internet orders have <code>onl_flg = TRUE</code>. Reseller orders have <code>onl_flg = FALSE</code>.</li><li>Finished goods have <code>fg_flg = TRUE</code>.</li><li>Product line codes: R Road, M Mountain, T Touring, S Standard.</li></ul>
+
+        <p>
+          Without those rules, "how many internet orders" is a guessing game over cryptic flags.
+        </p>
+
+        </section>
+
+      <section>
+<h2>Write the ontology as YAML</h2>
+
+        <p>
+          One file: <code>ontology/ontology.yaml</code>. Six sections. Each answers a question the LLM cannot answer from column names alone.
+        </p>
+
+        <p>
+          <strong>Entities (24).</strong> Business names mapped to tables and columns.
+        </p>
+
+        <pre class="language-yaml"><code class="language-yaml">name: SalesOrder
+description: A customer purchase order with dates, status, channel flag, and totals.
+table: wh.sls_ord_hdr
+primary_key: ord_id
+attributes:
+  - name: online_order_flag
+    column: onl_flg
+  - name: subtotal
+    column: sub_amt
+synonyms: [order, sales order, purchase, transaction]</code></pre>
+
+        <p>
+          <strong>Relationships (21).</strong> Join paths with exact keys. Provenance is <code>schema</code> because they came from the profile.
+        </p>
+
+        <pre class="language-yaml"><code class="language-yaml">name: has_lines
+from: SalesOrder
+to: SalesOrderLine
+join:
+  left: wh.sls_ord_hdr.ord_id
+  right: wh.sls_ord_dtl.ord_id</code></pre>
+
+        <p>
+          <strong>Rules (8).</strong> The docs section. Each rule carries a <code>sql_hint</code>, synonyms, and the source file.
+        </p>
+
+        <pre class="language-yaml"><code class="language-yaml">name: internet_vs_reseller
+description: Online/internet orders have onl_flg = true. Reseller orders have onl_flg = false.
+sql_hint: onl_flg = TRUE  -- internet; onl_flg = FALSE -- reseller
+provenance: docs/business/kpi_definitions.md</code></pre>
+
+        <p>
+          <strong>Metrics (4).</strong> What "revenue" means. Line sales is <code>unit_prc &lt;em&gt; qty &lt;/em&gt; (1 - disc_pct)</code>. Order subtotal is the header <code>sub_amt</code>. Pick one and stick to it.
+        </p>
+
+        <p>
+          <strong>Value meanings (9).</strong> Decode coded columns. <code>line_cd</code> R/M/T/S means Road, Mountain, Touring, Standard.
+        </p>
+
+        <p>
+          <strong>Synonyms index (14).</strong> Global lookup from user language to ontology terms. "internet" also matches "online", "web", "online order".
+        </p>
+
+        <p>
+          You can draft a first pass with <code>scripts/draft_ontology.py</code>. It packs the schema profile and the docs into a prompt and calls whichever LLM your <code>.env</code> names. Review the draft. Curate by hand. Synonyms should be business language, not copies of your eval questions.
+        </p>
+
+        <div class="my-8">
+        <img src="../assets/images/adventureworks-ontology/app-ontology-metrics.png"
+             alt="Ontology explorer showing 24 entities, 21 relationships, 8 rules, and 4 metrics"
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">Ontology explorer in the Streamlit app: 24 entities, 21 relationships, 8 rules, 4 metrics.</p>
+      </div>
+
+        </section>
+
+      <section>
+<h2>Retrieve a slice, do not dump the whole file</h2>
+
+        <p>
+          The full YAML is about 18.8k characters. A modern model could swallow all of it. I still retrieve a slice per question.
+        </p>
+
+        <p>
+          Why:
+        </p>
+
+        <ol class="list-decimal pl-6 space-y-2 my-4"><li><strong>Scale.</strong> AdventureWorks has 24 entities. A company ontology has hundreds. The tutorial should teach the pattern that survives.</li><li><strong>Less noise.</strong> Irrelevant tables invite wrong joins.</li><li><strong>Explainability.</strong> Deterministic retrieval lets the UI show scores and doc sources.</li><li><strong>Cost.</strong> Retrieval is free, fast, and stable across runs.</li></ol>
+
+        <p>
+          How it works in <code>scripts/ask.py</code>:
+        </p>
+
+        <ol class="list-decimal pl-6 space-y-2 my-4"><li>Tokenize the question. Light stemming. Drop stopwords.</li><li>Expand through the synonyms index, but only for distinctive words. "Sales" cannot drag in half the ontology.</li><li>Score every entity with IDF weighting. Rare words count more than common ones. Name hits beat synonym hits.</li><li>Keep top seeds. Anything below 40% of the best score is cut. Max 5 seeds.</li><li>Multi hop BFS fills join bridges, up to 3 hops.</li><li>Rules, metrics, and value meanings make the cut only when the question hits their distinctive words.</li></ol>
+
+        <p>
+          For "How many internet sales orders are there?" the slice is just <code>SalesOrder</code> plus the <code>internet_vs_reseller</code> rule. Earlier retrieval pulled eight entities, including PurchaseOrder and WorkOrder. Tighter is better.
+        </p>
+
+        <p>
+          A typical ontology prompt is 3.5k to 4.5k characters. The schema only baseline is about 5.5k. Smaller prompt. Higher accuracy.
+        </p>
+
+        <p>
+          Be honest about the weakness. Keyword retrieval is brittle with paraphrases. If someone says "ecommerce" and that phrase is missing from synonyms, you miss. Production should move to embeddings, a cheap LLM reranker, and graph traversal. HelixDB and similar graph stores fit that v2 well.
+        </p>
+
+        </section>
+
+      <section>
+<h2>Prompt the model, then run SQL safely</h2>
+
+        <p>
+          <code>prompts/ask_sql.md</code> fills in the question, the ontology slice as YAML, and schema hints for only the tables in the slice. The model returns SQL only.
+        </p>
+
+        <p>
+          <code>scripts/llm.py</code> talks to Ollama (local or Cloud), Gemini, OpenAI, or Anthropic through <code>.env</code>. Swap the key. Keep the ontology. The stack is model agnostic on purpose.
+        </p>
+
+        <p>
+          Before anything hits Postgres, the SQL must be a single <code>SELECT</code> or <code>WITH ... SELECT</code>. It runs on a read only session with a 15 second <code>statement_timeout</code>.
+        </p>
+
+        <div class="my-8">
+        <img src="../assets/images/adventureworks-ontology/app-needs-docs-guided.png"
+             alt="Guided ask flow for internet orders: tokens, synonym hits, and SalesOrder matched to wh.sls_ord_hdr"
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">Guided ask for Q08. Synonym expansion turns "internet" into online and web. Retrieval lands on SalesOrder → wh.sls_ord_hdr.</p>
+      </div>
+
+        <div class="my-8">
+        <img src="../assets/images/adventureworks-ontology/app-needs-docs-sql-result.png"
+             alt="Live SQL result matching gold: 27659 internet sales orders, with the onl_flg value meaning from docs"
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">Live result for Q08. Value meaning for onl_flg comes from docs. Eval check matches gold.</p>
+      </div>
+
+        </section>
+
+      <section>
+<h2>Evaluate with denotation, not SQL text</h2>
+
+        <p>
+          Thirty questions. Ten simple, twelve medium, eight complex. Tags: 15 structured, 7 needs docs, 8 both. Gold SQL is hand written against <code>wh</code>. Gold result rows are frozen in <code>eval/gold_results/</code>.
+        </p>
+
+        <p>
+          Scoring compares result sets, not SQL strings. Two different queries that return the same data both pass. The tiers are in <code>eval/COMPARISON.md</code>: full bag match, projection match, and numeric bag match. Numbers round to 2 decimals. Strings trim and lowercase.
+        </p>
+
+        <p>
+          Each model runs both modes: schema only, and with the ontology.
+        </p>
+
+        </section>
+
+      <section>
+<h2>What the numbers say</h2>
+
+        <p>
+          Three models. Temperature 0. Same 30 questions.
+        </p>
+
+        <div class="overflow-x-auto my-8"><table class="w-full text-left border-collapse"><thead><tr class="border-b border-gray-600"><th class="py-3 pr-4">Model</th><th class="py-3 pr-4">Schema only</th><th class="py-3 pr-4">With ontology</th><th class="py-3 pr-4">Gain</th></tr></thead><tbody><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Gemini 2.5 Flash</td><td class="py-2 pr-4 align-top">53%</td><td class="py-2 pr-4 align-top">87%</td><td class="py-2 pr-4 align-top">+34 pp</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">gpt-oss 120B</td><td class="py-2 pr-4 align-top">33%</td><td class="py-2 pr-4 align-top">73%</td><td class="py-2 pr-4 align-top">+40 pp</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Nemotron 3 Super</td><td class="py-2 pr-4 align-top">47%</td><td class="py-2 pr-4 align-top">70%</td><td class="py-2 pr-4 align-top">+23 pp</td></tr></tbody></table></div>
+
+        <p>
+          Gemini's run used an earlier retrieval version. The Ollama models used the tighter IDF retrieval above. The headline does not change either way.
+        </p>
+
+        <div class="my-8">
+        <img src="../assets/images/adventureworks-ontology/model_comparison.png"
+             alt="Bar chart of overall accuracy for three models, baseline vs ontology"
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">Overall accuracy. Green is ontology. Red is schema only. Every green bar beats every red bar.</p>
+      </div>
+
+        <div class="my-8">
+        <img src="../assets/images/adventureworks-ontology/model_comparison_by_tag.png"
+             alt="Accuracy by tag for structured, needs-docs, and both questions"
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">By tag. The biggest lift is on needs docs and both, where business rules matter.</p>
+      </div>
+
+        <p>
+          The misses are useful too. Q22, Q26, and Q27 fail for every model even with the ontology. Q26 asks for average annual sales from the store survey for Road specialty stores. That needs <code>xpath</code> over an XML column. The ontology says the survey exists. It does not teach the XML shape. That is an ontology gap, not a model gap. Fix the YAML before you chase a bigger model.
+        </p>
+
+        </section>
+
+      <section>
+<h2>Try it in the UI</h2>
+
+        <pre class="language-bash"><code class="language-bash">streamlit run app/app.py</code></pre>
+
+        <p>
+          The Ask tab walks one question step by step: tokens, entity scores, multi hop bridges, rules with From tables versus From docs, the prompt, the SQL, and the live rows. Compare both modes side by side when you want to see the baseline guess next to the ontology answer.
+        </p>
+
+        <div class="my-8">
+        <img src="../assets/images/adventureworks-ontology/app-compare-modes.png"
+             alt="Side by side compare: ontology retrieves one entity while schema only dumps 21 table hints"
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">Compare both. Ontology mode retrieves one entity. Schema only mode dumps schema hints for 21 tables and guesses a wrong filter on ord_src.</p>
+      </div>
+
+        </section>
+
+      <section>
+<h2>What I would do next on a real warehouse</h2>
+
+        <ol class="list-decimal pl-6 space-y-2 my-4"><li>Start with scrambled names or your real cryptic ones. Do not eval on famous clean schemas.</li><li>Write rules with provenance. Every business rule should point at a doc.</li><li>Keep retrieval explainable at first. Move to embeddings plus graph traversal when synonyms stop scaling.</li><li>Score by denotation. Wrong SQL text that returns the right rows is still useful. Right looking SQL that returns the wrong rows is not.</li><li>Treat eval misses as ontology bugs. Q26 taught me more than any chart.</li></ol>
+
+        </section>
+
+      <section>
+<h2>Resources</h2>
+
+        <ul class="list-disc pl-6 space-y-2 my-4"><li>Repo: <a href="https://github.com/MKcodeshere/adventureworks-ontology" target="_blank" class="text-blue-400 underline">MKcodeshere/adventureworks-ontology</a></li><li>Postgres port: <a href="https://github.com/lorint/AdventureWorks-for-Postgres" target="_blank" class="text-blue-400 underline">lorint/AdventureWorks-for-Postgres</a> (MIT)</li><li>Microsoft AdventureWorks OLTP sample: <a href="https://github.com/Microsoft/sql-server-samples/releases" target="_blank" class="text-blue-400 underline">sql-server-samples releases</a></li><li>Ontology and agent inspiration: <a href="https://github.com/HelixDB/helix-foundry" target="_blank" class="text-blue-400 underline">HelixDB helix-foundry</a></li></ul>
+
+        <p>
+          Build the ontology. Measure it. Then decide what your warehouse still refuses to tell you.
+        </p>
+      </section>
+
+      <!-- Consulting CTA -->
+      <div class="consulting-cta">
+        <h3>Need Help Implementing This?</h3>
+        <p>I offer consulting services for Text-to-SQL systems. Let's discuss your requirements.</p>
+        <a href="../consulting.html" class="btn-primary text-blue-600 hover:bg-gray-800">
+          Schedule a Consultation
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">Text2SQLHandbook</h3>
+          <p class="text-gray-400">Your comprehensive guide to Text-to-SQL systems with GenAI.</p>
+        </div>
+        <div class="footer-links">
+          <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../approaches.html">All Approaches</a></li>
+            <li><a href="../about.html">About</a></li>
+            <li><a href="../consulting.html">Consulting</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4">Connect</h3>
+          <p class="text-gray-400 text-sm">your@email.com</p>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
+        <p>&copy; 2025 Text2SQLHandbook</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="../assets/js/main.js"></script>
+
+</body>
+</html>
