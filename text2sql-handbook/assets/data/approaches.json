@@ -7,7 +7,7 @@
       "description": "I used AdventureWorks for a decade without fully understanding its business concepts. Here is how I built an ontology for Text-to-SQL, measured it on 30 questions, and mapped the same pattern to an enterprise stack.",
       "shortDescription": "Ground level ontology for Text-to-SQL on AdventureWorks, with evals and an enterprise scale map",
       "articlePreview": "I used AdventureWorks for a decade without fully understanding its business concepts. Here is how I built an ontology for Text-to-SQL, measured it on 30 questions, and mapped the same pattern to an enterprise stack.",
-      "thumbnailImage": "assets/images/adventureworks-ontology/model_comparison.png",
+      "thumbnailImage": "assets/images/adventureworks-ontology/hero.jpg",
       "thumbnailGradient": "from-emerald-600 to-teal-600",
       "thumbnailIcon": "\ud83e\udded",
       "readTime": "10 min read",
