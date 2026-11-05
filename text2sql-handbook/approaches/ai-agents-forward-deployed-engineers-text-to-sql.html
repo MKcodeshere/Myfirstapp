@@ -87,10 +87,10 @@
           This piece walks you through that result the way I wish someone had walked me through it. Numbers come from their tables. The state charts are mine.
         </p>
       <div class="my-8">
-        <img src="../assets/images/ai-agents-forward-deployed-engineers-text-to-sql/fig1-overview.jpg"
-             alt="Figure 1 from the paper. Discovery dialogue produces a requirements document, then a planner and an execution loop post train a model and profile it on CPU."
+        <img src="../assets/images/ai-agents-forward-deployed-engineers-text-to-sql/statechart-overview.jpg"
+             alt="Plate I. The whole job. A vague brief becomes a discovery dialogue, then a requirements document, then a model checked against three gates. One path ships. The other path fails a gate and does not ship."
              class="w-full rounded-lg shadow-lg">
-        <p class="text-center text-sm text-secondary mt-2">Figure 1 from the paper. Left: the agent asks, inspects, and submits acceptance criteria. Right: plan, train, export for CPU, and check the gates.</p>
+        <p class="text-center text-sm text-secondary mt-2">Plate I. The whole job at a glance. Ask, write it down, fine tune, then clear every gate. Miss one and you did not ship.</p>
       </div>
 
         </section>
@@ -124,20 +124,32 @@
         </p>
       <div class="my-8">
         <img src="../assets/images/ai-agents-forward-deployed-engineers-text-to-sql/statechart-discovery.jpg"
-             alt="Plate I. One requirement moves from hidden to asked to disclosed, then either written down, recorded as open, or lost at handoff. The red path is the handoff leak TLC found."
+             alt="Plate II. One requirement moves from hidden to asked to disclosed, then either written down, recorded as open, or lost at handoff. The red path is the handoff leak TLC found."
              class="w-full rounded-lg shadow-lg">
-        <p class="text-center text-sm text-secondary mt-2">Plate I. The life of one requirement. Asking is cheap. Writing it down is the hard part. About one in five disclosed facts never made the final document.</p>
+        <p class="text-center text-sm text-secondary mt-2">Plate II. The life of one requirement. Asking is cheap. Writing it down is the hard part. About one in five disclosed facts never made the final document.</p>
       </div>
 
         <p>
           Across 15 models and three ambiguity levels, frontier closed models recovered about 70 to 82 percent of the hidden facts. Claude Opus 5.5 led at 81.7 percent mean recovery. Claude Opus 5 hit 81.1. Sonnet 5.5 hit 78.4. GPT 6.1 Sol sat at 75.2. Open weight models landed around 40 to 50 percent.
         </p>
-      <div class="my-8">
-        <img src="../assets/images/ai-agents-forward-deployed-engineers-text-to-sql/table1-discovery.jpg"
-             alt="Table 1 from the paper. Discovery recovery, elicitation, and ask turns across 15 models."
-             class="w-full rounded-lg shadow-lg">
-        <p class="text-center text-sm text-secondary mt-2">Table 1 from the paper. Mean recovery, elicited facts, and ask turns. The winners ask about 5 to 11 focused turns and pull about 9 to 11 facts into the dialogue.</p>
-      </div>
+        <div class="overflow-x-auto my-8"><table class="w-full text-left border-collapse"><thead><tr class="border-b border-gray-600"><th class="py-3 pr-4">Model</th><th class="py-3 pr-4">Mean recovery %</th><th class="py-3 pr-4">Elicited facts</th><th class="py-3 pr-4">Ask turns</th></tr></thead><tbody>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Claude Opus 5.5</td><td class="py-2 pr-4 align-top">81.7</td><td class="py-2 pr-4 align-top">10.4</td><td class="py-2 pr-4 align-top">5.5</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Claude Opus 5</td><td class="py-2 pr-4 align-top">81.1</td><td class="py-2 pr-4 align-top">10.9</td><td class="py-2 pr-4 align-top">9.0</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Claude Sonnet 5.5</td><td class="py-2 pr-4 align-top">78.4</td><td class="py-2 pr-4 align-top">9.8</td><td class="py-2 pr-4 align-top">4.2</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">GPT 6.1 Sol</td><td class="py-2 pr-4 align-top">75.2</td><td class="py-2 pr-4 align-top">9.1</td><td class="py-2 pr-4 align-top">4.6</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Claude Fable 5</td><td class="py-2 pr-4 align-top">73.8</td><td class="py-2 pr-4 align-top">9.1</td><td class="py-2 pr-4 align-top">5.6</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Grok 4.7</td><td class="py-2 pr-4 align-top">70.1</td><td class="py-2 pr-4 align-top">9.2</td><td class="py-2 pr-4 align-top">4.8</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">GPT 5.6 Sol</td><td class="py-2 pr-4 align-top">68.4</td><td class="py-2 pr-4 align-top">9.0</td><td class="py-2 pr-4 align-top">7.1</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Gemini 2.5 Flash</td><td class="py-2 pr-4 align-top">57.8</td><td class="py-2 pr-4 align-top">7.1</td><td class="py-2 pr-4 align-top">4.5</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Gemma 4 31B</td><td class="py-2 pr-4 align-top">49.4</td><td class="py-2 pr-4 align-top">5.2</td><td class="py-2 pr-4 align-top">2.5</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">GLM 5.3 Flash</td><td class="py-2 pr-4 align-top">46.2</td><td class="py-2 pr-4 align-top">5.1</td><td class="py-2 pr-4 align-top">3.3</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Grok 4.20 Reasoning</td><td class="py-2 pr-4 align-top">44.6</td><td class="py-2 pr-4 align-top">5.1</td><td class="py-2 pr-4 align-top">1.8</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">GPT OSS 120B</td><td class="py-2 pr-4 align-top">43.6</td><td class="py-2 pr-4 align-top">4.8</td><td class="py-2 pr-4 align-top">1.7</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Llama 3.3 70B</td><td class="py-2 pr-4 align-top">43.4</td><td class="py-2 pr-4 align-top">5.4</td><td class="py-2 pr-4 align-top">3.6</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Command A</td><td class="py-2 pr-4 align-top">41.8</td><td class="py-2 pr-4 align-top">4.4</td><td class="py-2 pr-4 align-top">3.2</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">GPT 5.4 Mini</td><td class="py-2 pr-4 align-top">40.6</td><td class="py-2 pr-4 align-top">3.8</td><td class="py-2 pr-4 align-top">1.7</td></tr>
+</tbody></table></div>
+        <p class="text-center text-sm text-secondary mt-2 mb-8">Mean recovery, elicited facts, and ask turns across 15 models. The winners ask about 5 to 11 focused turns and pull about 9 to 11 facts into the dialogue.</p>
 
         <p>
           Two habits separated the good runs from the weak ones.
@@ -179,9 +191,9 @@
         </p>
       <div class="my-8">
         <img src="../assets/images/ai-agents-forward-deployed-engineers-text-to-sql/statechart-delivery.jpg"
-             alt="Plate II. Plan, train, pick a Spider 76 percent checkpoint, export for CPU. The red path shows real queries failing to compile, then a green Spider score that still breaks the ship rule."
+             alt="Plate III. Plan, train, pick a Spider 76 percent checkpoint, export for CPU. The red path shows real queries failing to compile, then a green Spider score that still breaks the ship rule."
              class="w-full rounded-lg shadow-lg">
-        <p class="text-center text-sm text-secondary mt-2">Plate II. A green benchmark is not a ship decision. TLC's shortest bug path ends at "green Spider, bad compile."</p>
+        <p class="text-center text-sm text-secondary mt-2">Plate III. A green benchmark is not a ship decision. TLC's shortest bug path ends at "green Spider, bad compile."</p>
       </div>
 
         <p>
@@ -201,12 +213,11 @@
         <p>
           The harness alone can flip a result. Same GPT 5.6 Sol autonomous setup failed in OpenCode on latency and passed in Codex.
         </p>
-      <div class="my-8">
-        <img src="../assets/images/ai-agents-forward-deployed-engineers-text-to-sql/table3-harness.jpg"
-             alt="Table 3 from the paper. OpenCode versus Codex on the same autonomous GPT 5.6 Sol run."
-             class="w-full rounded-lg shadow-lg">
-        <p class="text-center text-sm text-secondary mt-2">Table 3 from the paper. Same model, same budget, same evaluator. Codex clears the latency gate that OpenCode misses.</p>
-      </div>
+        <div class="overflow-x-auto my-8"><table class="w-full text-left border-collapse"><thead><tr class="border-b border-gray-600"><th class="py-3 pr-4">Harness</th><th class="py-3 pr-4">Spider</th><th class="py-3 pr-4">BIRD</th><th class="py-3 pr-4">Fail %</th><th class="py-3 pr-4">p90 (s)</th><th class="py-3 pr-4">Pass</th></tr></thead><tbody>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">OpenCode</td><td class="py-2 pr-4 align-top">72.6</td><td class="py-2 pr-4 align-top">27.7</td><td class="py-2 pr-4 align-top">10</td><td class="py-2 pr-4 align-top">16.2</td><td class="py-2 pr-4 align-top">No</td></tr>
+<tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Codex</td><td class="py-2 pr-4 align-top">75.0</td><td class="py-2 pr-4 align-top">27.2</td><td class="py-2 pr-4 align-top">10</td><td class="py-2 pr-4 align-top">10.8</td><td class="py-2 pr-4 align-top">Yes</td></tr>
+</tbody></table></div>
+        <p class="text-center text-sm text-secondary mt-2 mb-8">Same GPT 5.6 Sol autonomous run, same budget, same evaluator. Codex clears the latency gate that OpenCode misses.</p>
 
         <p>
           Reliability is thin too. Across 6 independent GPT 6.1 Sol repeats, only 1 of 6 met all acceptance criteria. Missing Hugging Face credentials, missing database credentials, and a continuation limit kill showed up alongside real acceptance misses.
