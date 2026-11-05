@@ -1,6 +1,69 @@
 {
   "approaches": [
     {
+      "id": "ai-agents-forward-deployed-engineers-text-to-sql",
+      "title": "Can AI Agents Be Forward Deployed Engineers for Enterprise Text-to-SQL?",
+      "slug": "ai-agents-forward-deployed-engineers-text-to-sql",
+      "description": "Oracle AI rebuilt a four month Text-to-SQL engagement as a two phase agent test. Agents asked sharp questions. Only 2 of 8 delivery runs cleared Spider, production compile, and CPU latency together.",
+      "shortDescription": "Agents recovered most of a Text-to-SQL brief. Only 2 of 8 delivery runs cleared every production gate.",
+      "articlePreview": "Oracle AI rebuilt a four month Text-to-SQL engagement as a two phase agent test. Agents asked sharp questions. Only 2 of 8 delivery runs cleared Spider, production compile, and CPU latency together.",
+      "thumbnailImage": "assets/images/ai-agents-forward-deployed-engineers-text-to-sql/hero.jpg",
+      "thumbnailGradient": "from-indigo-600 to-violet-600",
+      "thumbnailIcon": "\ud83e\udd16",
+      "readTime": "8 min read",
+      "difficulty": "intermediate",
+      "tags": [
+        "AI Agents",
+        "Forward Deployed Engineer",
+        "Text-to-SQL",
+        "Fine-tuning",
+        "Evaluation",
+        "Enterprise"
+      ],
+      "llmModel": "Claude / GPT / Grok / Gemini (agent) + Llama 3.1 8B / Ministral 3 8B (served)",
+      "database": "Oracle SQL (Spider / BIRD / SParC)",
+      "github": {
+        "url": "https://arxiv.org/abs/2611.03551",
+        "stars": 0,
+        "forks": 0
+      },
+      "medium": {
+        "url": "#",
+        "title": "Can AI Agents Be Forward Deployed Engineers for Enterprise Text-to-SQL?"
+      },
+      "datePublished": "2026-11-05",
+      "featured": true,
+      "architecture": {
+        "imageUrl": "/assets/images/ai-agents-forward-deployed-engineers-text-to-sql/fig1-overview.jpg",
+        "components": [
+          "Requirement discovery dialogue",
+          "Acceptance criteria document",
+          "LoRA post-training",
+          "GGUF + LoRA CPU serving",
+          "Spider / production / latency gates"
+        ]
+      },
+      "pros": [
+        "Turns a vague customer brief into measurable acceptance criteria",
+        "Shows why a green Spider score still fails production compile",
+        "Maps discovery leaks to ontology provenance habits",
+        "Honest limits section on sample size and judge agreement"
+      ],
+      "cons": [
+        "One engagement and one SQL dialect",
+        "No public agent code release yet",
+        "Gemini grades its own customer simulation",
+        "Only 8 primary delivery runs"
+      ],
+      "bestFor": [
+        "Teams shipping enterprise Text-to-SQL with agents",
+        "Anyone building discovery before fine tuning",
+        "Readers who want release gates beyond Spider and BIRD"
+      ],
+      "setupTime": "Read only (paper and datasets linked)",
+      "productionReady": false
+    },
+    {
       "id": "adventureworks-ontology",
       "title": "How I Built a Business Ontology for AdventureWorks Using LLMs",
       "slug": "adventureworks-ontology",

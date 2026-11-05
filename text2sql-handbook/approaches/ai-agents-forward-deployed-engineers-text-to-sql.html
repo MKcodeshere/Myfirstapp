@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Can AI Agents Be Forward Deployed Engineers for Enterprise Text-to-SQL? | Text2SQL Hub</title>
+  <meta name="description" content="Oracle AI rebuilt a four month Text-to-SQL engagement as a two phase agent test. Agents asked sharp questions. Only 2 of 8 delivery runs cleared Spider, production compile, and CPU latency together.">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/main.css?v=7">
+
+  <!-- Prism.js for code highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="flex items-center justify-between py-4">
+        <a href="../index.html" class="text-2xl font-bold text-blue-600 hover:opacity-80 transition-opacity">
+          Text2SQL<span class="text-gray-200">Hub</span>
+        </a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="../what-is-text2sql.html" class="nav-link">What is Text-to-SQL?</a>
+          <a href="../approaches.html" class="nav-link active">Approaches</a>
+          <a href="../about.html" class="nav-link">About</a>
+          <a href="../consulting.html" class="btn-primary">Get In Touch</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Article Header -->
+  <section class="article-header">
+    <div class="container">
+      <div class="max-w-4xl mx-auto">
+        <a href="../approaches.html" class="text-white opacity-75 hover:opacity-100 mb-6 inline-block">&larr; Back to All Approaches</a>
+
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">
+          Can AI Agents Be Forward Deployed Engineers for Enterprise Text-to-SQL?
+        </h1>
+
+        <div class="article-meta">
+          <span>📅 November 5, 2026</span>
+          <span>⏱️ 8 min read</span>
+          <span class="difficulty-badge difficulty-intermediate">intermediate</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Article Content -->
+  <div class="container py-12">
+    <div class="article-content">
+
+      <section>
+<p class="text-xl font-semibold text-gray-200 mb-6">
+          Discovery recovered most of the brief. Delivery that cleared every production gate worked in only 2 of 8 runs.
+        </p>
+
+      <div class="my-8">
+        <img src="../assets/images/ai-agents-forward-deployed-engineers-text-to-sql/hero.jpg"
+             alt="A four panel comic: a forward deployed AI agent gets a vague brief, hears we have not decided, celebrates a green benchmark, then ships nothing after 13 queries fail to compile"
+             class="w-full rounded-lg shadow-lg">
+      </div>
+<p>
+          Picture a contractor who embeds with a customer for a Text to SQL job. The brief is fuzzy. "Make English into Oracle SQL. Keep it accurate. Do not make it slow. Keep the bill small." The contractor has to turn that into hard acceptance criteria, then train and serve a model that clears those gates on real hardware.
+        </p>
+
+        <p>
+          That role is a forward deployed engineer. Palantir popularized it. OpenAI and Anthropic poured money into it in 2026 because production AI fails less on raw model quality and more on missing requirements, wrong dialect, and serving cost.
+        </p>
+
+        <p>
+          A team at Oracle AI asked a blunt question. Can an LLM agent do that job end to end? They rebuilt one completed four month engagement as a two phase test: discover the requirements, then deliver the model. Discovery looked strong. Delivery that cleared every production gate worked in only 2 of 8 runs.
+        </p>
+
+        <p>
+          This piece walks you through that result the way I wish someone had walked me through it. Numbers come from their tables. The state charts are mine.
+        </p>
+      <div class="my-8">
+        <img src="../assets/images/ai-agents-forward-deployed-engineers-text-to-sql/fig1-overview.jpg"
+             alt="Figure 1 from the paper. Discovery dialogue produces a requirements document, then a planner and an execution loop post train a model and profile it on CPU."
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">Figure 1 from the paper. Left: the agent asks, inspects, and submits acceptance criteria. Right: plan, train, export for CPU, and check the gates.</p>
+      </div>
+
+        </section>
+
+      <section>
+<h2>What the job actually looks like</h2>
+
+        <p>
+          The reference engagement was real. A human engineer spent four months building natural language to Oracle SQL for a cloud database team. He tried more than 100 LoRA adapters and ran about 200 evaluations. What shipped was Ministral 3 8B with one adapter and a tuned prompt.
+        </p>
+
+        <p>
+          From that record the authors wrote down 17 facts the customer actually knew, plus 6 decisions the customer never made. Things like where the latency timer starts. Those lists became the answer key.
+        </p>
+
+        <p>
+          Inventing a value for an open item counts as wrong. Recording it as still open counts as right. That single rule is half the story.
+        </p>
+
+        </section>
+
+      <section>
+<h2>Phase 1: pull the brief into a requirements doc</h2>
+
+        <p>
+          The agent gets a vague opening. At the hardest level, all 17 facts are hidden. Gemini 2.5 Pro plays the customer. It answers only what it is asked. It says "we have not decided" for the open items. A second pass watches for leakage.
+        </p>
+
+        <p>
+          The agent has 28 steps and at most 15 ask turns. Four moves only: ask a question, request a file, read the first 200 lines of a released file, or submit a numbered requirements document. Recovery rate is the share of withheld facts that land correctly in that document.
+        </p>
+      <div class="my-8">
+        <img src="../assets/images/ai-agents-forward-deployed-engineers-text-to-sql/statechart-discovery.jpg"
+             alt="Plate I. One requirement moves from hidden to asked to disclosed, then either written down, recorded as open, or lost at handoff. The red path is the handoff leak TLC found."
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">Plate I. The life of one requirement. Asking is cheap. Writing it down is the hard part. About one in five disclosed facts never made the final document.</p>
+      </div>
+
+        <p>
+          Across 15 models and three ambiguity levels, frontier closed models recovered about 70 to 82 percent of the hidden facts. Claude Opus 5.5 led at 81.7 percent mean recovery. Claude Opus 5 hit 81.1. Sonnet 5.5 hit 78.4. GPT 6.1 Sol sat at 75.2. Open weight models landed around 40 to 50 percent.
+        </p>
+      <div class="my-8">
+        <img src="../assets/images/ai-agents-forward-deployed-engineers-text-to-sql/table1-discovery.jpg"
+             alt="Table 1 from the paper. Discovery recovery, elicitation, and ask turns across 15 models."
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">Table 1 from the paper. Mean recovery, elicited facts, and ask turns. The winners ask about 5 to 11 focused turns and pull about 9 to 11 facts into the dialogue.</p>
+      </div>
+
+        <p>
+          Two habits separated the good runs from the weak ones.
+        </p>
+
+        <p>
+          First, targeted questions beat a long opening dump. Models that asked a handful of sharp turns recovered more than models that asked almost nothing. Grok 4.20 Reasoning asked 1.8 turns on average and recovered 44.6 percent.
+        </p>
+
+        <p>
+          Second, the handoff leaks. Of the facts the customer actually disclosed in dialogue, 21.2 percent never appeared in the submitted document. One Grok run recovered 82 percent of the facts and still dropped the latency constraint. That constraint is exactly the gate that decides pass or fail later.
+        </p>
+
+        <p>
+          I felt a version of this while building a business ontology for AdventureWorks. Rules only stick when every one of them points at a source doc. No source, no rule. Their fact sheet is the same idea, just earlier in the pipeline. Discovery is where a semantic layer's meaning comes from.
+        </p>
+
+        </section>
+
+      <section>
+<h2>Phase 2: clear three gates or you did not ship</h2>
+
+        <p>
+          Delivery takes the requirements and has to fine tune and serve a model under a hard budget. One A100 for under 12 GPU hours. A separate 96 core AMD EPYC machine for timing. Eligible bases: Llama 3.1 8B or Ministral 3 8B. Serving profile: a 4 bit GGUF base plus a 16 bit LoRA adapter on CPU.
+        </p>
+
+        <p>
+          Three gates must all pass:
+        </p>
+
+        <div class="overflow-x-auto my-8"><table class="w-full text-left border-collapse"><thead><tr class="border-b border-gray-600"><th class="py-3 pr-4">Gate</th><th class="py-3 pr-4">Threshold</th></tr></thead><tbody><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Spider dev Oracle execution accuracy</td><td class="py-2 pr-4 align-top">at least 60%</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Production SQL compilation failures on 100 real queries</td><td class="py-2 pr-4 align-top">at most 10</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">p90 CPU latency on those queries, concurrency 1</td><td class="py-2 pr-4 align-top">under 15 seconds</td></tr></tbody></table></div>
+
+        <p>
+          BIRD scores are reported only. They do not decide pass or fail.
+        </p>
+
+        <p>
+          They ran each delivery agent two ways. Decoupled: one agent writes a frozen plan, a fresh agent carries it out. Autonomous: one session plans, trains, and revises on its own.
+        </p>
+      <div class="my-8">
+        <img src="../assets/images/ai-agents-forward-deployed-engineers-text-to-sql/statechart-delivery.jpg"
+             alt="Plate II. Plan, train, pick a Spider 76 percent checkpoint, export for CPU. The red path shows real queries failing to compile, then a green Spider score that still breaks the ship rule."
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">Plate II. A green benchmark is not a ship decision. TLC's shortest bug path ends at "green Spider, bad compile."</p>
+      </div>
+
+        <p>
+          Only 2 of 8 primary runs cleared every gate.
+        </p>
+
+        <div class="overflow-x-auto my-8"><table class="w-full text-left border-collapse"><thead><tr class="border-b border-gray-600"><th class="py-3 pr-4">Agent</th><th class="py-3 pr-4">Workflow</th><th class="py-3 pr-4">Base</th><th class="py-3 pr-4">Spider</th><th class="py-3 pr-4">Prod fails</th><th class="py-3 pr-4">p90 (s)</th><th class="py-3 pr-4">Pass</th></tr></thead><tbody><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">GPT 5.6 Sol</td><td class="py-2 pr-4 align-top">Decoupled</td><td class="py-2 pr-4 align-top">Ministral 3 8B</td><td class="py-2 pr-4 align-top">76.11</td><td class="py-2 pr-4 align-top">9</td><td class="py-2 pr-4 align-top">11.24</td><td class="py-2 pr-4 align-top">Yes</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">GPT 6.1 Sol</td><td class="py-2 pr-4 align-top">Autonomous</td><td class="py-2 pr-4 align-top">Llama 3.1 8B</td><td class="py-2 pr-4 align-top">71.57</td><td class="py-2 pr-4 align-top">6</td><td class="py-2 pr-4 align-top">12.62</td><td class="py-2 pr-4 align-top">Yes</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Grok 4.7</td><td class="py-2 pr-4 align-top">Autonomous</td><td class="py-2 pr-4 align-top">Ministral 3 8B</td><td class="py-2 pr-4 align-top">75.82</td><td class="py-2 pr-4 align-top">13</td><td class="py-2 pr-4 align-top">9.24</td><td class="py-2 pr-4 align-top">No</td></tr><tr class="border-b border-gray-700"><td class="py-2 pr-4 align-top">Human FDE</td><td class="py-2 pr-4 align-top">(human)</td><td class="py-2 pr-4 align-top">Ministral 3 8B</td><td class="py-2 pr-4 align-top">79.90</td><td class="py-2 pr-4 align-top">6</td><td class="py-2 pr-4 align-top">9.26</td><td class="py-2 pr-4 align-top">Yes</td></tr></tbody></table></div>
+
+        <p>
+          Look at autonomous Grok. Best BIRD score in the table at 44.29 percent. Spider at 75.82. Latency under the limit at 9.24 seconds. It still failed because 13 of 100 production queries did not compile. A green leaderboard line does not mean the warehouse will accept the SQL.
+        </p>
+
+        <p>
+          Other failures were plain budget and setup mistakes. One run applied the training deadline to final BIRD inference and skipped BIRD. Another pair reserved 3 GPUs while allocated 1, so useful wall time shrank from about 12 hours to about 4. No agent compared both base models. No agent tried GRPO even though it was allowed. Every one of those runs used LoRA SFT only.
+        </p>
+
+        <p>
+          The harness alone can flip a result. Same GPT 5.6 Sol autonomous setup failed in OpenCode on latency and passed in Codex.
+        </p>
+      <div class="my-8">
+        <img src="../assets/images/ai-agents-forward-deployed-engineers-text-to-sql/table3-harness.jpg"
+             alt="Table 3 from the paper. OpenCode versus Codex on the same autonomous GPT 5.6 Sol run."
+             class="w-full rounded-lg shadow-lg">
+        <p class="text-center text-sm text-secondary mt-2">Table 3 from the paper. Same model, same budget, same evaluator. Codex clears the latency gate that OpenCode misses.</p>
+      </div>
+
+        <p>
+          Reliability is thin too. Across 6 independent GPT 6.1 Sol repeats, only 1 of 6 met all acceptance criteria. Missing Hugging Face credentials, missing database credentials, and a continuation limit kill showed up alongside real acceptance misses.
+        </p>
+
+        </section>
+
+      <section>
+<h2>What I take from this for Text to SQL work</h2>
+
+        <p>
+          Do discovery before you fine tune. Write the acceptance criteria while the customer is still in the room. Accuracy definition. Dialect. Latency timer. Read only policy. Hardware you will actually serve on. Record unknowns as unknowns.
+        </p>
+
+        <p>
+          Treat production compilation and real CPU latency as first class release gates. Spider and BIRD are useful for picking a checkpoint. They are not a ship decision.
+        </p>
+
+        <p>
+          Keep a durable store of what you learned. In my AdventureWorks work that store is a YAML ontology with provenance on every rule. Their fact sheet is a sparse version of the same thing. A sensible stack looks like FDE style discovery, then a curated ontology or metrics layer, then retrieval for Text to SQL, then optional small model post training for the dialect and the latency envelope.
+        </p>
+
+        <p>
+          Put a human on the handoff. Review the requirements document and the frozen plan. That is the paper's own mitigation, and it matches how I already treat ontology drafts.
+        </p>
+
+        </section>
+
+      <section>
+<h2>Limits worth saying out loud</h2>
+
+        <p>
+          This is one engagement in one SQL dialect. Gemini plays the customer and also grades recovery, and a human audit agreed only about 71 percent of the time on recovery labels. Eight primary delivery runs is a small sample. The training library is never named. The CPU inference binary is never named. The authors say review records will ship with the code, but as of the arXiv page there is no public repo link yet. The 100 production queries have no gold SQL, so "production ready" here means compile and run fast enough, not denotation accuracy on real traffic.
+        </p>
+
+        <p>
+          None of that kills the lesson. Agents can recover most of a requirements sheet. They can sometimes clear every gate. A human still needs to own the requirements document and the release checklist.
+        </p>
+
+        </section>
+
+      <section>
+<h2>Resources</h2>
+
+        <ul class="list-disc pl-6 space-y-2 my-4">
+          <li>Paper: <a href="https://arxiv.org/abs/2611.03551" target="_blank" class="text-blue-400 underline">Can LLM Agents Be Forward Deployed Engineers? Requirement Discovery and Delivery for Enterprise Text to SQL (arXiv 2611.03551)</a></li>
+          <li>Oracle dialect datasets: <a href="https://github.com/oracle-samples/spider" target="_blank" class="text-blue-400 underline">Spider</a>, <a href="https://github.com/oracle/oracle-bird" target="_blank" class="text-blue-400 underline">BIRD</a>, <a href="https://github.com/oracle/oracle-sparc" target="_blank" class="text-blue-400 underline">SParC</a></li>
+          <li>OpenCode harness: <a href="https://github.com/anomalyco/opencode" target="_blank" class="text-blue-400 underline">anomalyco/opencode</a></li>
+          <li>My AdventureWorks ontology case study: <a href="https://text2sql-hub.dev/approaches/adventureworks-ontology" target="_blank" class="text-blue-400 underline">text2sql-hub.dev/approaches/adventureworks-ontology</a></li>
+          <li>Repo for that case study: <a href="https://github.com/MKcodeshere/adventureworks-ontology" target="_blank" class="text-blue-400 underline">MKcodeshere/adventureworks-ontology</a></li>
+          <li>State charts drawn with <a href="https://github.com/kevintngo/statechart-art" target="_blank" class="text-blue-400 underline">statechart-art by Kevin Ngo</a> (MIT), checked by TLC, laid out by pele</li>
+        </ul>
+      </section>
+
+      <!-- Consulting CTA -->
+      <div class="consulting-cta">
+        <h3>Need Help Implementing This?</h3>
+        <p>I offer consulting services for Text-to-SQL systems. Let's discuss your requirements.</p>
+        <a href="../consulting.html" class="btn-primary text-blue-600 hover:bg-gray-800">
+          Schedule a Consultation
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">Text2SQLHandbook</h3>
+          <p class="text-gray-400">Your comprehensive guide to Text-to-SQL systems with GenAI.</p>
+        </div>
+        <div class="footer-links">
+          <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../approaches.html">All Approaches</a></li>
+            <li><a href="../about.html">About</a></li>
+            <li><a href="../consulting.html">Consulting</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-4">Connect</h3>
+          <p class="text-gray-400 text-sm">your@email.com</p>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
+        <p>&copy; 2025 Text2SQLHandbook</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="../assets/js/main.js"></script>
+
+</body>
+</html>
